@@ -44,18 +44,17 @@ const Nav = () => {
 
         <div className="flex items-center gap-6">
           <a href="#skills" className="page-number hover:text-accent transition-colors hidden md:inline-block">
-            Skills
+            {t('skillsTitle')}
           </a>
           <a href="#awards" className="page-number hover:text-accent transition-colors hidden md:inline-block">
-            Awards
+            {t('awardsTitle')}
           </a>
           <Link to="/portfolio" className="page-number hover:text-accent transition-colors">
-            Works
+            {t('viewPortfolio')}
           </Link>
           <LanguageSelector />
         </div>
       </div>
-
       <div className="mx-auto max-w-7xl px-6 md:px-12">
         <div className="h-px bg-gradient-to-r from-transparent via-ink/10 to-transparent" />
       </div>
@@ -69,20 +68,23 @@ const Hero = () => {
 
   return (
     <section className="relative min-h-screen flex flex-col justify-center pt-20 px-6 md:px-12">
-      {/* Large section number watermark */}
+      {/* Decorative border edge */}
+      <div className="absolute left-6 md:left-12 top-0 bottom-0 w-px bg-ink/5" />
+      <div className="absolute right-6 md:right-12 top-0 bottom-0 w-px bg-ink/5" />
+
+      {/* Watermark */}
       <div className="absolute top-32 right-8 md:right-16 opacity-[0.04] font-heading text-[12rem] md:text-[20rem] font-bold leading-none select-none">
         01
       </div>
 
       <div className="relative mx-auto max-w-7xl w-full">
         <div className="grid grid-cols-12 gap-6">
-          {/* Left: intro label */}
           <div className="col-span-12 md:col-span-5 lg:col-span-4">
             <AnimatedSection delay={0.1}>
               <p className="page-number mb-2">{t('hello')}</p>
             </AnimatedSection>
             <AnimatedSection delay={0.3}>
-              <div className="h-px w-16 bg-accent/40 mb-6" />
+              <div className="h-px w-16 bg-accent mb-6" />
             </AnimatedSection>
             <AnimatedSection delay={0.5}>
               <p className="text-ink-faint text-sm leading-relaxed max-w-xs font-light">
@@ -94,9 +96,24 @@ const Hero = () => {
                 {t('location')}
               </p>
             </AnimatedSection>
+            {/* Quick stats */}
+            <AnimatedSection delay={0.9}>
+              <div className="mt-8 grid grid-cols-2 gap-x-6 gap-y-3">
+                {[
+                  { num: '3', label: 'Languages' },
+                  { num: '4+', label: 'Design Tools' },
+                  { num: '8.5', label: 'IELTS Score' },
+                  { num: '2', label: 'Degrees' },
+                ].map((stat) => (
+                  <div key={stat.label}>
+                    <span className="block text-2xl font-display font-bold text-accent">{stat.num}</span>
+                    <span className="page-number">{stat.label}</span>
+                  </div>
+                ))}
+              </div>
+            </AnimatedSection>
           </div>
 
-          {/* Right: name */}
           <div className="col-span-12 md:col-span-7 lg:col-span-8 md:pl-12 lg:pl-20">
             <div className="leading-[0.85]">
               <motion.div
@@ -130,7 +147,7 @@ const Hero = () => {
                 href="#about"
                 className="px-6 py-3 text-[0.7rem] font-heading font-semibold tracking-[0.18em] uppercase text-paper bg-ink hover:bg-accent transition-colors duration-300"
               >
-                Explore
+                {t('explore')}
               </a>
               <Link
                 to="/portfolio"
@@ -148,22 +165,15 @@ const Hero = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 2.2 }}
-        className="absolute bottom-8 left-6 md:left-12 flex items-center gap-3"
+        className="absolute bottom-8 left-14 md:left-20 flex items-center gap-3"
       >
         <motion.div
           animate={{ y: [0, 6, 0] }}
           transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
           className="w-px h-10 bg-accent/40"
         />
-        <span className="page-number">Scroll</span>
+        <span className="page-number">{t('scroll')}</span>
       </motion.div>
-
-      {/* Page edge */}
-      <div className="absolute bottom-0 left-0 right-0">
-        <div className="mx-auto max-w-7xl px-6 md:px-12">
-          <div className="h-px bg-gradient-to-r from-ink/10 via-ink/5 to-transparent" />
-        </div>
-      </div>
     </section>
   )
 }
@@ -175,38 +185,61 @@ const About = () => {
 
   return (
     <section id="about" className="relative py-28 md:py-40 px-6 md:px-12">
+      {/* Decorative border */}
+      <div className="absolute left-6 md:left-12 top-0 bottom-0 w-px bg-ink/5" />
+      <div className="absolute right-6 md:right-12 top-0 bottom-0 w-px bg-ink/5" />
+
       <div className="mx-auto max-w-7xl">
         <div className="grid grid-cols-12 gap-12 md:gap-20">
-          {/* Section number */}
           <div className="col-span-12 md:col-span-3 lg:col-span-2">
             <AnimatedSection>
               <span className="section-number">02</span>
-              <p className="page-number mt-2">About</p>
+              <p className="page-number mt-2">{t('aboutLabel')}</p>
             </AnimatedSection>
           </div>
 
           <div className="col-span-12 md:col-span-9 lg:col-span-10">
-            <div className="grid md:grid-cols-2 gap-12 md:gap-16">
-              {/* Left column: monogram */}
-              <AnimatedSection delay={0.2}>
-                <div className="relative">
-                  <div className="aspect-[4/5] bg-paper-dark flex items-center justify-center border border-ink/5">
-                    <div className="text-center">
-                      <span className="block text-8xl md:text-9xl font-bold font-display italic text-accent/15">
-                        YS
-                      </span>
-                      <div className="w-12 h-px bg-accent/20 mx-auto my-6" />
-                      <p className="page-number">Est. {new Date().getFullYear() - 2}</p>
+            <div className="grid md:grid-cols-5 gap-12 md:gap-16">
+              {/* Left column: monogram + highlights */}
+              <div className="md:col-span-2">
+                <AnimatedSection delay={0.2}>
+                  <div className="relative">
+                    <div className="aspect-[4/5] bg-paper-dark flex items-center justify-center border border-ink/5">
+                      <div className="text-center">
+                        <span className="block text-8xl md:text-9xl font-bold font-display italic text-accent/15">
+                          YS
+                        </span>
+                        <div className="w-12 h-px bg-accent/20 mx-auto my-6" />
+                        <p className="page-number">Est. {new Date().getFullYear() - 2}</p>
+                      </div>
                     </div>
+                    <div className="absolute -top-1 -left-1 w-4 h-4 border-t border-l border-accent/30" />
+                    <div className="absolute -bottom-1 -right-1 w-4 h-4 border-b border-r border-accent/30" />
                   </div>
-                  {/* Corner accents */}
-                  <div className="absolute -top-1 -left-1 w-4 h-4 border-t border-l border-accent/30" />
-                  <div className="absolute -bottom-1 -right-1 w-4 h-4 border-b border-r border-accent/30" />
-                </div>
-              </AnimatedSection>
+                </AnimatedSection>
 
-              {/* Right column: bio */}
-              <div className="space-y-8">
+                {/* Highlights */}
+                <AnimatedSection delay={0.6}>
+                  <div className="mt-8 space-y-3">
+                    {profile.highlights.map((item, i) => (
+                      <motion.div
+                        key={item}
+                        initial={{ opacity: 0, x: -8 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: i * 0.08 }}
+                        className="flex items-start gap-3"
+                      >
+                        <span className="w-1.5 h-1.5 bg-accent/60 mt-1.5 flex-shrink-0" />
+                        <span className="text-sm text-ink-light font-light">{item}</span>
+                      </motion.div>
+                    ))}
+                  </div>
+                </AnimatedSection>
+              </div>
+
+              {/* Right column: bio + languages bar */}
+              <div className="md:col-span-3 space-y-8">
                 <AnimatedSection delay={0.3}>
                   <h2 className="text-3xl md:text-4xl lg:text-5xl leading-tight">
                     <span className="italic font-italic text-accent">Creativity</span>
@@ -220,21 +253,30 @@ const About = () => {
                   </p>
                 </AnimatedSection>
 
+                {/* Languages bar */}
                 <AnimatedSection delay={0.7}>
-                  <div className="space-y-3">
-                    {profile.highlights.map((item, i) => (
-                      <motion.div
-                        key={item}
-                        initial={{ opacity: 0, x: -8 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: i * 0.08 }}
-                        className="flex items-center gap-3"
-                      >
-                        <span className="w-1.5 h-1.5 bg-accent/60" />
-                        <span className="text-sm text-ink-light font-light">{item}</span>
-                      </motion.div>
-                    ))}
+                  <div className="border-t border-ink/5 pt-6">
+                    <p className="section-number mb-4">Languages</p>
+                    <div className="flex gap-3">
+                      {[
+                        { name: 'Arabic', level: 'Fluent', color: 'bg-ink' },
+                        { name: 'English', level: 'Fluent', color: 'bg-ink' },
+                        { name: 'French', level: 'Fluent', color: 'bg-ink' },
+                      ].map((lang) => (
+                        <div key={lang.name} className="flex-1">
+                          <div className="h-1 bg-paper-dark mb-1.5">
+                            <motion.div
+                              initial={{ width: 0 }}
+                              whileInView={{ width: '100%' }}
+                              viewport={{ once: true }}
+                              transition={{ duration: 1, delay: 0.5 }}
+                              className={`h-1 ${lang.color}`}
+                            />
+                          </div>
+                          <p className="page-number">{lang.name}</p>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </AnimatedSection>
               </div>
@@ -254,6 +296,8 @@ const Skills = () => {
   return (
     <section id="skills" className="relative py-28 md:py-40 px-6 md:px-12">
       <div className="absolute inset-0 bg-paper-dark pointer-events-none" />
+      <div className="absolute left-6 md:left-12 top-0 bottom-0 w-px bg-ink/5" />
+      <div className="absolute right-6 md:right-12 top-0 bottom-0 w-px bg-ink/5" />
 
       <div className="relative mx-auto max-w-7xl">
         <div className="grid grid-cols-12 gap-12 md:gap-20">
@@ -304,6 +348,9 @@ const Awards = () => {
 
   return (
     <section id="awards" className="relative py-28 md:py-40 px-6 md:px-12">
+      <div className="absolute left-6 md:left-12 top-0 bottom-0 w-px bg-ink/5" />
+      <div className="absolute right-6 md:right-12 top-0 bottom-0 w-px bg-ink/5" />
+
       <div className="mx-auto max-w-7xl">
         <div className="grid grid-cols-12 gap-12 md:gap-20">
           <div className="col-span-12 md:col-span-3 lg:col-span-2">
@@ -325,7 +372,7 @@ const Awards = () => {
                     initial={{ opacity: 0 }}
                     whileInView={{ opacity: 1 }}
                     viewport={{ once: true }}
-                    className="group py-6 border-b border-ink/5 hover:border-accent/20 transition-colors duration-300"
+                    className="group py-6 border-b border-ink/5 hover:border-accent/30 transition-colors duration-300"
                   >
                     <div className="flex flex-col md:flex-row md:items-baseline justify-between gap-2">
                       <div className="flex items-start gap-4">
@@ -357,6 +404,8 @@ const Education = () => {
   return (
     <section id="education" className="relative py-28 md:py-40 px-6 md:px-12">
       <div className="absolute inset-0 bg-paper-dark pointer-events-none" />
+      <div className="absolute left-6 md:left-12 top-0 bottom-0 w-px bg-ink/5" />
+      <div className="absolute right-6 md:right-12 top-0 bottom-0 w-px bg-ink/5" />
 
       <div className="relative mx-auto max-w-7xl">
         <div className="grid grid-cols-12 gap-12 md:gap-20">
@@ -403,6 +452,9 @@ const Contact = () => {
 
   return (
     <section id="contact" className="relative py-28 md:py-40 px-6 md:px-12">
+      <div className="absolute left-6 md:left-12 top-0 bottom-0 w-px bg-ink/5" />
+      <div className="absolute right-6 md:right-12 top-0 bottom-0 w-px bg-ink/5" />
+
       <div className="mx-auto max-w-7xl">
         <div className="grid grid-cols-12 gap-12 md:gap-20">
           <div className="col-span-12 md:col-span-3 lg:col-span-2">
@@ -415,14 +467,14 @@ const Contact = () => {
           <div className="col-span-12 md:col-span-9 lg:col-span-10">
             <AnimatedSection delay={0.1}>
               <h2 className="text-3xl md:text-4xl lg:text-5xl mb-4">
-                Let's <span className="italic font-italic text-accent">connect</span>
+                Let&apos;s <span className="italic font-italic text-accent">connect</span>
               </h2>
               <p className="page-number mb-14">{t('available')}</p>
             </AnimatedSection>
 
             <div className="grid md:grid-cols-3 gap-px bg-ink/5">
               {([
-                { label: t('email'), value: profile.contact.email.split('@')[0] + '@' + profile.contact.email.split('@')[1], href: `mailto:${profile.contact.email}` },
+                { label: t('email'), value: profile.contact.email, href: `mailto:${profile.contact.email}` },
                 { label: t('whatsapp'), value: profile.contact.whatsapp, href: `https://wa.me/${profile.contact.whatsapp.replace(/[^0-9]/g, '')}` },
                 { label: t('phone'), value: profile.contact.phone, href: `tel:${profile.contact.phone}` },
               ]).map(({ label, value, href }) => (
@@ -441,6 +493,16 @@ const Contact = () => {
                 </AnimatedSection>
               ))}
             </div>
+
+            {/* Why reach out */}
+            <AnimatedSection delay={0.6}>
+              <div className="mt-8 border-t border-ink/5 pt-8">
+                <p className="section-number mb-3">{t('whyReachOut')}</p>
+                <p className="text-ink-light text-sm font-light leading-relaxed">
+                  {t('reachOutText')}
+                </p>
+              </div>
+            </AnimatedSection>
           </div>
         </div>
       </div>
@@ -455,7 +517,7 @@ const Footer = () => {
     <footer className="py-8 px-6 md:px-12 border-t border-ink/5">
       <div className="mx-auto max-w-7xl flex items-center justify-between">
         <span className="page-number">{t('footerText')} — {new Date().getFullYear()}</span>
-        <span className="page-number">Designed with precision</span>
+        <span className="page-number">{t('precision')}</span>
       </div>
     </footer>
   )

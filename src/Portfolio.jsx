@@ -204,7 +204,7 @@ function Portfolio() {
               >
                 <span className="section-number">{t('portfolio')}</span>
                 <div className="w-8 h-px bg-accent/40 my-4" />
-                <p className="page-number">Selected works from 2024</p>
+                <p className="page-number">{t('selectedWorks')}</p>
               </motion.div>
             </div>
 
@@ -242,7 +242,7 @@ function Portfolio() {
             <h2 className="text-xl font-display tracking-tight">
               {t('category')}: <span className="italic font-italic text-accent">{t('portfolio')}</span>
             </h2>
-            <span className="page-number">{works.length} projects</span>
+            <span className="page-number">{works.length} {t('projects')}</span>
           </div>
 
           <Swiper
@@ -301,7 +301,7 @@ function Portfolio() {
           <span className="page-number">
             {t('footerText')} — {new Date().getFullYear()}
           </span>
-          <span className="page-number">Designed with precision</span>
+          <span className="page-number">{t('precision')}</span>
         </div>
       </footer>
     </div>
