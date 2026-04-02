@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, AnimatePresence, useScroll, useTransform, useInView } from 'framer-motion'
+import { LineSlideUp, MaskReveal, GlitchText, DividerText, StaggerContainer, TextCounter, ImageParallax } from './motionEffects'
 import { useLanguage } from './LanguageContext'
 import LanguageSelector from './LanguageSelector'
 import Cursor from './Cursor'
@@ -441,7 +442,9 @@ const OverviewStats = ({ works }) => {
               viewport={{ once: true }}
               transition={{ delay: i * 0.1, duration: 0.5 }}
             >
-              <div className="font-display text-2xl md:text-3xl tracking-tight" style={{ color: '#0d1a0f' }}>{stat.value}</div>
+              <div className="font-display text-2xl md:text-3xl tracking-tight" style={{ color: '#0d1a0f' }}>
+                <TextCounter target={parseInt(stat.value, 10)} />
+              </div>
               <div className="text-[0.6rem] uppercase tracking-widest mt-1 page-number" style={{ color: '#2d5a3d60' }}>{stat.label}</div>
             </motion.div>
           ))}
@@ -678,9 +681,10 @@ const WorkItem = ({ work, index }) => {
           <span className="page-number" style={{ color: '#2d5a3d60' }}>{work.year}</span>
         </motion.div>
 
-        {/* Image or SVG fallback */}
-        <div className="relative aspect-[4/3] overflow-hidden mb-6">
-          <CornerMarks />
+        {/* Image or SVG fallback — wrapped with ImageParallax */}
+        <ImageParallax speed={0.1}>
+          <div className="relative aspect-[4/3] overflow-hidden mb-6">
+            <CornerMarks />
           <div className="absolute inset-[11px] overflow-hidden">
             {!imageError && (
               <motion.img
@@ -697,8 +701,9 @@ const WorkItem = ({ work, index }) => {
                 <FallbackSvg />
               </div>
             )}
+            </div>
           </div>
-        </div>
+        </ImageParallax>
 
         {/* Caption */}
         <motion.p
@@ -714,7 +719,9 @@ const WorkItem = ({ work, index }) => {
 
         {/* Title & Description */}
         <h3 className="text-2xl md:text-4xl font-display mb-2 tracking-tight leading-tight" style={{ color: '#0d1a0f' }}>{work.title}</h3>
-        <p className="text-sm leading-relaxed mb-4 font-light max-w-2xl" style={{ color: '#2d5a3d' }}>{work.description}</p>
+        <MaskReveal>
+          <p className="text-sm leading-relaxed mb-4 font-light max-w-2xl" style={{ color: '#2d5a3d' }}>{work.description}</p>
+        </MaskReveal>
 
         {/* Difficulty & Impact */}
         <ProgressBar difficulty={meta.difficulty} impact={meta.impact} />
@@ -774,9 +781,11 @@ const WorkItem = ({ work, index }) => {
                 <h4 className="font-display italic text-lg mb-4" style={{ color: '#4a8f5c' }}>
                   {t('reflection')}
                 </h4>
-                <p className="text-sm leading-relaxed whitespace-pre-line font-light" style={{ color: '#2d5a3d' }}>
-                  {work.reflection}
-                </p>
+                <LineSlideUp>
+                  <p className="text-sm leading-relaxed whitespace-pre-line font-light" style={{ color: '#2d5a3d' }}>
+                    {work.reflection}
+                  </p>
+                </LineSlideUp>
                 {work.skillsGained && (
                   <div className="mt-5 flex flex-wrap gap-2">
                     {work.skillsGained.map((s) => (
@@ -886,11 +895,13 @@ const Reflections = () => {
                     <h3 className="text-xl md:text-2xl font-display mb-4 tracking-tight" style={{ color: '#0d1a0f' }}>
                       {stmt.title}
                     </h3>
-                    <DropCapParagraph
-                      text={stmt.body}
-                      className="text-[0.9rem] leading-[1.85] font-light whitespace-pre-line"
-                      style={{ color: '#2d5a3d' }}
-                    />
+                    <LineSlideUp>
+                      <DropCapParagraph
+                        text={stmt.body}
+                        className="text-[0.9rem] leading-[1.85] font-light whitespace-pre-line"
+                        style={{ color: '#2d5a3d' }}
+                      />
+                    </LineSlideUp>
                   </motion.div>
                 ))}
               </div>
@@ -1013,7 +1024,7 @@ function Portfolio() {
                 className="text-5xl md:text-7xl lg:text-8xl font-display tracking-tight leading-[0.9] mb-6"
                 style={{ color: '#0d1a0f' }}
               >
-                {t('portfolioTitle')}
+                <GlitchText as="span">{t('portfolioTitle')}</GlitchText>
               </motion.h1>
               <motion.p
                 initial={{ opacity: 0 }}
@@ -1067,11 +1078,13 @@ function Portfolio() {
       {/* ───── WORK GALLERY — vertical scroll sections ───── */}
       <section className="px-6 md:px-12 pt-12 pb-20">
         <div className="mx-auto max-w-7xl">
-          {Array.isArray(works) && works.map((work, i) => (
-            <div key={work.id} className="py-12 md:py-20">
-              <WorkItem work={work} index={i} />
-            </div>
-          ))}
+          <StaggerContainer staggerDelay={0.15}>
+            {Array.isArray(works) && works.map((work, i) => (
+              <div key={work.id} className="py-12 md:py-20">
+                <WorkItem work={work} index={i} />
+              </div>
+            ))}
+          </StaggerContainer>
         </div>
       </section>
 
@@ -1088,13 +1101,14 @@ function Portfolio() {
         <div className="h-px" style={{ backgroundImage: 'linear-gradient(to right, #2d5a3d20, #2d5a3d10, transparent)' }} />
       </div>
 
+      {/* ───── WORK DIVIDER ───── */}
+      <DividerText text="WORK" />
+
       {/* ───── REFLECTIONS ───── */}
       <Reflections />
 
-      {/* ───── DIVIDER ───── */}
-      <div className="mx-auto max-w-7xl px-6 md:px-12">
-        <div className="h-px" style={{ backgroundImage: 'linear-gradient(to right, #2d5a3d20, #2d5a3d10, transparent)' }} />
-      </div>
+      {/* ───── DIVIDER TEXT: THINK ───── */}
+      <DividerText text="THINK" />
 
       {/* ───── ETHICS NOTICE ───── */}
       <section className="px-6 md:px-12 py-16">
