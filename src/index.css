@@ -1,86 +1,132 @@
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300;1,9..40,400;1,9..40,500;1,9..40,600;1,9..40,700&family=Cormorant:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=JetBrains+Mono:wght@300;400;500&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  color-scheme: light;
+  color-scheme: dark;
+  --amber: #f5a623;
+  --copper: #d4763c;
+  --rose: #c4637a;
+  --dusk: #8b5cf6;
 }
 
-@layer base {
-  * {
-    @apply antialiased;
-    cursor: none;
-  }
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 4rem;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 
-  @media (pointer: coarse) {
-    * { cursor: auto; }
-  }
+body {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  background-color: #0a0a0f;
+  color: #e8e6e1;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
 
-  html {
-    scroll-behavior: smooth;
-    scroll-padding-top: 2rem;
-  }
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
 
-  body {
-    @apply bg-alabaster text-ink font-body leading-relaxed overflow-x-hidden;
-    background-image:
-      radial-gradient(circle at 1px 1px, rgba(14, 14, 16, 0.05) 1px, transparent 0);
-    background-size: 32px 32px;
-  }
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 60% 40% at 20% 10%, rgba(245,166,35,0.06) 0%, transparent 100%),
+    radial-gradient(ellipse 40% 60% at 80% 80%, rgba(139,92,246,0.04) 0%, transparent 100%),
+    radial-gradient(ellipse 50% 30% at 50% 50%, rgba(196,99,122,0.03) 0%, transparent 100%);
+}
 
-  body::before {
-    content: "";
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    pointer-events: none;
-    z-index: 9998;
-    opacity: 0.03;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-  }
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Playfair Display', Georgia, serif;
+  color: #e8e6e1;
+  letter-spacing: -0.02em;
+}
 
-  ::-webkit-scrollbar { width: 14px; }
-  ::-webkit-scrollbar-track { @apply bg-alabaster border-l-4 border-ink; }
-  ::-webkit-scrollbar-thumb { @apply bg-brutalYellow border-4 border-ink; }
-  ::-webkit-scrollbar-thumb:hover { @apply bg-brutalMagenta; }
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #0a0a0f; }
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--amber), var(--copper));
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--rose); }
 
-  ::selection {
-    @apply bg-brutalMagenta text-white;
-  }
-
-  h1, h2, h3, h4, h5, h6 {
-    @apply font-display tracking-tight text-ink;
-  }
+::selection {
+  background: var(--amber);
+  color: #0a0a0f;
 }
 
 @layer components {
-  .brutalist-swiper {
-    @apply pb-16;
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(245,166,35,0.3), rgba(212,118,60,0.2), transparent);
   }
-
+  .glass {
+    background: rgba(28, 28, 46, 0.6);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(232,230,225,0.06);
+  }
+  .card {
+    background: linear-gradient(145deg, rgba(19,19,32,0.9), rgba(10,10,15,0.95));
+    border: 1px solid rgba(232,230,225,0.04);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.2);
+  }
+  .section-badge {
+    display: inline-block;
+    padding: 6px 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--amber);
+    border: 1px solid rgba(245,166,35,0.2);
+    background: rgba(245,166,35,0.05);
+  }
+  .reflection-panel {
+    background: linear-gradient(135deg, rgba(19,19,32,0.8), rgba(10,10,15,0.9));
+    border-left: 3px solid var(--amber);
+    padding: 1.5rem;
+  }
+  .authorship {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    color: rgba(212,208,200,0.3);
+    text-align: center;
+    padding: 1rem;
+    border-top: 1px solid rgba(232,230,225,0.04);
+  }
+  .brutalist-swiper {
+    @apply pb-16 pt-4;
+  }
+  .brutalist-swiper .swiper-slide { height: auto; }
   .brutalist-swiper .swiper-button-prev,
   .brutalist-swiper .swiper-button-next {
-    @apply h-14 w-14 border-4 border-ink bg-brutalYellow shadow-brutal transition;
-    color: #0e0e10;
+    @apply h-12 w-12 rounded-full border-0 bg-amber/90 text-noir shadow-lg transition-all duration-300;
+    color: #0a0a0f;
   }
-
   .brutalist-swiper .swiper-button-prev:hover,
-  .brutalist-swiper .swiper-button-next:hover {
-    @apply -translate-y-1 shadow-[8px_8px_0_0_#0e0e10];
-  }
-
+  .brutalist-swiper .swiper-button-next:hover { @apply scale-110; }
   .brutalist-swiper .swiper-button-prev::after,
   .brutalist-swiper .swiper-button-next::after {
-    @apply text-xl font-black;
+    font-size: 18px !important;
+    font-weight: 700;
   }
-
   .brutalist-swiper .swiper-pagination-bullet {
-    @apply h-3 w-3 border-2 border-ink bg-alabaster opacity-100;
+    @apply h-2 w-8 rounded-full bg-smoke border-0;
+    opacity: 0.5;
   }
-
-  .brutalist-swiper .swiper-pagination-bullet-active {
-    @apply bg-brutalMagenta;
-  }
+  .brutalist-swiper .swiper-pagination-bullet-active { @apply bg-amber; opacity: 1; }
 }

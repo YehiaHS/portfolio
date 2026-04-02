@@ -4,22 +4,19 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Yehia Salem · Creative Portfolio</title>
-    <meta name="description" content="Portfolio of Yehia Hatem Salah Salem — multidisciplinary designer, creative technologist, and dual-degree student in IMC & Computer Science." />
-    <!-- GitHub Pages SPA redirect handler -->
+    <title>Yehia Salem — Creative Portfolio</title>
+    <meta name="description" content="Portfolio of Yehia Hatem Salah Salem — multidisciplinary designer, creative technologist, and dual-degree student at the British University in Egypt." />
     <script>
       (function() {
-        const redirect = sessionStorage.getItem('redirect');
-        if (redirect && redirect !== window.location.href) {
+        const r = sessionStorage.getItem('redirect');
+        if (r && r !== window.location.href) {
           sessionStorage.removeItem('redirect');
-          window.history.replaceState(null, null, redirect);
+          window.history.replaceState(null, null, r);
         }
-        const query = window.location.search;
-        if (query && query.startsWith('?p=')) {
-          const path = query.slice(3);
-          window.history.replaceState(null, null,
-            window.location.pathname.replace(/\/$/, '') + path + window.location.hash
-          );
+        const q = window.location.search;
+        if (q.startsWith('?p=')) {
+          const p = q.slice(3);
+          window.history.replaceState(null, null, window.location.pathname.replace(/\/$/, '') + p + window.location.hash);
         }
       })();
     </script>
