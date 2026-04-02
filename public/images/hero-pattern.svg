@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" fill="none">
+  <defs>
+    <linearGradient id="leaf1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#2d5a3d;stop-opacity:0.08"/>
+      <stop offset="100%" style="stop-color:#4a8f5c;stop-opacity:0.04"/>
+    </linearGradient>
+    <linearGradient id="leaf2" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a3526;stop-opacity:0.06"/>
+      <stop offset="100%" style="stop-color:#63b476;stop-opacity:0.03"/>
+    </linearGradient>
+    <linearGradient id="vine" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#2d5a3d;stop-opacity:0.1"/>
+      <stop offset="100%" style="stop-color:#63b476;stop-opacity:0.02"/>
+    </linearGradient>
+  </defs>
+  <!-- Large botanical leaf illustration -->
+  <path d="M620 80 Q580 120 560 180 Q540 240 550 300 Q555 330 520 360 Q480 390 440 380 Q400 370 370 400 Q340 430 310 470 Q280 510 270 550" stroke="url(#leaf1)" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M560 180 Q520 160 490 170 Q460 180 440 210 Q420 240 410 280 Q400 320 370 350" stroke="url(#leaf2)" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <path d="M440 210 Q400 190 370 200 Q340 210 320 250 Q300 290 290 330" stroke="url(#leaf1)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  <!-- Leaf shapes -->
+  <ellipse cx="520" cy="300" rx="45" ry="20" fill="url(#leaf1)" transform="rotate(-30 520 300)"/>
+  <ellipse cx="460" cy="240" rx="35" ry="15" fill="url(#leaf2)" transform="rotate(-20 460 240)"/>
+  <ellipse cx="390" cy="180" rx="30" ry="12" fill="url(#leaf1)" transform="rotate(-15 390 180)"/>
+  <!-- Vine curves -->
+  <path d="M550 300 Q600 280 650 260 Q680 250 720 240" stroke="url(#vine)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  <path d="M370 350 Q320 340 270 350 Q220 360 180 380" stroke="url(#vine)" stroke-width="1" fill="none" stroke-linecap="round"/>
+  <!-- Small dots as berries -->
+  <circle cx="520" cy="300" r="3" fill="#2d5a3d" opacity="0.15"/>
+  <circle cx="460" cy="240" r="2.5" fill="#4a8f5c" opacity="0.12"/>
+  <circle cx="390" cy="180" r="2" fill="#1a3526" opacity="0.1"/>
+  <circle cx="310" cy="470" r="3.5" fill="#63b476" opacity="0.08"/>
+  <circle cx="270" cy="550" r="2" fill="#2d5a3d" opacity="0.1"/>
+  <!-- Organic blob shape -->
+  <path d="M150 150 Q180 100 230 110 Q280 120 300 170 Q320 220 280 260 Q240 300 190 280 Q140 260 130 210 Q120 160 150 150Z" fill="url(#leaf2)"/>
+  <!-- More leaves -->
+  <ellipse cx="200" cy="200" rx="40" ry="18" fill="url(#leaf1)" transform="rotate(40 200 200)"/>
+  <ellipse cx="260" cy="160" rx="30" ry="14" fill="url(#leaf2)" transform="rotate(60 260 160)"/>
+</svg>

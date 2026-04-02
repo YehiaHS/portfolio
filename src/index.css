@@ -5,23 +5,23 @@
 @tailwind utilities;
 
 /* ============================================================
-   DESIGN TOKENS
+   DESIGN TOKENS — British Garden meets Swiss Typography
    ============================================================ */
 :root {
   color-scheme: light;
 
-  --paper: #f7f3ee;
-  --paper-darker: #f0ebe5;
-  --paper-darkest: #e8e0d6;
-  --ink: #1a1a1a;
-  --ink-light: #4a4a4a;
-  --ink-faint: #8a8a8a;
-  --accent: #c45b1e;
-  --accent-deep: #8b3a0f;
-  --accent-light: #d9874a;
-  --accent-glow: rgba(196, 91, 30, 0.15);
-  --sage: #6b7e5e;
-  --sage-light: #8fa67e;
+  --paper: #f5f6f0;
+  --paper-darker: #eaebe3;
+  --paper-darkest: #e0e2d8;
+  --ink: #0d1a0f;
+  --ink-light: #3a4a3e;
+  --ink-faint: #7a8a7c;
+  --accent: #2d6b3f;
+  --accent-deep: #1a3d28;
+  --accent-light: #4a9f62;
+  --accent-glow: rgba(45, 107, 63, 0.15);
+  --sage: #6b8a5e;
+  --sage-light: #9bae8e;
 
   --font-display: 'Fraunces', Georgia, serif;
   --font-serif-italic: 'Instrument Serif', Georgia, serif;
@@ -43,9 +43,9 @@
   --radius-lg: 12px;
   --radius-xl: 16px;
 
-  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.03), 0 8px 24px rgba(0, 0, 0, 0.04);
-  --shadow-card-hover: 0 2px 6px rgba(0, 0, 0, 0.04), 0 16px 40px rgba(0, 0, 0, 0.08);
-  --shadow-elevated: 0 4px 12px rgba(0, 0, 0, 0.06), 0 24px 48px rgba(0, 0, 0, 0.1);
+  --shadow-card: 0 1px 3px rgba(13, 26, 15, 0.03), 0 8px 24px rgba(13, 26, 15, 0.04);
+  --shadow-card-hover: 0 2px 6px rgba(13, 26, 15, 0.04), 0 16px 40px rgba(13, 26, 15, 0.08);
+  --shadow-elevated: 0 4px 12px rgba(13, 26, 15, 0.06), 0 24px 48px rgba(13, 26, 15, 0.1);
 }
 
 /* ============================================================
@@ -94,7 +94,7 @@ body::before {
   mix-blend-mode: multiply;
 }
 
-/* Layer 2: warm vignette */
+/* Layer 2: green-tinted vignette */
 body::after {
   content: '';
   position: fixed;
@@ -104,8 +104,8 @@ body::after {
   background: radial-gradient(
     ellipse at 50% 50%,
     transparent 50%,
-    rgba(139, 58, 15, 0.02) 70%,
-    rgba(26, 26, 26, 0.04) 100%
+    rgba(26, 61, 40, 0.02) 70%,
+    rgba(13, 26, 15, 0.04) 100%
   );
 }
 
@@ -363,9 +363,9 @@ p {
   background: linear-gradient(
     90deg,
     transparent 0%,
-    rgba(26, 26, 26, 0.08) 20%,
-    rgba(26, 26, 26, 0.15) 50%,
-    rgba(26, 26, 26, 0.08) 80%,
+    rgba(13, 26, 15, 0.08) 20%,
+    rgba(13, 26, 15, 0.15) 50%,
+    rgba(13, 26, 15, 0.08) 80%,
     transparent 100%
   );
 }
@@ -417,7 +417,7 @@ p {
 }
 
 .divider-ornament::before {
-  content: '✦';
+  content: '&#9830;';
   color: var(--accent);
   font-size: 0.65rem;
   opacity: 0.5;
@@ -429,7 +429,7 @@ p {
 .editorial-card {
   position: relative;
   background: white;
-  border: 1px solid rgba(26, 26, 26, 0.06);
+  border: 1px solid rgba(13, 26, 15, 0.06);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-card);
   transition:
@@ -512,8 +512,8 @@ a:focus-visible {
   outline-offset: 3px;
   border-radius: var(--radius-sm);
   box-shadow:
-    0 0 0 5px rgba(196, 91, 30, 0.15),
-    0 0 0 8px rgba(196, 91, 30, 0.08);
+    0 0 0 5px rgba(45, 107, 63, 0.15),
+    0 0 0 8px rgba(45, 107, 63, 0.08);
 }
 
 /* ============================================================
@@ -624,7 +624,7 @@ a:focus-visible {
    SECTION-SPECIFIC BACKGROUND PATTERNS
    ============================================================ */
 
-/* Skills section: subtle grid */
+/* Skills section: botanical fern pattern */
 .section-skills {
   position: relative;
   background-color: var(--paper);
@@ -636,14 +636,12 @@ a:focus-visible {
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  opacity: 0.025;
-  background-image:
-    linear-gradient(rgba(26,26,26,0.15) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(26,26,26,0.15) 1px, transparent 1px);
-  background-size: 48px 48px;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cpath d='M40 76 Q38 66 32 55 40 50 40 40 35 30 28 22 35 16 40 6 45 16 52 22 45 30 40 40 40 50 40 66 38 72 40 76Z' fill='none' stroke='%23%31a3d28' stroke-width='0.8'/%3E%3Cpath d='M35 50 Q30 48 26 42' fill='none' stroke='%23%31a3d28' stroke-width='0.5'/%3E%3Cpath d='M45 50 Q50 48 54 42' fill='none' stroke='%23%31a3d28' stroke-width='0.5'/%3E%3Cpath d='M33 38 Q28 36 24 28' fill='none' stroke='%23%31a3d28' stroke-width='0.5'/%3E%3Cpath d='M47 38 Q52 36 56 28' fill='none' stroke='%23%31a3d28' stroke-width='0.5'/%3E%3C/svg%3E");
+  background-size: 80px 80px;
 }
 
-/* Awards section: subtle striped accent */
+/* Awards section: botanical vine pattern */
 .section-awards {
   position: relative;
   background-color: var(--paper);
@@ -655,14 +653,9 @@ a:focus-visible {
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  opacity: 0.02;
-  background: repeating-linear-gradient(
-    -45deg,
-    transparent,
-    transparent 10px,
-    var(--accent) 10px,
-    var(--accent) 11px
-  );
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='80' viewBox='0 0 120 80'%3E%3Cpath d='M0 40 Q15 20 30 40 45 60 60 40 75 20 90 40 105 60 120 40' fill='none' stroke='%23%32d6b3f' stroke-width='0.6'/%3E%3Cellipse cx='22' cy='30' rx='6' ry='9' fill='none' stroke='%23%32d6b3f' stroke-width='0.4' transform='rotate(-25 22 30)'/%3E%3Cellipse cx='52' cy='50' rx='6' ry='9' fill='none' stroke='%23%32d6b3f' stroke-width='0.4' transform='rotate(25 52 50)'/%3E%3Cellipse cx='82' cy='30' rx='6' ry='9' fill='none' stroke='%23%32d6b3f' stroke-width='0.4' transform='rotate(-25 82 30)'/%3E%3Cellipse cx='108' cy='50' rx='6' ry='9' fill='none' stroke='%23%32d6b3f' stroke-width='0.4' transform='rotate(20 108 50)'/%3E%3C/svg%3E");
+  background-size: 120px 80px;
 }
 
 /* Contact section: gradient from paper-dark */
@@ -834,9 +827,9 @@ ol.accent-number li::before {
     background: linear-gradient(
       90deg,
       transparent 0%,
-      rgba(26, 26, 26, 0.15) 20%,
-      rgba(26, 26, 26, 0.08) 50%,
-      rgba(26, 26, 26, 0.15) 80%,
+      rgba(13, 26, 15, 0.15) 20%,
+      rgba(13, 26, 15, 0.08) 50%,
+      rgba(13, 26, 15, 0.15) 80%,
       transparent 100%
     );
   }
@@ -859,8 +852,8 @@ ol.accent-number li::before {
     background: linear-gradient(
       90deg,
       transparent 0%,
-      rgba(26, 26, 26, 0.1) 10%,
-      rgba(26, 26, 26, 0.06) 50%,
+      rgba(13, 26, 15, 0.1) 10%,
+      rgba(13, 26, 15, 0.06) 50%,
       transparent 100%
     );
   }
@@ -981,7 +974,7 @@ ol.accent-number li::before {
   }
 
   .cursor-ring {
-    border: 1.5px solid rgba(26, 26, 26, 0.15);
+    border: 1.5px solid rgba(13, 26, 15, 0.15);
     border-radius: 50%;
     position: fixed;
     pointer-events: none;
@@ -1054,7 +1047,7 @@ ol.accent-number li::before {
   /* ====== LANGUAGE SELECTOR ====== */
   .lang-dropdown {
     background: white;
-    border: 1px solid rgba(26, 26, 26, 0.08);
+    border: 1px solid rgba(13, 26, 15, 0.08);
     box-shadow: var(--shadow-card-hover);
     border-radius: var(--radius-md);
     overflow: hidden;
@@ -1088,7 +1081,7 @@ ol.accent-number li::before {
     border-radius: var(--radius-sm);
     background: var(--accent-glow);
     color: var(--accent);
-    border: 1px solid rgba(196, 91, 30, 0.15);
+    border: 1px solid rgba(45, 107, 63, 0.15);
   }
 
   /* ====== PULL QUOTE ====== */
@@ -1158,6 +1151,275 @@ ol.accent-number li::before {
 }
 
 /* ============================================================
+   DECORATIVE ELEMENTS — Botanical & Editorial
+   ============================================================ */
+
+/* --- Organic blob shapes --- */
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.blob--1 {
+  width: 420px;
+  height: 380px;
+  background: radial-gradient(
+    ellipse at 40% 35%,
+    rgba(45, 107, 63, 0.06) 0%,
+    rgba(155, 174, 142, 0.03) 40%,
+    transparent 70%
+  );
+  border-radius: 60% 40% 55% 45% / 50% 65% 35% 50%;
+  top: -80px;
+  right: -100px;
+  animation: blobFloat1 20s ease-in-out infinite;
+}
+
+.blob--2 {
+  width: 300px;
+  height: 350px;
+  background: radial-gradient(
+    ellipse at 55% 45%,
+    rgba(74, 159, 98, 0.05) 0%,
+    rgba(107, 138, 94, 0.03) 40%,
+    transparent 70%
+  );
+  border-radius: 45% 55% 60% 40% / 55% 40% 60% 45%;
+  bottom: 5%;
+  left: -60px;
+  animation: blobFloat2 25s ease-in-out infinite;
+}
+
+.blob--3 {
+  width: 260px;
+  height: 260px;
+  background: radial-gradient(
+    ellipse at 50% 50%,
+    rgba(45, 107, 63, 0.04) 0%,
+    transparent 65%
+  );
+  border-radius: 50% 50% 40% 60% / 45% 55% 45% 55%;
+  top: 30%;
+  left: 15%;
+  animation: blobFloat3 18s ease-in-out infinite;
+}
+
+.blob--4 {
+  width: 180px;
+  height: 200px;
+  background: radial-gradient(
+    ellipse at 45% 55%,
+    rgba(107, 138, 94, 0.05) 0%,
+    transparent 60%
+  );
+  border-radius: 55% 45% 50% 50% / 40% 55% 45% 60%;
+  top: 60%;
+  right: 8%;
+  animation: blobFloat1 22s ease-in-out infinite reverse;
+}
+
+@keyframes blobFloat1 {
+  0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+  33% { transform: translate(15px, -20px) rotate(3deg) scale(1.02); }
+  66% { transform: translate(-10px, 12px) rotate(-2deg) scale(0.98); }
+}
+
+@keyframes blobFloat2 {
+  0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+  50% { transform: translate(20px, 15px) rotate(-4deg) scale(1.03); }
+}
+
+@keyframes blobFloat3 {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  40% { transform: translate(-12px, -18px) rotate(5deg); }
+  70% { transform: translate(8px, 10px) rotate(-3deg); }
+}
+
+/* --- Gradient mesh background for hero section --- */
+.hero-mesh {
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-mesh::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 10% 20%, rgba(45, 107, 63, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 80% at 85% 15%, rgba(155, 174, 142, 0.05) 0%, transparent 45%),
+    radial-gradient(ellipse 50% 50% at 50% 80%, rgba(74, 159, 98, 0.04) 0%, transparent 40%),
+    radial-gradient(ellipse 70% 40% at 70% 60%, rgba(107, 138, 94, 0.03) 0%, transparent 50%),
+    radial-gradient(ellipse 40% 60% at 30% 40%, rgba(26, 61, 40, 0.03) 0%, transparent 45%);
+  pointer-events: none;
+  animation: meshShift 12s ease-in-out infinite alternate;
+}
+
+.hero-mesh::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background:
+    linear-gradient(160deg, var(--paper) 0%, transparent 40%),
+    linear-gradient(200deg, rgba(245, 246, 240, 0.9) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+@keyframes meshShift {
+  0% {
+    opacity: 1;
+    filter: hue-rotate(0deg);
+  }
+  50% {
+    opacity: 0.85;
+    filter: hue-rotate(5deg);
+  }
+  100% {
+    opacity: 1;
+    filter: hue-rotate(-3deg);
+  }
+}
+
+/* --- Botanical pattern overlay for general sections --- */
+.botanical-pattern {
+  position: relative;
+}
+
+.botanical-pattern::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.02;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cpath d='M30 55 Q28 45 25 35 30 32 30 25 27 18 22 12 27 8 30 3 33 8 38 12 33 18 30 25 30 32 30 45 28 52 30 55Z' fill='none' stroke='%23%32d6b3f' stroke-width='0.5'/%3E%3Cellipse cx='24' cy='18' rx='3' ry='5' fill='none' stroke='%23%32d6b3f' stroke-width='0.3' transform='rotate(-20 24 18)'/%3E%3Cellipse cx='36' cy='18' rx='3' ry='5' fill='none' stroke='%23%32d6b3f' stroke-width='0.3' transform='rotate(20 36 18)'/%3E%3Cellipse cx='21' cy='30' rx='3' ry='4' fill='none' stroke='%23%32d6b3f' stroke-width='0.3' transform='rotate(-30 21 30)'/%3E%3Cellipse cx='39' cy='30' rx='3' ry='4' fill='none' stroke='%23%32d6b3f' stroke-width='0.3' transform='rotate(30 39 30)'/%3E%3C/svg%3E");
+  background-size: 60px 60px;
+}
+
+/* --- Large decorative editorial ampersands --- */
+.ampersand-deco {
+  position: absolute;
+  font-family: var(--font-display);
+  font-size: clamp(12rem, 25vw, 20rem);
+  font-style: italic;
+  color: var(--accent);
+  opacity: 0.025;
+  pointer-events: none;
+  user-select: none;
+  line-height: 1;
+  z-index: 0;
+}
+
+.ampersand-deco--top-right {
+  top: -2rem;
+  right: 2rem;
+  transform: rotate(12deg);
+}
+
+.ampersand-deco--bottom-left {
+  bottom: -1rem;
+  left: 1rem;
+  transform: rotate(-8deg) scaleX(-1);
+}
+
+.ampersand-deco--center {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(5deg);
+}
+
+/* --- Ornamental divider characters --- */
+.ornament-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 2.5rem 0;
+  color: var(--accent);
+  opacity: 0.2;
+  font-size: 0.75rem;
+  letter-spacing: 0.5em;
+}
+
+.ornament-divider::before,
+.ornament-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(45, 107, 63, 0.12) 20%,
+    rgba(45, 107, 63, 0.08) 50%,
+    transparent 100%
+  );
+}
+
+.ornament-fleuron::before {
+  content: '\2766 ';
+}
+
+.ornament-fleuron::after {
+  content: ' \2766';
+}
+
+.ornament-floral::before {
+  content: '\2740 ';
+}
+
+.ornament-floral::after {
+  content: ' \2740';
+}
+
+.ornament-botanical::before {
+  content: '\2767 ';
+}
+
+.ornament-botanical::after {
+  content: ' \2767';
+}
+
+/* --- Decorative initial cap / drop cap --- */
+.drop-cap::first-letter {
+  font-family: var(--font-display);
+  font-size: 3.5em;
+  float: left;
+  line-height: 0.8;
+  margin-right: 0.08em;
+  margin-top: 0.05em;
+  color: var(--accent);
+  font-weight: 700;
+}
+
+/* --- Vine border accent --- */
+.vine-border {
+  position: relative;
+  border-left: none;
+}
+
+.vine-border::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    var(--accent-light) 15%,
+    var(--accent) 50%,
+    var(--accent-deep) 85%,
+    transparent 100%
+  );
+  border-radius: 3px;
+}
+
+/* ============================================================
    PRINT STYLES
    ============================================================ */
 @media print {
@@ -1206,7 +1468,12 @@ ol.accent-number li::before {
   .scroll-progress-bar,
   .marquee-strip,
   .cursor-dot,
-  .cursor-ring {
+  .cursor-ring,
+  .blob,
+  .ampersand-deco,
+  .hero-mesh::before,
+  .hero-mesh::after,
+  .botanical-pattern::before {
     display: none !important;
   }
 
@@ -1300,6 +1567,12 @@ ol.accent-number li::before {
   html {
     scroll-behavior: auto !important;
   }
+
+  .blob,
+  .hero-mesh::before,
+  .hero-mesh::after {
+    animation: none !important;
+  }
 }
 
 /* ============================================================
@@ -1329,7 +1602,7 @@ ol.accent-number li::before {
 @media (prefers-contrast: high) {
   :root {
     --ink-faint: #555;
-    --accent-glow: rgba(196, 91, 30, 0.25);
+    --accent-glow: rgba(45, 107, 63, 0.25);
   }
 
   .editorial-card {

@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { motion, useSpring, useTransform } from 'framer-motion';
 
-const ACCENT = '#c45b1e';
-const NEUTRAL = '#1a1a1a';
+const ACCENT = '#2d5a3d';
+const NEUTRAL = '#0d1a0f';
 
 const INTERACTIVE_SELECTOR = [
   'a',
