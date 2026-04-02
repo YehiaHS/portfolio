@@ -2,6 +2,7 @@ import { useRef, useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, useInView, useScroll, useTransform, AnimatePresence } from 'framer-motion'
 import { LineSlideUp, MaskReveal, GlitchText, DividerText, StaggerContainer, TextCounter } from './motionEffects'
+import { ColoredPanel, ContentGrid, SplitLayout, GhostButton, StackedCard } from './C2Patterns'
 import { useLanguage } from './LanguageContext'
 import LanguageSelector from './LanguageSelector'
 import Cursor from './Cursor'
@@ -844,8 +845,8 @@ const Skills = () => {
   const skillLevels = [92, 88, 95, 85]
 
   return (
+    <ColoredPanel variant="sage" className="!py-0 !px-0">
     <section id="skills" className="relative py-28 md:py-40 px-6 md:px-12">
-      <div className="absolute inset-0 bg-paper-dark pointer-events-none" />
       <div className="absolute left-6 md:left-12 top-0 bottom-0 w-px bg-ink/5" />
       <div className="absolute right-6 md:right-12 top-0 bottom-0 w-px bg-ink/5" />
 
@@ -937,6 +938,7 @@ const Skills = () => {
         </div>
       </div>
     </section>
+    </ColoredPanel>
   )
 }
 
@@ -1534,6 +1536,7 @@ const VisualMoments = () => {
   ]
 
   return (
+    <ColoredPanel variant="dark" className="!py-0 !px-0">
     <section className="relative py-28 md:py-40 px-6 md:px-12 overflow-hidden">
       {/* Decorative sidebar imagery */}
       <div className="hidden lg:block absolute left-0 top-0 bottom-0 w-24 pointer-events-none select-none opacity-[0.04]">
@@ -1598,6 +1601,7 @@ const VisualMoments = () => {
         </div>
       </div>
     </section>
+    </ColoredPanel>
   )
 }
 
