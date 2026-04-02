@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, useInView, useScroll, useTransform, AnimatePresence } from 'framer-motion'
+import { LineSlideUp, MaskReveal, GlitchText, DividerText, StaggerContainer, TextCounter } from './motionEffects'
 import { useLanguage } from './LanguageContext'
 import LanguageSelector from './LanguageSelector'
 import Cursor from './Cursor'
@@ -252,23 +253,21 @@ const Hero = () => {
               <AnimatedSection delay={0.3}>
                 <div className="h-px w-16 bg-accent mb-6" />
               </AnimatedSection>
-              <AnimatedSection delay={0.5}>
+              <StaggerContainer staggerMs={150}>
                 <p className="text-ink-faint text-sm leading-relaxed max-w-xs font-light">
                   {t('tagline')}
                 </p>
-              </AnimatedSection>
-              <AnimatedSection delay={0.7}>
                 <p className="text-ink-faint/50 text-xs mt-3 font-light">{t('location')}</p>
-              </AnimatedSection>
+              </StaggerContainer>
 
               {/* Quick stats */}
               <AnimatedSection delay={0.9}>
                 <div className="mt-8 grid grid-cols-2 gap-x-6 gap-y-3">
                   {[
-                    { num: '3', label: 'Languages' },
-                    { num: '4+', label: 'Design Tools' },
-                    { num: '8.5', label: 'IELTS Score' },
-                    { num: '2', label: 'Degrees' },
+                    { num: <TextCounter end={3} />, label: 'Languages' },
+                    { num: <TextCounter end={10} suffix="+" />, label: 'Design Tools' },
+                    { num: <TextCounter end={8} suffix=".5" />, label: 'IELTS Score' },
+                    { num: <TextCounter end={2} />, label: 'Degrees' },
                   ].map((stat) => (
                     <div key={stat.label}>
                       <span className="block text-2xl font-display font-bold text-accent">{stat.num}</span>
@@ -316,7 +315,7 @@ const Hero = () => {
                     transition={{ duration: 1, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
                   >
                     <h1 className="text-[4.5rem] md:text-[8rem] lg:text-[11rem] font-bold tracking-tight text-ink leading-none">
-                      Yehia
+                      <GlitchText>Yehia</GlitchText>
                     </h1>
                   </motion.div>
                   <motion.div
@@ -346,12 +345,14 @@ const Hero = () => {
                 transition={{ delay: 1.5 }}
                 className="mt-12 md:mt-14 flex flex-wrap items-center gap-4"
               >
-                <a href="#about" className="px-6 py-3 text-[0.7rem] font-heading font-semibold tracking-[0.18em] uppercase text-paper bg-ink hover:bg-accent transition-colors duration-300">
+                <motion.a href="#about" className="px-6 py-3 text-[0.7rem] font-heading font-semibold tracking-[0.18em] uppercase text-paper bg-ink hover:bg-accent transition-colors duration-300" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
                   {t('explore')}
-                </a>
-                <Link to="/portfolio" className="px-6 py-3 text-[0.7rem] font-heading font-semibold tracking-[0.18em] uppercase border border-ink/20 text-ink hover:border-accent hover:text-accent transition-colors duration-300">
-                  {t('viewPortfolio')}
-                </Link>
+                </motion.a>
+                <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
+                  <Link to="/portfolio" className="px-6 py-3 text-[0.7rem] font-heading font-semibold tracking-[0.18em] uppercase border border-ink/20 text-ink hover:border-accent hover:text-accent transition-colors duration-300">
+                    {t('viewPortfolio')}
+                  </Link>
+                </motion.div>
               </motion.div>
             </div>
           </div>
@@ -734,11 +735,11 @@ const About = () => {
                   </h2>
                 </AnimatedSection>
 
-                <AnimatedSection delay={0.5}>
+                <MaskReveal delay={0.5}>
                   <p className="text-ink-light text-base leading-relaxed font-light">
                     {profile.summary}
                   </p>
-                </AnimatedSection>
+                </MaskReveal>
 
                 {/* Quick Facts row */}
                 <AnimatedSection delay={0.6}>
@@ -1705,11 +1706,13 @@ const Contact = () => {
                 },
               ]).map(({ label, value, href, icon }) => (
                 <AnimatedSection key={label}>
-                  <a
+                  <motion.a
                     href={href}
                     target={href.startsWith('http') ? '_blank' : undefined}
                     rel={href.startsWith('http') ? 'noreferrer' : undefined}
                     className="block bg-paper p-8 hover:bg-white transition-colors group"
+                    whileHover={{ y: -6, rotate: -0.5 }}
+                    transition={{ type: 'spring', stiffness: 400, damping: 10 }}
                   >
                     <div className="flex items-center gap-2 mb-3 text-ink-faint group-hover:text-accent transition-colors">
                       {icon}
@@ -1718,7 +1721,7 @@ const Contact = () => {
                     <p className="text-sm text-ink font-light group-hover:text-accent transition-colors break-all">
                       {value}
                     </p>
-                  </a>
+                  </motion.a>
                 </AnimatedSection>
               ))}
             </div>
@@ -1888,9 +1891,11 @@ function App() {
       <MarqueeStrip />
       <Skills />
       <GeometricPatternBand />
+      <DividerText text="CRAFT" />
       <DecorativeBreak letter="A" />
       <Awards />
       <DecorativeEmblem />
+      <DividerText text="CREATE" />
       <ToolsSection />
       <Interests />
       <Education />
