@@ -21,7 +21,7 @@ const LanguageSelector = () => {
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => setOpen(!open)}
-        className="flex items-center gap-2 px-4 py-2 border border-pearl/10 rounded-full backdrop-blur-sm bg-noir/60 text-cream/60 hover:text-amber hover:border-amber/30 transition-all duration-300"
+        className="flex items-center gap-2 px-4 py-2 border border-ink/10 text-ink-light hover:text-accent hover:border-accent/30 transition-all duration-300"
       >
         <span className="text-lg">{current?.flag}</span>
       </motion.button>
@@ -33,7 +33,7 @@ const LanguageSelector = () => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -8, scale: 0.95 }}
             transition={{ duration: 0.2 }}
-            className="absolute right-0 top-full mt-3 glass rounded-xl overflow-hidden min-w-[160px]"
+            className="absolute right-0 top-full mt-3 lang-dropdown min-w-[160px]"
           >
             {languages.map(lang => (
               <button

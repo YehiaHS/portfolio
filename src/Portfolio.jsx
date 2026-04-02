@@ -17,51 +17,54 @@ const WorkItem = ({ work, index }) => {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 40 }}
+      initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ delay: index * 0.1, duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
+      transition={{ delay: index * 0.1, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
       className="relative"
     >
       {/* Image container */}
-      <div className="relative aspect-[4/3] overflow-hidden rounded-lg border border-pearl/5 mb-6 group">
+      <div className="relative aspect-[4/3] overflow-hidden mb-6 group">
+        <div className="absolute inset-0 border border-ink/5 bg-paper-dark" />
         <img
           src={work.media.src}
           alt={work.title}
-          className="h-full w-full object-cover transition-all duration-700 group-hover:scale-105"
+          className="h-full w-full object-cover relative z-10 transition-all duration-700 group-hover:scale-[1.02]"
           onError={(e) => {
-            e.target.parentElement.innerHTML = `
-              <div class="flex flex-col items-center justify-center h-full bg-graphite">
-                <span class="text-6xl text-amber/20 font-serif italic">P${index + 1}</span>
-                <span class="mt-2 font-mono text-xs tracking-widest text-cream/20 uppercase">Project Work</span>
-              </div>
+            e.target.parentElement.querySelectorAll('img, .placeholder').forEach(el => el.style.display = 'none')
+            const ph = document.createElement('div')
+            ph.className = 'placeholder absolute inset-0 z-20 flex flex-col items-center justify-center bg-paper-dark'
+            ph.innerHTML = `
+              <span class="text-6xl font-display italic text-accent/15">${String(index + 1).padStart(2, '0')}</span>
+              <span class="mt-2 page-number">Image unavailable</span>
             `
+            e.target.parentElement.appendChild(ph)
           }}
         />
-        {/* Overlay on hover */}
-        <div className="absolute inset-0 bg-gradient-to-t from-noir/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-6">
-          <span className="section-badge mb-3">{work.category}</span>
+        {/* Category overlay */}
+        <div className="absolute top-4 left-4 z-20">
+          <span className="section-number">{work.category}</span>
         </div>
         {/* Year badge */}
-        <div className="absolute top-4 right-4 font-mono text-xs tracking-widest text-pearl/50 bg-noir/60 backdrop-blur-sm px-3 py-1.5 rounded-full">
+        <div className="absolute top-4 right-4 z-20 page-number">
           {work.year}
         </div>
       </div>
 
       {/* Title & description */}
-      <h3 className="text-2xl font-serif text-pearl/90 mb-2">{work.title}</h3>
-      <p className="text-cream/50 text-sm leading-relaxed mb-4">{work.description}</p>
+      <h3 className="text-2xl md:text-3xl font-display mb-2 tracking-tight">{work.title}</h3>
+      <p className="text-ink-light text-sm leading-relaxed mb-4 font-light">{work.description}</p>
 
       {/* Reflection toggle */}
       <button
         onClick={() => setShowReflection(!showReflection)}
-        className="font-mono text-xs tracking-[0.15em] uppercase text-amber/60 hover:text-amber transition-colors flex items-center gap-2"
+        className="reflexion-label flex items-center gap-2"
       >
         <span>{showReflection ? t('closeReflection') : t('reflection')}</span>
         <motion.span
           animate={{ rotate: showReflection ? 0 : -90 }}
           transition={{ duration: 0.3 }}
-          className="text-lg"
+          className="text-sm"
         >
           ↓
         </motion.span>
@@ -75,14 +78,14 @@ const WorkItem = ({ work, index }) => {
           opacity: showReflection ? 1 : 0,
           marginTop: showReflection ? 20 : 0,
         }}
-        transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
+        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
         className="overflow-hidden"
       >
-        <div className="reflection-panel rounded-r-lg">
-          <h4 className="font-serif text-lg italic text-amber/80 mb-4">
+        <div className="reflexion-panel">
+          <h4 className="font-display italic text-lg text-accent mb-4">
             {t('reflection')}
           </h4>
-          <p className="text-cream/60 text-sm leading-relaxed whitespace-pre-line">
+          <p className="text-ink-light text-sm leading-relaxed font-light whitespace-pre-line">
             {work.reflection}
           </p>
 
@@ -92,7 +95,7 @@ const WorkItem = ({ work, index }) => {
               {work.skillsGained.map((s) => (
                 <span
                   key={s}
-                  className="px-3 py-1 text-xs bg-pearl/5 text-cream/40 rounded-full border border-pearl/10"
+                  className="px-3 py-1 text-[0.65rem] page-number bg-paper border border-ink/5"
                 >
                   {s}
                 </span>
@@ -100,8 +103,7 @@ const WorkItem = ({ work, index }) => {
             </div>
           )}
 
-          {/* Learning outcome */}
-          <p className="mt-4 font-mono text-[0.65rem] tracking-wider uppercase text-amber/30">
+          <p className="mt-4 page-number">
             {t('learningOutcome')}
           </p>
         </div>
@@ -110,7 +112,7 @@ const WorkItem = ({ work, index }) => {
   )
 }
 
-/* ──────────────────────── REFLECTIVE JOURNEY ──────────────────────── */
+/* ──────────────────────── REFLECTIONS ──────────────────────── */
 const Reflections = () => {
   const { t } = useLanguage()
   const statements = t('reflectionStatements')
@@ -118,30 +120,40 @@ const Reflections = () => {
   if (!statements || statements.length === 0) return null
 
   return (
-    <section className="py-24 px-6">
-      <div className="mx-auto max-w-5xl">
-        <div className="mb-14">
-          <span className="section-badge mb-4 inline-block">{t('reflection').toLowerCase()}</span>
-          <h2 className="text-4xl md:text-5xl font-serif">{t('reflectionTitle')}</h2>
-          <p className="text-cream/40 mt-3 font-mono text-sm tracking-widest">{t('reflectionSubtitle')}</p>
+    <section className="py-24 px-6 md:px-12">
+      <div className="mx-auto max-w-7xl">
+        <div className="grid grid-cols-12 gap-12 md:gap-20 mb-14">
+          <div className="col-span-12 md:col-span-3 lg:col-span-2">
+            <span className="section-number">07</span>
+            <p className="page-number mt-2">{t('reflection').toLowerCase()}</p>
+          </div>
+          <div className="col-span-12 md:col-span-9 lg:col-span-10">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl mb-2">{t('reflectionTitle')}</h2>
+            <p className="text-ink-faint page-number">{t('reflectionSubtitle')}</p>
+          </div>
         </div>
 
-        <div className="grid gap-8">
-          {statements.map((stmt, i) => (
-            <motion.div
-              key={stmt.title}
-              initial={{ opacity: 0, x: i % 2 === 0 ? -30 : 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.15, duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
-              className="card rounded-xl p-8 md:p-10 border-l-3 border-l-amber/40 border border-pearl/5"
-            >
-              <h3 className="text-2xl font-serif text-pearl/90 mb-4">{stmt.title}</h3>
-              <p className="text-cream/50 text-sm leading-relaxed whitespace-pre-line">
-                {stmt.body}
-              </p>
-            </motion.div>
-          ))}
+        <div className="grid grid-cols-12 gap-12 md:gap-20">
+          <div className="col-span-12 md:col-start-4 lg:col-start-4 md:col-span-9 lg:col-span-9">
+            <div className="space-y-12">
+              {statements.map((stmt, i) => (
+                <motion.div
+                  key={stmt.title}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.15, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  <h3 className="text-2xl font-display mb-4 tracking-tight">
+                    {stmt.title}
+                  </h3>
+                  <p className="text-ink-light text-sm leading-relaxed whitespace-pre-line font-light">
+                    {stmt.body}
+                  </p>
+                </motion.div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -155,19 +167,24 @@ function Portfolio() {
   const isRTL = useLanguage().isRTL
 
   return (
-    <div className="relative min-h-screen text-pearl cursor-none">
+    <div className="relative min-h-screen text-ink cursor-none page-enter">
       <Cursor />
 
       {/* Top bar */}
-      <div className="fixed top-6 left-0 right-0 z-50 flex items-center justify-between px-8 pointer-events-none">
-        <Link
-          to="/"
-          className="pointer-events-auto flex items-center gap-3 font-mono text-xs tracking-[0.15em] uppercase text-cream/40 hover:text-amber transition-colors"
-        >
-          <span className="text-xl">←</span>
-          {t('home')}
-        </Link>
-        <LanguageSelector />
+      <div className="fixed top-0 left-0 right-0 z-50">
+        <div className="mx-auto max-w-7xl px-6 md:px-12 py-5 flex items-center justify-between">
+          <Link
+            to="/"
+            className="flex items-center gap-3 font-display italic text-xl text-ink hover:text-accent transition-colors"
+          >
+            <span className="text-lg">←</span>
+            {t('home')}
+          </Link>
+          <LanguageSelector />
+        </div>
+        <div className="mx-auto max-w-7xl px-6 md:px-12">
+          <div className="h-px bg-gradient-to-r from-transparent via-ink/10 to-transparent" />
+        </div>
       </div>
 
       {/* Header */}
@@ -175,46 +192,57 @@ function Portfolio() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1 }}
-        className="pt-28 pb-16 px-8 pb-22"
+        className="pt-28 pb-16 px-6 md:px-12"
       >
-        <div className="mx-auto max-w-5xl">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
-            <span className="section-highlight mb-4">
-              {/* decorative accent */}
-            </span>
-            <div className="w-12 h-px bg-amber/40 mb-6" />
-            <h1 className="text-5xl md:text-7xl font-serif leading-tight">
-              {t('portfolioTitle')}
-            </h1>
-            <p className="mt-4 text-cream/40 text-lg font-accent italic">
-              {t('portfolioSubtitle')}
-            </p>
-          </motion.div>
+        <div className="mx-auto max-w-7xl">
+          <div className="grid grid-cols-12 gap-8 md:gap-16">
+            <div className="col-span-12 md:col-span-4 lg:col-span-3">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+              >
+                <span className="section-number">{t('portfolio')}</span>
+                <div className="w-8 h-px bg-accent/40 my-4" />
+                <p className="page-number">Selected works from 2024</p>
+              </motion.div>
+            </div>
 
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
-            className="mt-6 text-cream/50 max-w-xl text-sm leading-relaxed"
-          >
-            {t('portfolioDescription')}
-          </motion.p>
+            <div className="col-span-12 md:col-span-8 lg:col-span-9">
+              <motion.h1
+                initial={{ opacity: 0, y: 40 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                className="text-5xl md:text-7xl lg:text-8xl font-display tracking-tight leading-[0.9]"
+              >
+                {t('portfolioTitle')}
+              </motion.h1>
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.6 }}
+                className="mt-6 text-ink-faint text-base font-light max-w-xl"
+              >
+                {t('portfolioDescription')}
+              </motion.p>
+            </div>
+          </div>
         </div>
       </motion.header>
 
-      <div className="divider mx-auto max-w-5xl" />
+      {/* Divider */}
+      <div className="mx-auto max-w-7xl px-6 md:px-12">
+        <div className="h-px bg-gradient-to-r from-ink/10 to-transparent" />
+      </div>
 
       {/* Work carousel */}
-      <section className="py-24 px-8">
-        <div className="mx-auto max-w-5xl">
+      <section className="py-24 px-6 md:px-12">
+        <div className="mx-auto max-w-7xl">
           <div className="flex items-center justify-between mb-14">
-            <h2 className="text-2xl font-serif text-pearl/80">
-              {t('category')}: <span className="italic text-amber/60">{t('portfolio')}</span>
+            <h2 className="text-xl font-display tracking-tight">
+              {t('category')}: <span className="italic font-italic text-accent">{t('portfolio')}</span>
             </h2>
+            <span className="page-number">{works.length} projects</span>
           </div>
 
           <Swiper
@@ -224,7 +252,7 @@ function Portfolio() {
             navigation={true}
             keyboard={{ enabled: true }}
             mousewheel={{ forceToAxis: true }}
-            className="brutalist-swiper"
+            className="editorial-swiper"
             breakpoints={{
               768: { slidesPerView: 1.15, spaceBetween: 40 },
               1024: { slidesPerView: 1.3, spaceBetween: 48 },
@@ -240,19 +268,27 @@ function Portfolio() {
         </div>
       </section>
 
-      {/* Reflective Journey */}
-      <div className="divider mx-auto max-w-5xl" />
+      {/* Divider */}
+      <div className="mx-auto max-w-7xl px-6 md:px-12">
+        <div className="h-px bg-gradient-to-r from-ink/10 to-transparent" />
+      </div>
+
+      {/* Reflections */}
       <Reflections />
 
-      {/* Authorship & Ethics Notice */}
-      <div className="divider mx-auto max-w-5xl" />
-      <section className="py-16 px-6">
-        <div className="mx-auto max-w-5xl">
-          <div className="card rounded-xl p-8 border border-pearl/5 text-center">
-            <p className="font-mono text-xs tracking-widest uppercase text-amber/50 mb-3">
+      {/* Divider */}
+      <div className="mx-auto max-w-7xl px-6 md:px-12">
+        <div className="h-px bg-gradient-to-r from-ink/10 to-transparent" />
+      </div>
+
+      {/* Authorship Notice */}
+      <section className="py-16 px-6 md:px-12">
+        <div className="mx-auto max-w-7xl">
+          <div className="text-center">
+            <p className="page-number mb-3 text-accent">
               {t('ethicsNotice')}
             </p>
-            <p className="text-cream/40 text-sm leading-relaxed">
+            <p className="text-ink-faint text-sm font-light max-w-2xl mx-auto leading-relaxed">
               {t('authorshipAll')}
             </p>
           </div>
@@ -260,9 +296,12 @@ function Portfolio() {
       </section>
 
       {/* Footer */}
-      <footer className="py-8 px-6">
-        <div className="authorship">
-          {t('footerText')} — {new Date().getFullYear()}
+      <footer className="py-8 px-6 md:px-12 border-t border-ink/5">
+        <div className="mx-auto max-w-7xl flex items-center justify-between">
+          <span className="page-number">
+            {t('footerText')} — {new Date().getFullYear()}
+          </span>
+          <span className="page-number">Designed with precision</span>
         </div>
       </footer>
     </div>
