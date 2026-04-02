@@ -1674,3 +1674,225 @@ ol.accent-number li::before {
     opacity: 0.5;
   }
 }
+
+/* ============================================================
+   LINE SLIDE-UP TEXT REVEAL
+   ============================================================ */
+.line-reveal {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+}
+.line-reveal::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--paper);
+  transform-origin: right center;
+  animation: maskSlideLeft 0.8s cubic-bezier(0.77, 0, 0.18, 1) forwards;
+}
+@keyframes maskSlideLeft {
+  from { transform: scaleX(1); transform-origin: left center; }
+  to { transform: scaleX(0); transform-origin: right center; }
+}
+.line-reveal-text {
+  display: block;
+  transform: translateY(100%);
+  animation: textSlideUp 0.8s 0.2s cubic-bezier(0.77, 0, 0.18, 1) forwards;
+  filter: blur(4px);
+}
+@keyframes textSlideUp {
+  to { transform: translateY(0); filter: blur(0); }
+}
+.line-reveal-text:nth-child(2), .line-reveal-text:nth-child(3) {
+  animation-delay: 0.35s;
+}
+
+/* ============================================================
+   TEXT SCRAMBLE EFFECT (CSS BASE)
+   ============================================================ */
+.scramble-text {
+  font-family: var(--font-heading);
+  letter-spacing: 0.05em;
+}
+.scramble-text .char {
+  display: inline-block;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+/* ============================================================
+   IMAGE PARALLAX CONTAINERS
+   ============================================================ */
+.img-parallax-wrap {
+  overflow: hidden;
+  position: relative;
+}
+.img-parallax-wrap img,
+.img-parallax-wrap svg {
+  width: 100%;
+  height: 120%;
+  object-fit: cover;
+  object-position: center;
+  will-change: transform;
+}
+
+/* ============================================================
+   STICKY IMAGE SECTION
+   ============================================================ */
+.sticky-image-section {
+  position: relative;
+}
+.sticky-image-section .pinned-image {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+.sticky-image-section .scrolling-text {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 4rem;
+}
+
+/* ============================================================
+   PROJECT CARD FLIP
+   ============================================================ */
+.project-card {
+  perspective: 1000px;
+}
+.project-card-inner {
+  position: relative;
+  transition: transform 0.6s cubic-bezier(0.77, 0, 0.18, 1);
+  transform-style: preserve-3d;
+}
+.project-card:hover .project-card-inner {
+  transform: rotateY(180deg);
+}
+.project-card-front,
+.project-card-back {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.project-card-front {
+  position: relative;
+}
+.project-card-back {
+  transform: rotateY(180deg);
+  background: var(--accent-deep);
+  color: var(--paper);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 2rem;
+}
+
+/* ============================================================
+   SECTION DIVIDER TYPOGRAPHY
+   ============================================================ */
+.section-divider-text {
+  font-family: var(--font-display);
+  font-size: clamp(4rem, 10vw, 10rem);
+  font-weight: 800;
+  text-align: center;
+  line-height: 0.9;
+  color: transparent;
+  -webkit-text-stroke: 1px var(--accent);
+  opacity: 0.12;
+  user-select: none;
+  pointer-events: none;
+  letter-spacing: -0.05em;
+}
+
+/* ============================================================
+   IMPROVED MARQUEE STRIP
+   ============================================================ */
+.marquee-strip-v2 {
+  overflow: hidden;
+  background: var(--ink);
+  color: var(--paper);
+  padding: 0.75rem 0;
+  white-space: nowrap;
+  position: relative;
+}
+.marquee-track {
+  display: inline-block;
+  animation: marqueeScroll 20s linear infinite;
+}
+.marquee-strip:hover .marquee-track {
+  animation-play-state: paused;
+}
+.marquee-track span {
+  font-family: var(--font-heading);
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 0 3rem;
+}
+@keyframes marqueeScroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* ============================================================
+   SCROLL PROGRESS INDICATOR (HORIZONTAL)
+   ============================================================ */
+.h-scroll-progress {
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  height: 1px;
+  background: var(--accent);
+  will-change: width;
+}
+
+/* ============================================================
+   HOVER MAGNETIC BUTTON EFFECT BASE
+   ============================================================ */
+.magnetic-btn {
+  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* ============================================================
+   GLITCH TEXT EFFECT ON HOVER
+   ============================================================ */
+.glitch-text {
+  position: relative;
+}
+.glitch-text::before,
+.glitch-text::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  pointer-events: none;
+}
+.glitch-text:hover::before {
+  opacity: 0.8;
+  color: var(--accent-light);
+  animation: glitch1 0.3s infinite;
+}
+.glitch-text:hover::after {
+  opacity: 0.8;
+  color: var(--accent);
+  animation: glitch2 0.3s infinite;
+}
+@keyframes glitch1 {
+  0% { clip-path: inset(20% 0 60% 0); transform: translateX(-2px); }
+  25% { clip-path: inset(60% 0 10% 0); transform: translateX(2px); }
+  50% { clip-path: inset(10% 0 70% 0); transform: translateX(-1px); }
+  75% { clip-path: inset(50% 0 30% 0); transform: translateX(3px); }
+}
+@keyframes glitch2 {
+  0% { clip-path: inset(60% 0 10% 0); transform: translateX(2px); }
+  25% { clip-path: inset(20% 0 60% 0); transform: translateX(-2px); }
+  50% { clip-path: inset(50% 0 30% 0); transform: translateX(1px); }
+  75% { clip-path: inset(10% 0 70% 0); transform: translateX(-3px); }
+}
