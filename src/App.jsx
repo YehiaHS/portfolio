@@ -120,6 +120,63 @@ const FloatingShapes = () => {
   )
 }
 
+/* ──────────────────────── HERO BOTANICAL BACKGROUND ──────────────────────── */
+const HeroBotanicalBg = () => (
+  <div className="absolute inset-0 overflow-hidden pointer-events-none select-none">
+    {/* Layer 1: large sweeping vine curves - very faint */}
+    <svg className="absolute top-0 right-0 w-[60%] h-full opacity-[0.03]" viewBox="0 0 600 900" fill="none">
+      <path d="M500 0 C 450 100, 550 200, 400 350 C 300 450, 500 500, 450 650 C 400 800, 500 850, 450 900"
+        stroke="#2d5a3d" strokeWidth="2" fill="none" />
+      <path d="M520 50 C 470 150, 570 250, 420 380 C 320 480, 520 530, 470 670 C 420 810, 520 860, 470 900"
+        stroke="#4a8f5c" strokeWidth="1" fill="none" />
+      {/* Leaf shapes along vine */}
+      <ellipse cx="440" cy="180" rx="35" ry="15" fill="#2d5a3d" opacity="0.15" transform="rotate(-30 440 180)" />
+      <ellipse cx="380" cy="320" rx="30" ry="12" fill="#4a8f5c" opacity="0.1" transform="rotate(20 380 320)" />
+      <ellipse cx="470" cy="480" rx="28" ry="10" fill="#2d5a3d" opacity="0.12" transform="rotate(-15 470 480)" />
+      <ellipse cx="430" cy="600" rx="25" ry="11" fill="#4a8f5c" opacity="0.08" transform="rotate(25 430 600)" />
+      <ellipse cx="480" cy="750" rx="32" ry="14" fill="#2d5a3d" opacity="0.1" transform="rotate(-20 480 750)" />
+    </svg>
+
+    {/* Layer 2: left side organic curves */}
+    <svg className="absolute bottom-0 left-0 w-[50%] h-[70%] opacity-[0.025]" viewBox="0 0 500 700" fill="none">
+      <path d="M50 700 C 100 600, 0 500, 100 400 C 200 300, 50 200, 150 100 C 200 50, 150 20, 200 0"
+        stroke="#1a3526" strokeWidth="1.5" fill="none" />
+      <path d="M70 700 C 120 580, 20 480, 120 380 C 220 280, 70 180, 170 80 C 220 30, 170 10, 220 0"
+        stroke="#4a8f5c" strokeWidth="1" fill="none" />
+      {/* Leaves */}
+      <path d="M100 400 Q 140 350 120 300 Q 80 340 100 400Z" fill="#2d5a3d" opacity="0.1" />
+      <path d="M150 100 Q 190 60 170 10 Q 130 50 150 100Z" fill="#4a8f5c" opacity="0.08" />
+      <path d="M70 550 Q 110 500 90 450 Q 50 490 70 550Z" fill="#2d5a3d" opacity="0.07" />
+    </svg>
+
+    {/* Layer 3: scattered small leaf silhouettes */}
+    <svg className="absolute inset-0 w-full h-full opacity-[0.02]" viewBox="0 0 1440 900" fill="none">
+      {[
+        [200, 100, -25, 40, 18],
+        [700, 200, 15, 35, 15],
+        [1100, 300, -10, 45, 20],
+        [300, 500, 30, 30, 14],
+        [900, 450, -20, 38, 16],
+        [1200, 600, 10, 42, 19],
+        [100, 700, -15, 36, 17],
+        [600, 750, 20, 33, 15],
+        [1300, 150, -5, 28, 12],
+        [450, 350, 25, 40, 18],
+      ].map(([cx, cy, rot, rx, ry], i) => (
+        <ellipse key={i} cx={cx} cy={cy} rx={rx} ry={ry} fill="#2d5a3d"
+          transform={`rotate(${rot} ${cx} ${cy})`} opacity="0.12" />
+      ))}
+    </svg>
+
+    {/* Layer 4: flowing horizontal lines - editorial style */}
+    <svg className="absolute top-[30%] left-0 w-full opacity-[0.02]" viewBox="0 0 1440 100" fill="none">
+      <path d="M0 50 Q 360 10, 720 50 Q 1080 90, 1440 50" stroke="#2d5a3d" strokeWidth="0.8" />
+      <path d="M0 55 Q 360 15, 720 55 Q 1080 95, 1440 55" stroke="#4a8f5c" strokeWidth="0.5" />
+      <path d="M0 60 Q 360 20, 720 60 Q 1080 100, 1440 60" stroke="#1a3526" strokeWidth="0.3" />
+    </svg>
+  </div>
+)
+
 /* ──────────────────────── HERO ──────────────────────── */
 const Hero = () => {
   const { t } = useLanguage()
@@ -143,6 +200,7 @@ const Hero = () => {
     <section className="relative min-h-screen flex flex-col justify-center pt-20 px-6 md:px-12 overflow-hidden">
       <motion.div style={{ opacity: heroOpacity, y: heroY }}>
         <FloatingShapes />
+        <HeroBotanicalBg />
 
         {/* Sidebar border edges */}
         <div className="absolute left-6 md:left-12 top-0 bottom-0 w-px bg-ink/5" />
@@ -221,28 +279,57 @@ const Hero = () => {
               </AnimatedSection>
             </div>
 
-            {/* Right column - Name */}
+            {/* Right column - Name + Portrait */}
             <div className="col-span-12 md:col-span-7 lg:col-span-8 md:pl-12 lg:pl-20">
-              <div className="leading-[0.85]">
-                <motion.div
-                  initial={{ opacity: 0, y: 60 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 1, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                >
-                  <h1 className="text-[4.5rem] md:text-[8rem] lg:text-[11rem] font-bold tracking-tight text-ink leading-none">
-                    Yehia
-                  </h1>
-                </motion.div>
-                <motion.div
-                  initial={{ opacity: 0, x: -30 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 1.2, delay: 0.6, ease: [0.22, 1, 0.36, 1] }}
-                  className="pl-4 md:pl-8 lg:pl-12 -mt-2"
-                >
-                  <h1 className="text-[4rem] md:text-[7rem] lg:text-[10rem] font-normal italic font-italic tracking-tight text-accent leading-none">
-                    Salem
-                  </h1>
-                </motion.div>
+              <div className="flex flex-col lg:flex-row lg:items-start gap-8 lg:gap-12">
+                {/* Portrait placeholder - visible on lg+ */}
+                <div className="hidden lg:flex flex-shrink-0">
+                  <AnimatedSection delay={0.4}>
+                    <div className="relative">
+                      {/* Decorative outer frame */}
+                      <div className="absolute -inset-3 border-2 border-accent/10 rounded-full" />
+                      <div className="absolute -inset-6 border border-accent/5 rounded-full" />
+                      {/* Rotating accent ring */}
+                      <svg className="absolute -inset-4 w-[calc(8rem+2rem)] h-[calc(8rem+2rem)] opacity-20" viewBox="0 0 120 120" fill="none">
+                        <motion.circle cx="60" cy="60" r="58" stroke="#2d5a3d" strokeWidth="0.5" strokeDasharray="4 8"
+                          animate={{ rotate: 360 }} transition={{ duration: 60, repeat: Infinity, ease: 'linear' }}
+                          style={{ transformOrigin: '60px 60px' }} />
+                      </svg>
+                      {/* Main circle with gradient */}
+                      <div className="w-32 h-32 rounded-full bg-gradient-to-br from-[#2d5a3d] via-[#1a3526] to-[#4a8f5c] flex items-center justify-center shadow-lg">
+                        <div className="text-center">
+                          <span className="block text-3xl font-bold font-display text-[#f5f5f0]/80 tracking-wider">YS</span>
+                        </div>
+                      </div>
+                      {/* Corner decorative marks */}
+                      <div className="absolute top-1 left-1 w-2 h-2 border-t border-l border-accent/30 rounded-tl-sm" />
+                      <div className="absolute bottom-1 right-1 w-2 h-2 border-b border-r border-accent/30 rounded-br-sm" />
+                    </div>
+                  </AnimatedSection>
+                </div>
+
+                {/* Name (full width on mobile/tablet) */}
+                <div className="leading-[0.85]">
+                  <motion.div
+                    initial={{ opacity: 0, y: 60 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 1, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                  >
+                    <h1 className="text-[4.5rem] md:text-[8rem] lg:text-[11rem] font-bold tracking-tight text-ink leading-none">
+                      Yehia
+                    </h1>
+                  </motion.div>
+                  <motion.div
+                    initial={{ opacity: 0, x: -30 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 1.2, delay: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                    className="pl-4 md:pl-8 lg:pl-12 -mt-2"
+                  >
+                    <h1 className="text-[4rem] md:text-[7rem] lg:text-[10rem] font-normal italic font-italic tracking-tight text-accent leading-none">
+                      Salem
+                    </h1>
+                  </motion.div>
+                </div>
               </div>
 
               {/* Quote */}
@@ -360,6 +447,122 @@ const DecorativeBreak = ({ letter }) => (
   </div>
 )
 
+/* ──────────────────────── BOTANICAL BREAK (Between About and Skills) ──────────────────────── */
+const BotanicalBreak = () => (
+  <div className="relative py-16 md:py-24 flex items-center justify-center overflow-hidden">
+    {/* Faint background wash */}
+    <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#2d5a3d]/[0.02] to-transparent" />
+    <svg className="relative w-40 md:w-64 opacity-20" viewBox="0 0 200 200" fill="none">
+      {/* Central leaf */}
+      <path d="M100 15 C 140 50 170 90 100 185 C 30 90 60 50 100 15Z"
+        fill="url(#leafGrad1)" stroke="#2d5a3d" strokeWidth="0.8" />
+      {/* Vein lines */}
+      <line x1="100" y1="25" x2="100" y2="175" stroke="#2d5a3d" strokeWidth="0.5" opacity="0.6" />
+      <path d="M100 50 Q 130 60 145 80" stroke="#2d5a3d" strokeWidth="0.4" opacity="0.4" />
+      <path d="M100 80 Q 75 90 60 110" stroke="#2d5a3d" strokeWidth="0.4" opacity="0.4" />
+      <path d="M100 110 Q 125 115 135 135" stroke="#2d5a3d" strokeWidth="0.4" opacity="0.4" />
+      <path d="M100 140 Q 78 145 70 160" stroke="#2d5a3d" strokeWidth="0.4" opacity="0.4" />
+      {/* Small secondary leaves */}
+      <path d="M100 30 C 120 50 150 60 100 100 C 70 60 90 50 100 30Z"
+        fill="url(#leafGrad2)" opacity="0.5" transform="rotate(-30 100 50)" />
+      <defs>
+        <linearGradient id="leafGrad1" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#2d5a3d" stopOpacity="0.3" />
+          <stop offset="100%" stopColor="#4a8f5c" stopOpacity="0.1" />
+        </linearGradient>
+        <linearGradient id="leafGrad2" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#4a8f5c" stopOpacity="0.2" />
+          <stop offset="100%" stopColor="#2d5a3d" stopOpacity="0.05" />
+        </linearGradient>
+      </defs>
+    </svg>
+    {/* Accent line through center */}
+    <div className="absolute left-0 right-0 flex justify-center">
+      <div className="w-px h-full bg-gradient-to-b from-transparent via-accent/10 to-transparent" />
+    </div>
+  </div>
+)
+
+/* ──────────────────────── GEOMETRIC PATTERN BAND (Between Skills and Awards) ──────────────────────── */
+const GeometricPatternBand = () => (
+  <div className="relative h-32 md:h-40 overflow-hidden bg-[#1a3526]">
+    <svg className="absolute inset-0 w-full h-full" viewBox="0 0 1440 160" fill="none" preserveAspectRatio="none">
+      {/* Grid pattern */}
+      {Array.from({ length: 36 }).map((_, i) => (
+        <line key={`v${i}`} x1={i * 40} y1="0" x2={i * 40} y2="160" stroke="#2d5a3d" strokeWidth="0.3" opacity="0.3" />
+      ))}
+      {Array.from({ length: 5 }).map((_, i) => (
+        <line key={`h${i}`} x1="0" y1={i * 40} x2="1440" y2={i * 40} stroke="#2d5a3d" strokeWidth="0.3" opacity="0.3" />
+      ))}
+      {/* Diamond shapes in alternating cells */}
+      {Array.from({ length: 18 }).map((_, i) => (
+        <rect key={`d${i}`}
+          x={i * 80 + 30} y={i % 2 === 0 ? 10 : 50}
+          width="20" height="20" transform={`rotate(45 ${i * 80 + 40} ${i % 2 === 0 ? 20 : 60})`}
+          fill="#4a8f5c" opacity={i % 3 === 0 ? '0.25' : i % 3 === 1 ? '0.15' : '0.08'} />
+      ))}
+      {/* Large decorative circles */}
+      <circle cx="200" cy="80" r="50" stroke="#4a8f5c" strokeWidth="0.5" opacity="0.15" />
+      <circle cx="720" cy="80" r="60" stroke="#4a8f5c" strokeWidth="0.5" opacity="0.12" />
+      <circle cx="1240" cy="80" r="45" stroke="#4a8f5c" strokeWidth="0.5" opacity="0.15" />
+      {/* Flowing wave */}
+      <path d="M0 100 Q 360 40, 720 100 Q 1080 160, 1440 100" stroke="#4a8f5c" strokeWidth="1" opacity="0.2" />
+      <path d="M0 110 Q 360 50, 720 110 Q 1080 170, 1440 110" stroke="#2d5a3d" strokeWidth="0.5" opacity="0.15" />
+    </svg>
+    {/* Center text overlay */}
+    <div className="absolute inset-0 flex items-center justify-center">
+      <span className="text-[#f5f5f0]/30 text-[0.6rem] font-heading font-semibold tracking-[0.3em] uppercase">
+        Craft &middot; Code &middot; Create
+      </span>
+    </div>
+    {/* Top/bottom accent lines */}
+    <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#4a8f5c]/30 to-transparent" />
+    <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#4a8f5c]/30 to-transparent" />
+  </div>
+)
+
+/* ──────────────────────── DECORATIVE EMBLEM (Between Awards and Education) ──────────────────────── */
+const DecorativeEmblem = () => (
+  <div className="relative py-16 md:py-20 flex items-center justify-center overflow-hidden">
+    <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#2d5a3d]/[0.015] to-transparent" />
+    <motion.div
+      initial={{ scale: 0.8, opacity: 0 }}
+      whileInView={{ scale: 1, opacity: 0.25 }}
+      viewport={{ once: true }}
+      transition={{ duration: 1 }}
+      className="relative"
+    >
+      <svg className="w-28 md:w-40" viewBox="0 0 120 120" fill="none">
+        {/* Outer circle with dashed ring */}
+        <circle cx="60" cy="60" r="55" stroke="#2d5a3d" strokeWidth="0.8" strokeDasharray="3 5" />
+        <circle cx="60" cy="60" r="48" stroke="#4a8f5c" strokeWidth="0.5" />
+        <circle cx="60" cy="60" r="42" stroke="#2d5a3d" strokeWidth="0.3" />
+        {/* Star / compass */}
+        <path d="M60 18 L64 52 L98 60 L64 68 L60 102 L56 68 L22 60 L56 52Z"
+          fill="#2d5a3d" opacity="0.2" stroke="#2d5a3d" strokeWidth="0.5" />
+        {/* Inner diamond */}
+        <rect x="48" y="48" width="24" height="24" transform="rotate(45 60 60)"
+          stroke="#4a8f5c" strokeWidth="0.6" fill="#4a8f5c" fillOpacity="0.08" />
+        {/* Center dot */}
+        <circle cx="60" cy="60" r="3" fill="#2d5a3d" opacity="0.3" />
+        {/* Cardinal tick marks */}
+        {[0, 90, 180, 270].map((angle, i) => (
+          <line key={i}
+            x1={60 + 38 * Math.cos(angle * Math.PI / 180)}
+            y1={60 + 38 * Math.sin(angle * Math.PI / 180)}
+            x2={60 + 44 * Math.cos(angle * Math.PI / 180)}
+            y2={60 + 44 * Math.sin(angle * Math.PI / 180)}
+            stroke="#2d5a3d" strokeWidth="1" />
+        ))}
+      </svg>
+      <div className="absolute -top-2 -left-2 w-3 h-3 border-t border-l border-accent/20" />
+      <div className="absolute -bottom-2 -right-2 w-3 h-3 border-b border-r border-accent/20" />
+    </motion.div>
+    {/* Horizontal accent lines from emblem */}
+    <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-40 md:w-80 h-px bg-gradient-to-r from-transparent via-accent/10 to-transparent" />
+  </div>
+)
+
 /* ──────────────────────── SECTION NAV DOTS ──────────────────────── */
 const SectionNav = () => {
   const sections = [
@@ -431,6 +634,14 @@ const About = () => {
       <div className="absolute left-6 md:left-12 top-0 bottom-0 w-px bg-ink/5" />
       <div className="absolute right-6 md:right-12 top-0 bottom-0 w-px bg-ink/5" />
 
+      {/* Decorative sidebar imagery on wide screens */}
+      <div className="hidden lg:block absolute left-0 top-0 bottom-0 w-24 pointer-events-none select-none opacity-[0.04]">
+        <svg className="absolute top-20 left-2" viewBox="0 0 40 40" fill="none" stroke="#2d5a3d" strokeWidth="1">
+          <circle cx="20" cy="14" r="8" />
+          <path d="M6 36c0-8 6-14 14-14s14 6 14 14" />
+        </svg>
+      </div>
+
       {/* Greeting watermark */}
       <div className="absolute top-10 right-6 md:right-20 opacity-[0.03] font-display text-[6rem] md:text-[10rem] font-bold italic select-none pointer-events-none">
         {getGreeting().split(' ')[0]}
@@ -448,24 +659,49 @@ const About = () => {
 
           <div className="col-span-12 md:col-span-9 lg:col-span-10">
             <div className="grid md:grid-cols-5 gap-12 md:gap-16">
-              {/* Left: monogram + highlights */}
+              {/* Left: Editorial portrait + highlights */}
               <div className="md:col-span-2">
                 <AnimatedSection delay={0.2}>
                   <div className="relative">
-                    <div className="aspect-[4/5] bg-paper-dark flex items-center justify-center border border-ink/5 overflow-hidden">
+                    {/* Elapsed editorial portrait panel */}
+                    <div className="aspect-[4/5] bg-paper-dark flex items-center justify-center border border-ink/5 overflow-hidden relative">
+                      {/* Diagonal gradient lines */}
+                      <svg className="absolute inset-0 w-full h-full opacity-[0.06]" viewBox="0 0 100 125" preserveAspectRatio="none">
+                        {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((i) => (
+                          <line key={i} x1={i * 10 - 20} y1="125" x2={i * 10 + 30} y2="0"
+                            stroke="#2d5a3d" strokeWidth="1.5" />
+                        ))}
+                      </svg>
+                      {/* Gradient wash */}
+                      <div className="absolute inset-0 bg-gradient-to-br from-[#2d5a3d]/[0.05] via-transparent to-[#4a8f5c]/[0.08]" />
+                      {/* Corner ornaments */}
+                      <svg className="absolute top-3 left-3 w-8 h-8 opacity-20" viewBox="0 0 32 32" fill="none">
+                        <path d="M0 0h12v2H2v10H0V0z" fill="#2d5a3d" />
+                        <circle cx="18" cy="18" r="2" fill="#2d5a3d" />
+                      </svg>
+                      <svg className="absolute bottom-3 right-3 w-8 h-8 opacity-20" viewBox="0 0 32 32" fill="none">
+                        <path d="M32 32H20v-2h10V20h2v12z" fill="#2d5a3d" />
+                        <circle cx="14" cy="14" r="2" fill="#2d5a3d" />
+                      </svg>
+                      {/* Center YS monogram */}
                       <div className="text-center relative z-10">
-                        <span className="block text-8xl md:text-9xl font-bold font-display italic text-accent/15">YS</span>
-                        <div className="w-12 h-px bg-accent/20 mx-auto my-6" />
-                        <p className="page-number">Est. {new Date().getFullYear() - 4}</p>
+                        <span className="block text-[5rem] font-bold font-display italic bg-gradient-to-br from-[#2d5a3d] to-[#4a8f5c] bg-clip-text text-transparent leading-none select-none">YS</span>
+                        <div className="w-16 h-px bg-gradient-to-r from-transparent via-accent/30 to-transparent mx-auto my-6" />
+                        <p className="page-number text-accent/30">Est. {new Date().getFullYear() - 4}</p>
                       </div>
+                      {/* Pulsing vignette */}
                       <motion.div
-                        className="absolute inset-0 bg-gradient-to-br from-transparent to-accent/[0.02]"
-                        animate={{ opacity: [0.5, 1, 0.5] }}
+                        className="absolute inset-0"
+                        animate={{ opacity: [0, 0.15, 0] }}
                         transition={{ duration: 6, repeat: Infinity }}
+                        style={{ background: 'radial-gradient(ellipse at center, transparent 30%, rgba(45,90,61,0.06) 100%)' }}
                       />
                     </div>
-                    <div className="absolute -top-1 -left-1 w-4 h-4 border-t border-l border-accent/30" />
-                    <div className="absolute -bottom-1 -right-1 w-4 h-4 border-b border-r border-accent/30" />
+                    {/* Decorative border corners */}
+                    <div className="absolute -top-2 -left-2 w-6 h-6 border-t-2 border-l-2 border-accent/20" />
+                    <div className="absolute -top-2 -right-2 w-6 h-6 border-t-2 border-r-2 border-accent/20" />
+                    <div className="absolute -bottom-2 -left-2 w-6 h-6 border-b-2 border-l-2 border-accent/20" />
+                    <div className="absolute -bottom-2 -right-2 w-6 h-6 border-b-2 border-r-2 border-accent/20" />
                   </div>
                 </AnimatedSection>
 
@@ -611,6 +847,14 @@ const Skills = () => {
       <div className="absolute inset-0 bg-paper-dark pointer-events-none" />
       <div className="absolute left-6 md:left-12 top-0 bottom-0 w-px bg-ink/5" />
       <div className="absolute right-6 md:right-12 top-0 bottom-0 w-px bg-ink/5" />
+
+      {/* Decorative sidebar imagery */}
+      <div className="hidden lg:block absolute left-0 top-0 bottom-0 w-24 pointer-events-none select-none opacity-[0.04]">
+        <svg className="absolute top-20 left-3" viewBox="0 0 40 40" fill="none" stroke="#2d5a3d" strokeWidth="1">
+          <path d="M14 6h4v10H14zM24 12h4v24h-4zM24 6l8 6-8 6z" />
+          <path d="M6 20h28" strokeWidth="0.5" />
+        </svg>
+      </div>
 
       <div className="relative mx-auto max-w-7xl">
         <div className="grid grid-cols-12 gap-12 md:gap-20">
@@ -803,6 +1047,16 @@ const Awards = () => {
     <section id="awards" className="relative py-28 md:py-40 px-6 md:px-12">
       <div className="absolute left-6 md:left-12 top-0 bottom-0 w-px bg-ink/5" />
       <div className="absolute right-6 md:right-12 top-0 bottom-0 w-px bg-ink/5" />
+
+      {/* Decorative sidebar imagery */}
+      <div className="hidden lg:block absolute left-0 top-0 bottom-0 w-24 pointer-events-none select-none opacity-[0.04]">
+        <svg className="absolute top-20 left-3" viewBox="0 0 40 40" fill="none" stroke="#2d5a3d" strokeWidth="1">
+          <path d="M12 15l8-10 8 10-8 5-8-5z" />
+          <path d="M8 17h24v10c0 3-3 6-6 6H14c-3 0-6-3-6-6V17z" />
+          <rect x="17" y="27" width="6" height="6" />
+          <rect x="13" y="33" width="14" height="3" rx="1" />
+        </svg>
+      </div>
 
       {/* Large watermark */}
       <div className="absolute bottom-10 right-8 md:right-20 opacity-[0.025] font-heading text-[10rem] font-bold leading-none select-none pointer-events-none">
@@ -1087,6 +1341,15 @@ const Education = () => {
       <div className="absolute left-6 md:left-12 top-0 bottom-0 w-px bg-ink/5" />
       <div className="absolute right-6 md:right-12 top-0 bottom-0 w-px bg-ink/5" />
 
+      {/* Decorative sidebar imagery */}
+      <div className="hidden lg:block absolute left-0 top-0 bottom-0 w-24 pointer-events-none select-none opacity-[0.04]">
+        <svg className="absolute top-20 left-3" viewBox="0 0 40 40" fill="none" stroke="#2d5a3d" strokeWidth="1">
+          <path d="M20 4L4 14l16 10 16-10L20 4z" />
+          <path d="M8 17v11c0 3 5 5 12 5s12-2 12-5V17" />
+          <path d="M32 17v8" />
+        </svg>
+      </div>
+
       <div className="relative mx-auto max-w-7xl">
         <div className="grid grid-cols-12 gap-12 md:gap-20">
           <div className="col-span-12 md:col-span-3 lg:col-span-2">
@@ -1143,6 +1406,200 @@ const Education = () => {
   )
 }
 
+/* ──────────────────────── VISUAL MOMENTS GALLERY ──────────────────────── */
+const VisualMoments = () => {
+  const cards = [
+    {
+      caption: 'Work in Progress',
+      sub: 'Iterative design exploration',
+      svg: (
+        <svg viewBox="0 0 300 200" className="w-full h-full" fill="none">
+          <defs>
+            <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stopColor="#1a3526" />
+              <stop offset="50%" stopColor="#2d5a3d" />
+              <stop offset="100%" stopColor="#4a8f5c" />
+            </linearGradient>
+          </defs>
+          <rect width="300" height="200" fill="#0d1a0f" />
+          {/* Overlapping circles with gradient */}
+          <circle cx="100" cy="80" r="60" fill="url(#g1)" opacity="0.5" />
+          <circle cx="180" cy="100" r="50" fill="url(#g1)" opacity="0.4" />
+          <circle cx="150" cy="130" r="45" fill="#2d5a3d" opacity="0.3" />
+          {/* Leaf motif */}
+          <path d="M220 30 Q 250 60 230 100 Q 200 70 220 30Z" fill="#4a8f5c" opacity="0.3" />
+          <path d="M50 140 Q 80 110 90 150 Q 60 170 50 140Z" fill="#2d5a3d" opacity="0.4" />
+          {/* Grid lines */}
+          {Array.from({ length: 8 }).map((_, i) => (
+            <line key={`v${i}`} x1={i * 43} y1="0" x2={i * 43} y2="200" stroke="#2d5a3d" strokeWidth="0.3" opacity="0.2" />
+          ))}
+          <line x1="0" y1="100" x2="300" y2="100" stroke="#4a8f5c" strokeWidth="0.5" opacity="0.15" />
+        </svg>
+      ),
+    },
+    {
+      caption: 'Creative Process',
+      sub: 'From concept to composition',
+      svg: (
+        <svg viewBox="0 0 300 200" className="w-full h-full" fill="none">
+          <defs>
+            <radialGradient id="g2" cx="0.5" cy="0.5" r="0.5">
+              <stop offset="0%" stopColor="#4a8f5c" stopOpacity="0.6" />
+              <stop offset="100%" stopColor="#0d1a0f" stopOpacity="0" />
+            </radialGradient>
+            <linearGradient id="g3" x1="0" y1="0" x2="0.3" y2="1">
+              <stop offset="0%" stopColor="#2d5a3d" stopOpacity="0.7" />
+              <stop offset="100%" stopColor="#1a3526" stopOpacity="0.3" />
+            </linearGradient>
+          </defs>
+          <rect width="300" height="200" fill="#0d1a0f" />
+          <circle cx="150" cy="100" r="80" fill="url(#g2)" />
+          {/* Concentric rings */}
+          {[30, 50, 70, 90].map((r, i) => (
+            <circle key={i} cx="150" cy="100" r={r} stroke="#2d5a3d" strokeWidth="0.5" opacity={0.3 - i * 0.05} />
+          ))}
+          {/* Geometric petals */}
+          {[0, 45, 90, 135, 180, 225, 270, 315].map((angle, i) => (
+            <ellipse key={i} cx={150 + 35 * Math.cos(angle * Math.PI / 180)} cy={100 + 35 * Math.sin(angle * Math.PI / 180)}
+              rx="18" ry="8" fill="url(#g3)" opacity="0.3"
+              transform={`rotate(${angle} ${150 + 35 * Math.cos(angle * Math.PI / 180)} ${100 + 35 * Math.sin(angle * Math.PI / 180)})`} />
+          ))}
+          {/* Center */}
+          <circle cx="150" cy="100" r="12" fill="#2d5a3d" opacity="0.5" />
+          <circle cx="150" cy="100" r="4" fill="#4a8f5c" opacity="0.8" />
+        </svg>
+      ),
+    },
+    {
+      caption: 'Botanical Studies',
+      sub: 'Nature-inspired geometry',
+      svg: (
+        <svg viewBox="0 0 300 200" className="w-full h-full" fill="none">
+          <rect width="300" height="200" fill="#0d1a0f" />
+          {/* Large leaf shape */}
+          <path d="M150 20 C 200 50 230 100 150 180 C 70 100 100 50 150 20Z"
+            fill="#2d5a3d" opacity="0.25" stroke="#4a8f5c" strokeWidth="0.5" />
+          {/* Veins */}
+          <line x1="150" y1="30" x2="150" y2="170" stroke="#4a8f5c" strokeWidth="0.5" opacity="0.5" />
+          <path d="M150 50 Q 185 65 200 85" stroke="#4a8f5c" strokeWidth="0.4" opacity="0.4" />
+          <path d="M150 50 Q 115 65 100 85" stroke="#4a8f5c" strokeWidth="0.4" opacity="0.4" />
+          <path d="M150 80 Q 180 95 195 110" stroke="#4a8f5c" strokeWidth="0.4" opacity="0.4" />
+          <path d="M150 80 Q 120 95 105 110" stroke="#4a8f5c" strokeWidth="0.4" opacity="0.4" />
+          <path d="M150 110 Q 175 125 185 140" stroke="#4a8f5c" strokeWidth="0.4" opacity="0.4" />
+          <path d="M150 110 Q 125 125 115 140" stroke="#4a8f5c" strokeWidth="0.4" opacity="0.4" />
+          {/* Small surrounding leaves */}
+          <path d="M60 30 Q 80 10 90 30 Q 70 50 60 30Z" fill="#4a8f5c" opacity="0.2" />
+          <path d="M230 160 Q 250 140 260 160 Q 240 180 230 160Z" fill="#4a8f5c" opacity="0.2" />
+          <path d="M40 150 Q 55 135 65 150 Q 50 165 40 150Z" fill="#2d5a3d" opacity="0.25" />
+          <path d="M250 50 Q 265 35 275 50 Q 260 65 250 50Z" fill="#2d5a3d" opacity="0.25" />
+        </svg>
+      ),
+    },
+    {
+      caption: 'Abstract Composition',
+      sub: 'Digital canvas explorations',
+      svg: (
+        <svg viewBox="0 0 300 200" className="w-full h-full" fill="none">
+          <defs>
+            <linearGradient id="g4" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stopColor="#1a3526" />
+              <stop offset="100%" stopColor="#2d5a3d" />
+            </linearGradient>
+            <linearGradient id="g5" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stopColor="#4a8f5c" />
+              <stop offset="100%" stopColor="#1a3526" />
+            </linearGradient>
+          </defs>
+          <rect width="300" height="200" fill="#0d1a0f" />
+          {/* Flowing curves */}
+          <path d="M0 100 C 50 50, 100 150, 150 100 C 200 50, 250 150, 300 100" stroke="#2d5a3d" strokeWidth="1" opacity="0.3" />
+          <path d="M0 120 C 60 70, 110 170, 160 120 C 210 70, 260 170, 300 120" stroke="#4a8f5c" strokeWidth="0.5" opacity="0.2" />
+          <path d="M0 80 C 70 30, 130 130, 180 80 C 230 30, 270 130, 300 80" stroke="#1a3526" strokeWidth="0.8" opacity="0.2" />
+          {/* Abstract rectangles */}
+          <rect x="50" y="40" width="60" height="30" rx="2" fill="url(#g4)" opacity="0.4" />
+          <rect x="180" y="120" width="80" height="40" rx="2" fill="url(#g5)" opacity="0.3" />
+          <rect x="100" y="150" width="40" height="20" rx="2" fill="#2d5a3d" opacity="0.3" />
+          {/* Dots grid */}
+          {Array.from({ length: 5 }).map((_, row) =>
+            Array.from({ length: 8 }).map((_, col) => (
+              <circle key={`${row}-${col}`}
+                cx={25 + col * 35} cy={30 + row * 35}
+                r="1.5" fill="#4a8f5c" opacity={0.1 + (row + col) % 3 * 0.05} />
+            ))
+          )}
+        </svg>
+      ),
+    },
+  ]
+
+  return (
+    <section className="relative py-28 md:py-40 px-6 md:px-12 overflow-hidden">
+      {/* Decorative sidebar imagery */}
+      <div className="hidden lg:block absolute left-0 top-0 bottom-0 w-24 pointer-events-none select-none opacity-[0.04]">
+        <svg className="absolute top-20 left-3" viewBox="0 0 40 40" fill="none" stroke="#2d5a3d" strokeWidth="1">
+          <rect x="4" y="4" width="32" height="32" rx="2" />
+          <path d="M4 28l10-10 8 8 6-6 8 8" strokeWidth="1.5" />
+          <circle cx="14" cy="14" r="4" />
+        </svg>
+      </div>
+
+      {/* Background wash */}
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#1a3526]/[0.02] to-transparent pointer-events-none" />
+
+      <div className="relative mx-auto max-w-7xl">
+        {/* Section header */}
+        <div className="text-center mb-16">
+          <AnimatedSection>
+            <p className="section-number">Visual Moments</p>
+          </AnimatedSection>
+          <AnimatedSection delay={0.1}>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl mt-2 mb-4">
+              Behind the <span className="italic font-italic text-accent">Scenes</span>
+            </h2>
+          </AnimatedSection>
+          <AnimatedSection delay={0.2}>
+            <p className="text-ink-light font-light max-w-xl mx-auto">
+              Abstract compositions in green &mdash; echoes of the creative process, digital canvases, and botanical inspirations.
+            </p>
+          </AnimatedSection>
+        </div>
+
+        {/* Gallery strip */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+          {cards.map((card, i) => (
+            <AnimatedSection key={card.caption} delay={0.15 + i * 0.1}>
+              <motion.div
+                whileHover={{ y: -6, scale: 1.02 }}
+                transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                className="group relative overflow-hidden border border-ink/5 bg-paper-dark"
+              >
+                {/* SVG image */}
+                <div className="aspect-[3/2] overflow-hidden">
+                  {card.svg}
+                  {/* Hover overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0d1a0f]/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                </div>
+                {/* Caption */}
+                <div className="absolute bottom-0 left-0 right-0 p-4 transform translate-y-2 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-500">
+                  <p className="text-[#f5f5f0] text-sm font-heading font-semibold">{card.caption}</p>
+                  <p className="text-[#f5f5f0]/50 text-xs font-light mt-0.5">{card.sub}</p>
+                </div>
+                {/* Caption below (always visible) */}
+                <div className="p-3 group-hover:p-4 transition-all duration-300">
+                  <p className="text-xs font-heading font-semibold text-ink group-hover:text-accent transition-colors">{card.caption}</p>
+                  <p className="text-[0.6rem] text-ink-faint font-light mt-0.5">{card.sub}</p>
+                </div>
+                {/* Corner accent */}
+                <div className="absolute top-2 right-2 w-3 h-3 border-t border-r border-accent/0 group-hover:border-accent/30 transition-colors duration-500" />
+              </motion.div>
+            </AnimatedSection>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
 /* ──────────────────────── CONTACT ──────────────────────── */
 const Contact = () => {
   const { t } = useLanguage()
@@ -1173,6 +1630,15 @@ const Contact = () => {
     <section id="contact" className="relative py-28 md:py-40 px-6 md:px-12">
       <div className="absolute left-6 md:left-12 top-0 bottom-0 w-px bg-ink/5" />
       <div className="absolute right-6 md:right-12 top-0 bottom-0 w-px bg-ink/5" />
+
+      {/* Decorative sidebar imagery */}
+      <div className="hidden lg:block absolute left-0 top-0 bottom-0 w-24 pointer-events-none select-none opacity-[0.04]">
+        <svg className="absolute top-20 left-3" viewBox="0 0 40 40" fill="none" stroke="#2d5a3d" strokeWidth="1">
+          <rect x="3" y="8" width="34" height="24" rx="2" />
+          <path d="M3 8l17 14L37 8" />
+          <line x1="3" y1="32" x2="37" y2="32" />
+        </svg>
+      </div>
 
       {/* Large watermark */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.02] font-heading text-[16rem] md:text-[24rem] font-bold leading-none select-none pointer-events-none whitespace-nowrap">
@@ -1375,6 +1841,18 @@ const Footer = () => {
         </div>
       </div>
 
+      {/* Green gradient footer bar with pattern */}
+      <div className="relative h-3 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-[#1a3526] via-[#2d5a3d] to-[#4a8f5c]" />
+        {/* Geometric pattern overlay */}
+        <svg className="absolute inset-0 w-full h-full opacity-20" viewBox="0 0 720 12" preserveAspectRatio="none">
+          {Array.from({ length: 30 }).map((_, i) => (
+            <rect key={i} x={i * 24 + 6} y="2" width="6" height="8" transform={`rotate(45 ${i * 24 + 9} 6)`}
+              fill="#f5f5f0" opacity={i % 3 === 0 ? '0.4' : i % 3 === 1 ? '0.25' : '0.15'} />
+          ))}
+        </svg>
+      </div>
+
       {/* Back to top */}
       <AnimatePresence>
         {showBackToTop && (
@@ -1406,14 +1884,17 @@ function App() {
       <Hero />
       <Ticker />
       <About />
+      <BotanicalBreak />
       <MarqueeStrip />
       <Skills />
-      <Values />
+      <GeometricPatternBand />
       <DecorativeBreak letter="A" />
       <Awards />
+      <DecorativeEmblem />
       <ToolsSection />
       <Interests />
       <Education />
+      <VisualMoments />
       <Contact />
       <Footer />
     </div>
