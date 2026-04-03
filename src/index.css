@@ -8,20 +8,20 @@
    DESIGN TOKENS — British Garden meets Swiss Typography
    ============================================================ */
 :root {
-  color-scheme: light;
+  color-scheme: dark;
 
-  --paper: #f5f6f0;
-  --paper-darker: #eaebe3;
-  --paper-darkest: #e0e2d8;
-  --ink: #0d1a0f;
-  --ink-light: #3a4a3e;
-  --ink-faint: #7a8a7c;
-  --accent: #2d6b3f;
-  --accent-deep: #1a3d28;
-  --accent-light: #4a9f62;
-  --accent-glow: rgba(45, 107, 63, 0.15);
+  --paper: #0d1410;
+  --paper-darker: #111c14;
+  --paper-darkest: #162319;
+  --ink: #d4e4d8;
+  --ink-light: #a8b8ac;
+  --ink-faint: #5a6a5e;
+  --accent: #4a9f62;
+  --accent-deep: #2d6b3f;
+  --accent-light: #63b476;
+  --accent-glow: rgba(74, 159, 98, 0.15);
   --sage: #6b8a5e;
-  --sage-light: #9bae8e;
+  --sage-light: #4a6a3e;
 
   --font-display: 'Fraunces', Georgia, serif;
   --font-serif-italic: 'Instrument Serif', Georgia, serif;
@@ -43,8 +43,8 @@
   --radius-lg: 12px;
   --radius-xl: 16px;
 
-  --shadow-card: 0 1px 3px rgba(13, 26, 15, 0.03), 0 8px 24px rgba(13, 26, 15, 0.04);
-  --shadow-card-hover: 0 2px 6px rgba(13, 26, 15, 0.04), 0 16px 40px rgba(13, 26, 15, 0.08);
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.1), 0 8px 24px rgba(0, 0, 0, 0.15);
+  --shadow-card-hover: 0 2px 6px rgba(0, 0, 0, 0.15), 0 16px 40px rgba(0, 0, 0, 0.2);
   --shadow-elevated: 0 4px 12px rgba(13, 26, 15, 0.06), 0 24px 48px rgba(13, 26, 15, 0.1);
 }
 
@@ -2414,3 +2414,64 @@ ol.accent-number li::before {
   background: var(--ink);
   opacity: 0.1;
 }
+
+/* ============================================================
+   DARK MODE OVERRIDES (token values already inverted above)
+   ============================================================ */
+
+.editorial-card {
+  background: var(--paper-darker);
+  border-color: rgba(74, 159, 98, 0.12);
+}
+
+.hairline {
+  background: linear-gradient(90deg, transparent 0%, rgba(212, 228, 220, 0.12) 20%, rgba(212, 228, 220, 0.06) 50%, transparent 100%);
+}
+
+.bg-panel--sage {
+  background: #162319;
+  color: var(--ink);
+}
+
+.bg-panel--dark {
+  background: #0a0e0c;
+  color: var(--ink);
+}
+
+.bg-panel--moss {
+  background: #111c14;
+}
+
+.section-skills::before,
+.section-awards::before {
+  opacity: 0.06;
+}
+
+/* App.jsx section background overrides */
+.bg-paper { background-color: var(--paper) !important; }
+.bg-paper-dark { background-color: var(--paper-darker) !important; }
+.bg-paper-darker { background-color: var(--paper-darkest) !important; }
+
+/* Override hardcoded light colors used by inline styles & utility classes */
+.bg-\[\#f7f3ee\]\/90 { background-color: rgba(13, 20, 16, 0.92) !important; }
+.bg-white\/60 { background-color: rgba(17, 28, 20, 0.6) !important; }
+.bg-white { background-color: var(--paper-darker) !important; }
+.text-paper { color: var(--ink) !important; }
+.text-paper\/50 { color: rgba(212, 228, 220, 0.5) !important; }
+.text-paper\/40 { color: rgba(212, 228, 220, 0.4) !important; }
+.text-paper\/30 { color: rgba(212, 228, 220, 0.3) !important; }
+.bg-paper-dark\/90 { background-color: rgba(17, 28, 20, 0.9) !important; }
+.bg-paper\/95 { background-color: rgba(13, 20, 16, 0.95) !important; }
+.bg-paper\/90 { background-color: rgba(13, 20, 16, 0.9) !important; }
+
+.border-border, .border-ink\/5 { border-color: rgba(74, 159, 98, 0.1) !important; }
+.border-ink\/6 { border-color: rgba(74, 159, 98, 0.08) !important; }
+.border-ink\/8 { border-color: rgba(74, 159, 98, 0.1) !important; }
+.border-ink\/20 { border-color: rgba(74, 159, 98, 0.15) !important; }
+.border-ink\/10 { border-color: rgba(74, 159, 98, 0.08) !important; }
+.border-paper\/10 { border-color: rgba(74, 159, 98, 0.1) !important; }
+
+/* Hero section backgrounds */
+.bg-\[\#1a3526\] { background-color: #0a0e0c !important; }
+.bg-ink { background-color: var(--ink) !important; }
+.text-ink { color: var(--ink) !important; }

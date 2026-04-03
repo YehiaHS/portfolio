@@ -182,13 +182,29 @@ const Fallback = () => (
   </svg>
 )
 
+/* Preload images to ensure onLoad/onError fire correctly */
+function useImageState(src) {
+  const [state, setState] = useState('loading') // loading | loaded | error
+
+  useEffect(() => {
+    let cancelled = false
+    const img = new Image()
+    img.src = src
+    // Timeout: if image hasn't loaded in 5s, treat as error
+    const tid = setTimeout(() => { if (!cancelled) setState('error') }, 5000)
+    img.onload = () => { if (!cancelled) { setState('loaded'); clearTimeout(tid) } }
+    img.onerror = () => { if (!cancelled) { setState('error'); clearTimeout(tid) } }
+    return () => { cancelled = true; clearTimeout(tid) }
+  }, [src])
+
+  return state
+}
+
 /* ──────────────── IMAGE CARD (with error handling + skeleton) ──────────────── */
 const ImageCard = ({ src, caption, index }) => {
   const ref = useRef(null)
   const [inView, setInView] = useState(false)
-  const [loaded, setLoaded] = useState(false)
-  const [errored, setErrored] = useState(false)
-  const ext = src.split('.').pop().toLowerCase()
+  const imgState = useImageState(src)
 
   useEffect(() => {
     const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setInView(true) }, { threshold: 0.05 })
@@ -196,7 +212,7 @@ const ImageCard = ({ src, caption, index }) => {
     return () => obs.disconnect()
   }, [])
 
-  if (['psd', 'zip', 'rar', 'ai', 'sketch'].includes(ext)) return null
+  if (['psd', 'zip', 'rar', 'ai', 'sketch'].includes(src.split('.').pop().toLowerCase())) return null
 
   return (
     <motion.div
@@ -208,17 +224,14 @@ const ImageCard = ({ src, caption, index }) => {
       style={{ borderColor: D.border }}
     >
       <div className="aspect-[3/2] overflow-hidden relative" style={{ background: D.card }}>
-        {!loaded && !errored && (
-          <div className="absolute inset-0 flex items-center justify-center animate-pulse" style={{ background: D.skeleton }}>
-            <div className="w-5 h-5 border-2 rounded-full border-t-accent" style={{ borderTopColor: D.accent, borderColor: D.faint }} />
+        {imgState === 'loading' && (
+          <div className="absolute inset-0 flex items-center justify-center" style={{ background: D.skeleton }}>
+            <div className="w-5 h-5 border-2 rounded-full animate-spin" style={{ borderTopColor: D.accent, borderColor: D.faint }} />
           </div>
         )}
-        {errored ? <Fallback /> : (
+        {imgState === 'error' ? <Fallback /> : (
           <img
             src={src} alt={caption} loading="lazy"
-            onLoad={() => setLoaded(true)}
-            onError={() => setErrored(true)}
-            style={{ display: loaded ? 'block' : 'none' }}
             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
           />
         )}
