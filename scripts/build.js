@@ -12,21 +12,20 @@ const dist = join(root, 'dist')
 rmSync(tmp, { recursive: true, force: true })
 rmSync(dist, { recursive: true, force: true })
 
-// Step 1: Build to _tmp (Vite uses publicDir = 'public' by default)
+// Step 1: Build to _tmp
 import { execSync } from 'child_process'
 const viteBin = join(root, 'node_modules', '.bin', 'vite')
 execSync(`${viteBin} build --outDir _tmp`, { stdio: 'inherit', cwd: root })
 
 // Step 2: Assemble dist/ at ROOT level
-// dist/ index.html, assets/, vite.svg → from Vite build output
+// _tmp/* → dist/ root (index, assets, vite.svg)
 cpSync(join(tmp, 'index.html'), join(dist, 'index.html'))
 cpSync(join(tmp, 'assets'), join(dist, 'assets'), { recursive: true })
 try { cpSync(join(tmp, 'vite.svg'), join(dist, 'vite.svg')) } catch {}
 
-// Step 3: Copy public/portfolio/* → dist/portfolio/ (media files)
-// public/images/* → dist/images/
-// public/404.html → dist/404.html (root-level spa fallback)
-cpSync(join(root, 'public', 'portfolio'), join(dist, 'portfolio'), { recursive: true })
+// Step 3: Copy public/portfolio/* → dist/ root level
+// So public/portfolio/portraits/ → dist/portraits/
+cpSync(join(root, 'public', 'portfolio'), dist, { recursive: true, overwrite: false })
 try { cpSync(join(root, 'public', 'images'), join(dist, 'images'), { recursive: true }) } catch {}
 try { cpSync(join(root, 'public', '404.html'), join(dist, '404.html')) } catch {}
 
