@@ -1,6 +1,6 @@
 import { useState, useRef, useCallback, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { motion, useInView, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { useLanguage } from './LanguageContext'
 import LanguageSelector from './LanguageSelector'
 import Cursor from './Cursor'
@@ -85,7 +85,7 @@ const categories = [
       { src: '/portfolio/academic/Slide_Corporate_Sustainability_Strategy.png', caption: 'Corporate Sustainability — Strategy' },
       { src: '/portfolio/academic/Slide_Corporate_Sustainability_Vision.png', caption: 'Corporate Sustainability — Vision' },
       { src: '/portfolio/academic/Slide_Corporate_Sustainability_Vision_V2.png', caption: 'Corporate Sustainability — Vision V2' },
-      { src: '/portfolio/academic/Slide_Critical_Review_Lebanon.png', caption: 'Media Crittical Review — Lebanon' },
+      { src: '/portfolio/academic/Slide_Critical_Review_Lebanon.png', caption: 'Media Critical Review — Lebanon' },
       { src: '/portfolio/academic/Slide_Heavy_Viewing_Media_Logic.jpg', caption: 'Heavy Viewing — Media Logic' },
       { src: '/portfolio/academic/Slide_Mass_Media_Consolidation_Factors.jpg', caption: 'Mass Media Consolidation' },
       { src: '/portfolio/academic/Slide_Print_vs_Digital_Media.png', caption: 'Print vs Digital Media' },
@@ -127,8 +127,6 @@ const categories = [
       { src: '/portfolio/bisco-misr/hero-paris-cafe.jpg', caption: 'Paris Café — Hero Shot' },
       { src: '/portfolio/bisco-misr/language-customs.jpg', caption: 'Language & Customs Research' },
       { src: '/portfolio/bisco-misr/strategy-mountains.jpg', caption: 'Strategic Mountains — Campaign Strategy' },
-      { src: '/portfolio/bisco-misr/Roughly_drawn_storyboard__panel_1storyboard_panel__delpmaspu.png', caption: 'Storyboard Panel 1' },
-      { src: '/portfolio/bisco-misr/Adapt_the_all_the_product_design_to_the_french_mar_delpmaspu.png', caption: 'Product Design Adaptation — French Market' },
     ],
   },
   {
@@ -136,7 +134,7 @@ const categories = [
     label: 'Presentations',
     description: 'Arabic and English academic presentation design',
     items: [
-      { src: '/portfolio/presentations/Artboard 1.jpg', caption: 'Arabic Presentation — Main' },
+      { src: '/portfolio/presentations/Artboard 1 copy.jpg', caption: 'Arabic Presentation — Main' },
       { src: '/portfolio/presentations/Artboard 2 copy.jpg', caption: 'Arabic Presentation — Artboard 2' },
     ],
   },
@@ -150,83 +148,113 @@ const categories = [
       { src: '/portfolio/misc-design/Asset_Blurry_Code_Background.png', caption: 'Blurry Code Background' },
       { src: '/portfolio/misc-design/Asset_Skyrim_Logo_Leather.jpeg', caption: 'Skyrim Logo on Leather' },
       { src: '/portfolio/misc-design/Asset_Mariams_Book_Quotes_Mockup.png', caption: "Mariam's Book Quotes Mockup" },
-      { src: '/portfolio/misc-design/IMG_mkk1026.psd', caption: 'Creative edit — original' },
     ],
   },
 ]
 
-/* ──────────────── IMAGE CARD ──────────────── */
+/* ──────────────── DARK THEME TOKENS ──────────────── */
+const D = {
+  bg: '#0d1410',
+  card: '#111c14',
+  cardHover: '#162319',
+  border: 'rgba(45, 107, 63, 0.1)',
+  borderH: 'rgba(74, 159, 98, 0.25)',
+  text: '#c8d8cc',
+  muted: '#7a8a7e',
+  faint: '#3a4a3e',
+  accent: '#4a9f62',
+  accentDeep: '#2d6b3f',
+  topBg: 'rgba(13, 20, 16, 0.92)',
+  stickyBg: 'rgba(13, 20, 16, 0.95)',
+  filterBarBg: '#111c14',
+  skeleton: '#162319',
+  skeletonShine: '#1a2a1f',
+}
+
+/* ──────────────── FALLBACK SVG PLACEHOLDER ──────────────── */
+const Fallback = () => (
+  <svg viewBox="0 0 400 267" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+    <rect width="400" height="267" fill={D.card} />
+    <circle cx="200" cy="100" r="40" fill="none" stroke={D.faint} strokeWidth="1.5" />
+    <circle cx="210" cy="85" r="10" fill={D.faint} opacity="0.3" />
+    <path d="M240 180 L280 130 L320 170 Z" fill={D.faint} opacity="0.15" />
+    <text x="200" y="180" textAnchor="middle" fill={D.faint} fontSize="11" fontFamily="sans-serif">Image unavailable</text>
+  </svg>
+)
+
+/* ──────────────── IMAGE CARD (with error handling + skeleton) ──────────────── */
 const ImageCard = ({ src, caption, index }) => {
   const ref = useRef(null)
-  const inView = useInView(ref, { once: true, margin: '-30px' })
+  const [inView, setInView] = useState(false)
   const [loaded, setLoaded] = useState(false)
+  const [errored, setErrored] = useState(false)
+  const ext = src.split('.').pop().toLowerCase()
+
+  useEffect(() => {
+    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setInView(true) }, { threshold: 0.05 })
+    if (ref.current) obs.observe(ref.current)
+    return () => obs.disconnect()
+  }, [])
+
+  if (['psd', 'zip', 'rar', 'ai', 'sketch'].includes(ext)) return null
 
   return (
     <motion.div
       ref={ref}
       initial={{ opacity: 0, y: 20 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ delay: index * 0.04, duration: 0.4 }}
-      className="group relative overflow-hidden rounded-sm border border-ink/5 bg-paper-dark"
+      transition={{ delay: Math.min(index * 0.03, 0.3), duration: 0.4 }}
+      className="group relative overflow-hidden rounded-sm border"
+      style={{ borderColor: D.border }}
     >
-      <div className="aspect-[3/2] overflow-hidden bg-[#e0e2d8] flex items-center justify-center">
-        {!loaded && (
-          <div className="w-6 h-6 border-2 border-accent/20 border-t-accent/60 rounded-full animate-spin" />
-        )}
-        {src.endsWith('.psd') ? (
-          <div className="w-full h-full flex items-center justify-center bg-accent/5">
-            <span className="page-number text-accent/60">PSD File</span>
+      <div className="aspect-[3/2] overflow-hidden relative" style={{ background: D.card }}>
+        {!loaded && !errored && (
+          <div className="absolute inset-0 flex items-center justify-center animate-pulse" style={{ background: D.skeleton }}>
+            <div className="w-5 h-5 border-2 rounded-full border-t-accent" style={{ borderTopColor: D.accent, borderColor: D.faint }} />
           </div>
-        ) : (
+        )}
+        {errored ? <Fallback /> : (
           <img
-            src={src}
-            alt={caption}
+            src={src} alt={caption} loading="lazy"
             onLoad={() => setLoaded(true)}
+            onError={() => setErrored(true)}
             style={{ display: loaded ? 'block' : 'none' }}
             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-            loading="lazy"
           />
         )}
       </div>
-      <div className="absolute inset-0 bg-gradient-to-t from-[#0d1a0f]/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end">
-        <p className="p-4 text-[#f5f5f0] text-sm font-light">{caption}</p>
+      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end pointer-events-none"
+        style={{ background: 'linear-gradient(to top, rgba(13,20,16,0.85), transparent)' }}>
+        <p className="p-3 text-sm font-light" style={{ color: D.text }}>{caption}</p>
       </div>
     </motion.div>
   )
 }
 
 /* ──────────────── CATEGORY SECTION ──────────────── */
-const CategorySection = ({ category, isActive }) => {
+const CategorySection = ({ category }) => {
   return (
-    <AnimatePresence mode="wait">
-      {isActive && (
-        <motion.section
-          key={category.id}
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.5 }}
-          className="py-16 px-6 md:px-12"
-        >
-          <div className="mx-auto max-w-7xl">
-            <div className="mb-10">
-              <span className="section-number">
-                {categories.findIndex(c => c.id === category.id) + 1}
-              </span>
-              <h2 className="text-3xl md:text-4xl font-display mt-2">{category.label}</h2>
-              <p className="text-ink-faint text-sm font-light mt-1">{category.description}</p>
-            </div>
-            <div className="columns-1 sm:columns-2 lg:columns-3 gap-4 space-y-4">
-              {category.items.map((item, i) => (
-                <div key={item.src} className="break-inside-avoid">
-                  <ImageCard src={item.src} caption={item.caption} index={i} />
-                </div>
-              ))}
-            </div>
-          </div>
-        </motion.section>
-      )}
-    </AnimatePresence>
+    <motion.section
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="py-16 px-6 md:px-12"
+    >
+      <div className="mx-auto max-w-7xl">
+        <div className="mb-10">
+          <span className="section-number" style={{ color: D.accent }}>
+            {categories.findIndex(c => c.id === category.id) + 1}
+          </span>
+          <h2 className="text-3xl md:text-4xl font-display mt-2" style={{ color: D.text }}>{category.label}</h2>
+          <p className="text-sm font-light mt-1" style={{ color: D.muted }}>{category.description}</p>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {category.items.map((item, i) => (
+            <ImageCard key={item.src} src={item.src} caption={item.caption} index={i} />
+          ))}
+        </div>
+      </div>
+    </motion.section>
   )
 }
 
@@ -234,99 +262,118 @@ const CategorySection = ({ category, isActive }) => {
 function WorksArchive() {
   const { t } = useLanguage()
   const [activeCategory, setActiveCategory] = useState('all')
+  const [searchQuery, setSearchQuery] = useState('')
 
-  const totalItems = categories.reduce((sum, c) => sum + c.items.length, 0)
+  const totalItems = categories.reduce((s, c) => s + c.items.length, 0)
+
+  const filteredCategories = activeCategory === 'all'
+    ? categories
+    : categories.filter(c => c.id === activeCategory)
+
+  const shownItems = searchQuery
+    ? filteredCategories.map(cat => ({
+        ...cat,
+        items: cat.items.filter(item => item.caption.toLowerCase().includes(searchQuery.toLowerCase()))
+      })).filter(cat => cat.items.length > 0)
+    : filteredCategories
 
   return (
-    <div className="relative min-h-screen text-ink cursor-none page-enter">
+    <div className="relative min-h-screen cursor-none page-enter" style={{ background: D.bg, color: D.text }}>
       <Cursor />
 
       {/* Top bar */}
-      <div className="fixed top-0 left-0 right-0 z-50 bg-paper/90 backdrop-blur-md">
+      <div className="fixed top-0 left-0 right-0 z-50" style={{ background: D.topBg, backdropFilter: 'blur(12px)' }}>
         <div className="mx-auto max-w-7xl px-6 md:px-12 py-5 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Link to="/" className="font-display text-xl italic text-ink hover:text-accent transition-colors">
+            <Link to="/" style={{ color: D.text }} className="font-display text-xl italic hover:transition-colors"
+              onMouseEnter={e => e.currentTarget.style.color = D.accent}
+              onMouseLeave={e => e.currentTarget.style.color = D.text}>
               Y.S.
             </Link>
-            <span className="hidden md:block h-4 w-px bg-ink-faint/20" />
-            <span className="hidden md:block page-number">Projects Archive</span>
+            <span className="hidden md:block h-4 w-px" style={{ background: D.faint }} />
+            <span className="hidden md:block page-number" style={{ color: D.muted }}>Projects Archive</span>
           </div>
           <LanguageSelector />
         </div>
         <div className="mx-auto max-w-7xl px-6 md:px-12">
-          <div className="h-px bg-gradient-to-r from-transparent via-ink/10 to-transparent" />
+          <div className="h-px" style={{ background: `linear-gradient(to right, transparent, ${D.border}, transparent)` }} />
         </div>
       </div>
 
       {/* Header */}
-      <motion.header
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1 }}
-        className="pt-28 pb-8 px-6 md:px-12"
-      >
+      <motion.header initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }} className="pt-28 pb-8 px-6 md:px-12">
         <div className="mx-auto max-w-7xl">
           <div className="grid grid-cols-12 gap-8 md:gap-16">
             <div className="col-span-12 md:col-span-4 lg:col-span-3">
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }}>
-                <span className="section-number">Archive</span>
-                <div className="w-8 h-px bg-accent/40 my-4" />
-                <p className="page-number">{totalItems} works across {categories.length} categories</p>
+                <span className="section-number" style={{ color: D.accent }}>Archive</span>
+                <div className="w-8 h-px my-4" style={{ background: `${D.accent}66` }} />
+                <p className="page-number" style={{ color: D.muted }}>{totalItems} works across {categories.length} categories</p>
               </motion.div>
             </div>
             <div className="col-span-12 md:col-span-8 lg:col-span-9">
-              <motion.h1 initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.25 }} className="text-5xl md:text-7xl lg:text-8xl font-display tracking-tight leading-[0.9] mb-6">
+              <motion.h1 initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.25 }} className="text-5xl md:text-7xl lg:text-8xl font-display tracking-tight leading-[0.9] mb-6" style={{ color: D.text }}>
                 Complete Works
               </motion.h1>
-              <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }} className="text-base font-light max-w-xl leading-relaxed text-ink-light">
-                Every design piece, photograph, academic slide, and creative project — organized holistically in one browsable archive.
+              <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }} className="text-base font-light max-w-xl leading-relaxed" style={{ color: D.muted }}>
+                Every design piece, photograph, academic slide, and creative project — organized in one browsable archive.
               </motion.p>
             </div>
           </div>
         </div>
       </motion.header>
 
-      {/* Category Filter */}
-      <div className="sticky top-[73px] z-40 bg-paper/95 backdrop-blur-sm border-b border-ink/5">
-        <div className="mx-auto max-w-7xl px-6 md:px-12 py-4 overflow-x-auto">
-          <div className="flex gap-2 whitespace-nowrap">
-            <button
-              onClick={() => setActiveCategory('all')}
-              className={`px-4 py-2 text-xs font-heading tracking-[0.1em] uppercase rounded-sm transition-all duration-300 ${
-                activeCategory === 'all' ? 'bg-ink text-paper' : 'bg-paper-dark text-ink-faint hover:bg-accent/10 hover:text-accent'
-              }`}
-            >
-              All ({totalItems})
-            </button>
-            {categories.map((cat) => (
-              <button
-                key={cat.id}
-                onClick={() => setActiveCategory(cat.id)}
-                className={`px-4 py-2 text-xs font-heading tracking-[0.1em] uppercase rounded-sm transition-all duration-300 ${
-                  activeCategory === cat.id ? 'bg-ink text-paper' : 'bg-paper-dark text-ink-faint hover:bg-accent/10 hover:text-accent'
-                }`}
-              >
-                {cat.label}
+      {/* Search + Filter Bar */}
+      <div className="sticky top-[73px] z-40 border-b" style={{ background: D.stickyBg, backdropFilter: 'blur(8px)', borderColor: D.border }}>
+        <div className="mx-auto max-w-7xl px-6 md:px-12 pt-4 pb-2">
+          {/* Search */}
+          <input
+            type="text" placeholder="Search works..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
+            className="w-full px-4 py-2.5 text-sm rounded-sm border outline-none focus:border-accent"
+            style={{ background: D.card, borderColor: D.border, color: D.text, '::placeholder': { color: D.faint } }}
+          />
+          <div className="mt-3 overflow-x-auto pb-2">
+            <div className="flex gap-2 whitespace-nowrap">
+              <button onClick={() => { setActiveCategory('all'); setSearchQuery('') }}
+                className={`px-4 py-2 text-xs font-heading tracking-[0.1em] uppercase rounded-sm transition-all duration-300 ${activeCategory === 'all' && !searchQuery ? 'text-paper' : 'hover:text-accent'}`}
+                style={activeCategory === 'all' && !searchQuery ? { background: D.accent } : { background: D.filterBarBg, color: D.faint }}>
+                All ({totalItems})
               </button>
-            ))}
+              {categories.map((cat) => (
+                <button key={cat.id} onClick={() => setActiveCategory(cat.id)}
+                  className={`px-4 py-2 text-xs font-heading tracking-[0.1em] uppercase rounded-sm transition-all duration-300 ${activeCategory === cat.id ? 'text-paper' : 'hover:text-accent'}`}
+                  style={activeCategory === cat.id ? { background: D.accent } : { background: D.filterBarBg, color: D.faint }}>
+                  {cat.label}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Categories */}
-      {activeCategory === 'all' ? (
-        categories.map((cat) => <CategorySection key={cat.id} category={cat} isActive={true} />)
-      ) : (
-        <CategorySection category={categories.find(c => c.id === activeCategory)} isActive={true} />
-      )}
+      {/* Content */}
+      <AnimatePresence mode="wait">
+        <motion.div key={activeCategory + '__' + searchQuery} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
+          {shownItems.length > 0 ? (
+            shownItems.map(cat => <CategorySection key={cat.id} category={cat} />)
+          ) : (
+            <div className="py-24 text-center">
+              <p className="text-lg" style={{ color: D.muted }}>No works found matching &ldquo;{searchQuery}&rdquo;</p>
+              <button onClick={() => setSearchQuery('')} className="mt-4 text-sm underline" style={{ color: D.accent }}>Clear search</button>
+            </div>
+          )}
+        </motion.div>
+      </AnimatePresence>
 
       {/* Footer */}
-      <footer className="py-8 px-6 md:px-12 border-t border-ink/5">
+      <footer className="py-8 px-6 md:px-12 border-t" style={{ borderColor: D.border }}>
         <div className="mx-auto max-w-7xl flex items-center justify-between">
-          <Link to="/" className="font-display italic text-xl text-ink hover:text-accent transition-colors">
+          <Link to="/" className="font-display italic text-xl hover:transition-colors" style={{ color: D.text }}
+            onMouseEnter={e => e.currentTarget.style.color = D.accent}
+            onMouseLeave={e => e.currentTarget.style.color = D.text}>
             Y.S.
           </Link>
-          <span className="page-number">{t('precision')}</span>
+          <span className="page-number" style={{ color: D.faint }}>{t('precision')}</span>
         </div>
       </footer>
     </div>
