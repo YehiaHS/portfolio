@@ -1,8 +1,8 @@
 import { useRef, useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, useInView, useScroll, useTransform, AnimatePresence } from 'framer-motion'
-import { LineSlideUp, MaskReveal, GlitchText, DividerText, StaggerContainer, TextCounter } from './motionEffects'
-import { ColoredPanel, ContentGrid, SplitLayout, GhostButton, StackedCard } from './C2Patterns'
+import { LineSlideUp, MaskReveal, GlitchText, DividerText, StaggerContainer, TextCounter } from './motionEffects.jsx'
+import { ColoredPanel, ContentGrid, SplitLayout, GhostButton, StackedCard } from './C2Patterns.jsx'
 import { useLanguage } from './LanguageContext'
 import LanguageSelector from './LanguageSelector'
 import Cursor from './Cursor'
@@ -54,7 +54,9 @@ const Nav = () => {
           <a href="#about" className="page-number hover:text-accent transition-colors hidden md:inline-block">{t('aboutLabel')}</a>
           <a href="#skills" className="page-number hover:text-accent transition-colors hidden md:inline-block">{t('skillsTitle')}</a>
           <a href="#awards" className="page-number hover:text-accent transition-colors hidden md:inline-block">{t('awardsTitle')}</a>
+          <Link to="/works" className="page-number hover:text-accent transition-colors">Works</Link>
           <Link to="/portfolio" className="page-number hover:text-accent transition-colors">{t('viewPortfolio')}</Link>
+          <Link to="/behind-the-scenes" className="page-number hover:text-accent transition-colors hidden md:inline-block">Behind the Scenes</Link>
           <LanguageSelector />
         </div>
       </div>
@@ -352,6 +354,16 @@ const Hero = () => {
                 <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
                   <Link to="/portfolio" className="px-6 py-3 text-[0.7rem] font-heading font-semibold tracking-[0.18em] uppercase border border-ink/20 text-ink hover:border-accent hover:text-accent transition-colors duration-300">
                     {t('viewPortfolio')}
+                  </Link>
+                </motion.div>
+                <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
+                  <Link to="/behind-the-scenes" className="px-6 py-3 text-[0.7rem] font-heading font-semibold tracking-[0.18em] uppercase text-ink-light hover:text-accent transition-colors duration-300">
+                    Behind the Scenes
+                  </Link>
+                </motion.div>
+                <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
+                  <Link to="/works" className="px-6 py-3 text-[0.7rem] font-heading font-semibold tracking-[0.18em] uppercase text-ink-light hover:text-accent transition-colors duration-300">
+                    Complete Works
                   </Link>
                 </motion.div>
               </motion.div>

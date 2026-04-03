@@ -6,7 +6,7 @@
   "homepage": "https://YehiaHS.github.io/portfolio/",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "node scripts/build.js",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "predeploy": "npm run build",
