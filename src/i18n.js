@@ -470,4 +470,69 @@ export const languages = [
   { code: 'en', name: 'English', flag: '🇬🇧' },
   { code: 'ar', name: 'العربية', flag: '🇪🇬', rtl: true },
   { code: 'fr', name: 'Français', flag: '🇫🇷' },
-];
+]
+
+/* ──────────────── QUOTES (translated) ──────────────── */
+
+const quotesEn = [
+  { text: 'May the odds be ever in your favor.', source: 'The Hunger Games' },
+  { text: 'You don\'t forget what you\'ve survived.', source: 'Mockingjay' },
+  { text: 'Hope is the only thing stronger than fear.', source: 'Catching Fire' },
+  { text: 'Fire is catching! And if we burn, you burn with us!', source: 'Mockingjay' },
+  { text: 'I am mockingjay. The fire is catching, and if we burn, you burn with us.', source: 'Mockingjay' },
+  { text: 'The world isn\'t neat and tidy. None of it makes sense.', source: 'The Lightning Thief' },
+  { text: 'I have a lot on my mind. I don\'t need to be reminded about how doomed we are.', source: 'The Titan\'s Curse' },
+  { text: 'Destiny is a funny thing. You never see how it\'s playing out until the end.', source: 'The Lightning Thief' },
+  { text: 'Even the Fates are bound by the rules of Olympus.', source: 'The Last Olympian' },
+  { text: 'The very nature of you is to rebel and to make the world better.', source: 'The House of Hades' },
+  { text: 'It is only with the heart that one can see rightly; what is essential is invisible to the eye.', source: 'Le Petit Prince' },
+  { text: 'What makes the desert beautiful is that somewhere it hides a well.', source: 'Le Petit Prince' },
+  { text: 'All grown-ups were once children — but only few of them remember it.', source: 'Le Petit Prince' },
+  { text: 'You become responsible, forever, for what you have tamed.', source: 'Le Petit Prince' },
+  { text: 'If you come at four in the afternoon, I\'ll begin to be happy by three.', source: 'Le Petit Prince' },
+  { text: 'It is the time you have wasted for your rose that makes your rose so important.', source: 'Le Petit Prince' },
+]
+
+const quotesAr = [
+  { text: 'عسى أن تكون الاحتمالات دائماً في صالحك.', source: 'مباريات الجوع' },
+  { text: 'لا تنسى ما نجوتَ منه.', source: 'غراب شبيه' },
+  { text: 'الأمل هو الشيء الوحيد الأقوى من الخوف.', source: 'ألسنة اللهب' },
+  { text: 'النار تشتعل! وإذا احترقنا، ستحترق معنا!', source: 'غراب شبيه' },
+  { text: 'أنا الطائر المحاكي. النار تشتعل، وإذا احترقنا، ستحترق معنا.', source: 'غراب شبيه' },
+  { text: 'العالم ليس مرتباً ومنطقياً. لا شيء منه له معنى.', source: 'اللص البرقي' },
+  { text: 'علىّ الكثير في ذهني. لا أحتاج من يذكّرني بمدى هلاكنا.', source: 'لعنة التيتان' },
+  { text: 'القدر شيء طريف. لا تراه ينكشف إلا في النهاية.', source: 'اللص البرقي' },
+  { text: 'حتى القَدَر نفسه مقيد بقوانين الأولمب.', source: 'الأوليمبي الأخير' },
+  { text: 'طبيعتك أن تثور وتجعل العالم أفضل.', source: 'بيت الجحيم' },
+  { text: 'لا يُرى بوضوح إلا بالقلب؛ ما هو جوهري لا تراه العين.', source: 'الأمير الصغير' },
+  { text: 'ما يجعل الصحراء جميلة أنها تخفي بئراً في مكان ما.', source: 'الأمير الصغير' },
+  { text: 'كل الكبار كانوا أطفالاً من قبل — لكن القليل منهم يتذكر.', source: 'الأمير الصغير' },
+  { text: 'تصبح مسؤولاً إلى الأبد عمّا ألّفته.', source: 'الأمير الصغير' },
+  { text: 'إذا أتيت في الرابعة من بعد الظهر، سأبدأ بأن أكون سعيداً في الثالثة.', source: 'الأمير الصغير' },
+  { text: 'هو الوقت الذي أضعتَه في ورديتك الذي يجعل ورديتك مهمة جداً.', source: 'الأمير الصغير' },
+]
+
+const quotesFr = [
+  { text: 'Que la chance soit avec toi.', source: 'Hunger Games' },
+  { text: 'On n\'oublie jamais ce qu\'on a survécu.', source: 'La Révolte' },
+  { text: 'L\'espoir est la seule chose plus forte que la peur.', source: 'L\'Embrasement' },
+  { text: 'Le feu se propage ! Et si nous brûlons, vous brûlerez avec nous !', source: 'La Révolte' },
+  { text: 'Je suis le geai moqueur. Le feu se propage, et si nous brûlons, vous brûlerez avec nous.', source: 'La Révolte' },
+  { text: 'Le monde n\'est pas rangé et logique. Rien n\'a de sens.', source: 'Le Voleur de Foudre' },
+  { text: 'J\'ai beaucoup de choses en tête. Je n\'ai pas besoin qu\'on me rappelle à quel point nous sommes condamnés.', source: 'Le Sort du Titan' },
+  { text: 'Le destin est une drôle de chose. On ne voit jamais comment il se déroule avant la fin.', source: 'Le Voleur de Foudre' },
+  { text: 'Même les Moires sont liées par les règles de l\'Olympe.', source: 'Le Dernier Olympien' },
+  { text: 'Ta nature est de te rebeller et de rendre le monde meilleur.', source: 'La Maison d\'Hadès' },
+  { text: 'On ne voit bien qu\'avec le cœur. L\'essentiel est invisible pour les yeux.', source: 'Le Petit Prince' },
+  { text: 'Ce qui embellit le désert, c\'est qu\'il cache quelque part un puits.', source: 'Le Petit Prince' },
+  { text: 'Toutes les grandes personnes ont d\'abord été des enfants. Mais peu d\'entre elles s\'en souviennent.', source: 'Le Petit Prince' },
+  { text: 'Tu deviens responsable pour toujours de ce que tu as apprivoisé.', source: 'Le Petit Prince' },
+  { text: 'Si tu viens à quatre heures du soir, je commencerai dès trois heures à être heureux.', source: 'Le Petit Prince' },
+  { text: 'C\'est le temps que tu as perdu pour ta rose qui fait ta rose si importante.', source: 'Le Petit Prince' },
+]
+
+export const getQuotes = (lang) => {
+  if (lang === 'ar') return quotesAr
+  if (lang === 'fr') return quotesFr
+  return quotesEn
+}
