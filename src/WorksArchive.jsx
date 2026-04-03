@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback, useEffect } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useLanguage } from './LanguageContext'
@@ -156,52 +156,43 @@ const categories = [
 const D = {
   bg: '#0d1410',
   card: '#111c14',
-  cardHover: '#162319',
   border: 'rgba(45, 107, 63, 0.1)',
-  borderH: 'rgba(74, 159, 98, 0.25)',
   text: '#c8d8cc',
   muted: '#7a8a7e',
   faint: '#3a4a3e',
   accent: '#4a9f62',
-  accentDeep: '#2d6b3f',
   topBg: 'rgba(13, 20, 16, 0.92)',
   stickyBg: 'rgba(13, 20, 16, 0.95)',
   filterBarBg: '#111c14',
   skeleton: '#162319',
-  skeletonShine: '#1a2a1f',
 }
 
-/* ──────────────── FALLBACK SVG PLACEHOLDER ──────────────── */
+/* ──────────────── FALLBACK SVG ──────────────── */
 const Fallback = () => (
   <svg viewBox="0 0 400 267" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
     <rect width="400" height="267" fill={D.card} />
     <circle cx="200" cy="100" r="40" fill="none" stroke={D.faint} strokeWidth="1.5" />
-    <circle cx="210" cy="85" r="10" fill={D.faint} opacity="0.3" />
-    <path d="M240 180 L280 130 L320 170 Z" fill={D.faint} opacity="0.15" />
     <text x="200" y="180" textAnchor="middle" fill={D.faint} fontSize="11" fontFamily="sans-serif">Image unavailable</text>
   </svg>
 )
 
-/* Preload images to ensure onLoad/onError fire correctly */
+/* ──────────────── IMAGE STATE ──────────────── */
 function useImageState(src) {
-  const [state, setState] = useState('loading') // loading | loaded | error
-
+  const [state, setState] = useState('loading')
   useEffect(() => {
     let cancelled = false
     const img = new Image()
     img.src = src
-    // Timeout: if image hasn't loaded in 5s, treat as error
     const tid = setTimeout(() => { if (!cancelled) setState('error') }, 5000)
     img.onload = () => { if (!cancelled) { setState('loaded'); clearTimeout(tid) } }
     img.onerror = () => { if (!cancelled) { setState('error'); clearTimeout(tid) } }
     return () => { cancelled = true; clearTimeout(tid) }
   }, [src])
-
   return state
 }
 
-/* ──────────────── IMAGE CARD (with error handling + skeleton) ──────────────── */
-const ImageCard = ({ src, caption, index }) => {
+/* ──────────────── IMAGE CARD ──────────────── */
+const ImageCard = ({ src, caption, index, onClick }) => {
   const ref = useRef(null)
   const [inView, setInView] = useState(false)
   const imgState = useImageState(src)
@@ -220,8 +211,9 @@ const ImageCard = ({ src, caption, index }) => {
       initial={{ opacity: 0, y: 20 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ delay: Math.min(index * 0.03, 0.3), duration: 0.4 }}
-      className="group relative overflow-hidden rounded-sm border"
+      className="group relative overflow-hidden rounded-sm border cursor-pointer"
       style={{ borderColor: D.border }}
+      onClick={() => onClick && onClick({ src, caption })}
     >
       <div className="aspect-[3/2] overflow-hidden relative" style={{ background: D.card }}>
         {imgState === 'loading' && (
@@ -230,10 +222,8 @@ const ImageCard = ({ src, caption, index }) => {
           </div>
         )}
         {imgState === 'error' ? <Fallback /> : (
-          <img
-            src={src} alt={caption} loading="lazy"
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-          />
+          <img src={src} alt={caption} loading="lazy"
+            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
         )}
       </div>
       <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end pointer-events-none"
@@ -244,40 +234,87 @@ const ImageCard = ({ src, caption, index }) => {
   )
 }
 
-/* ──────────────── CATEGORY SECTION ──────────────── */
-const CategorySection = ({ category }) => {
+/* ──────────────── LIGHTBOX MODAL ──────────────── */
+const Lightbox = ({ src, caption, onClose, onPrev, onNext }) => {
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key === 'Escape') onClose()
+      if (e.key === 'ArrowLeft' && onPrev) onPrev()
+      if (e.key === 'ArrowRight' && onNext) onNext()
+    }
+    window.addEventListener('keydown', onKey)
+    document.body.style.overflow = 'hidden'
+    return () => { window.removeEventListener('keydown', onKey); document.body.style.overflow = '' }
+  }, [onClose, onPrev, onNext])
+
   return (
-    <motion.section
-      initial={{ opacity: 0, y: 30 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      className="py-16 px-6 md:px-12"
+    <motion.div
+      initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+      className="fixed inset-0 z-[9999] flex items-center justify-center"
+      style={{ background: 'rgba(5, 8, 6, 0.95)', backdropFilter: 'blur(20px)' }}
+      onClick={onClose}
     >
-      <div className="mx-auto max-w-7xl">
-        <div className="mb-10">
-          <span className="section-number" style={{ color: D.accent }}>
-            {categories.findIndex(c => c.id === category.id) + 1}
-          </span>
-          <h2 className="text-3xl md:text-4xl font-display mt-2" style={{ color: D.text }}>{category.label}</h2>
-          <p className="text-sm font-light mt-1" style={{ color: D.muted }}>{category.description}</p>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {category.items.map((item, i) => (
-            <ImageCard key={item.src} src={item.src} caption={item.caption} index={i} />
-          ))}
-        </div>
+      {/* Top bar */}
+      <div className="absolute top-6 left-0 right-0 flex items-center justify-between px-12" onClick={e => e.stopPropagation()}>
+        <p className="text-sm font-light" style={{ color: D.muted }}>{caption}</p>
+        <button onClick={onClose} className="text-3xl hover:text-accent transition-colors" style={{ color: D.text }}>&times;</button>
       </div>
-    </motion.section>
+      {/* Image */}
+      <img src={src} alt={caption} className="max-h-[85vh] max-w-[80vw] w-auto object-contain rounded-sm" onClick={e => e.stopPropagation()} />
+      {/* Navigation */}
+      {onPrev && (
+        <button onClick={e => { e.stopPropagation(); onPrev() }}
+          className="absolute left-6 top-1/2 -translate-y-1/2 text-4xl transition-opacity hover:opacity-100" style={{ color: D.text, opacity: 0.5 }}>
+          &larr;
+        </button>
+      )}
+      {onNext && (
+        <button onClick={e => { e.stopPropagation(); onNext() }}
+          className="absolute right-6 top-1/2 -translate-y-1/2 text-4xl transition-opacity hover:opacity-100" style={{ color: D.text, opacity: 0.5 }}>
+          &rarr;
+        </button>
+      )}
+    </motion.div>
   )
 }
+
+/* ──────────────── CATEGORY SECTION ──────────────── */
+const CategorySection = ({ category, onImageClick }) => (
+  <motion.section
+    initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.5 }}
+    className="py-16 px-6 md:px-12"
+  >
+    <div className="mx-auto max-w-7xl">
+      <div className="mb-10">
+        <span className="section-number" style={{ color: D.accent }}>
+          {categories.findIndex(c => c.id === category.id) + 1}
+        </span>
+        <h2 className="text-3xl md:text-4xl font-display mt-2" style={{ color: D.text }}>{category.label}</h2>
+        <p className="text-sm font-light mt-1" style={{ color: D.muted }}>{category.description}</p>
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {category.items.map((item, i) => (
+          <ImageCard key={item.src} src={item.src} caption={item.caption} index={i} onClick={onImageClick} />
+        ))}
+      </div>
+    </div>
+  </motion.section>
+)
 
 /* ──────────────── PAGE ──────────────── */
 function WorksArchive() {
   const { t } = useLanguage()
   const [activeCategory, setActiveCategory] = useState('all')
   const [searchQuery, setSearchQuery] = useState('')
+  const [lightbox, setLightbox] = useState(null)
 
   const totalItems = categories.reduce((s, c) => s + c.items.length, 0)
+
+  // Collect all items currently shown (for lightbox navigation)
+  const allShownItems = (activeCategory === 'all' ? categories : categories.filter(c => c.id === activeCategory))
+    .flatMap(cat => cat.items)
+    .filter(item => !searchQuery || item.caption.toLowerCase().includes(searchQuery.toLowerCase()))
 
   const filteredCategories = activeCategory === 'all'
     ? categories
@@ -289,6 +326,20 @@ function WorksArchive() {
         items: cat.items.filter(item => item.caption.toLowerCase().includes(searchQuery.toLowerCase()))
       })).filter(cat => cat.items.length > 0)
     : filteredCategories
+
+  function openLightbox(item) {
+    const idx = allShownItems.findIndex(i => i.src === item.src)
+    setLightbox({ ...item, index: idx })
+  }
+
+  function closeLightbox() { setLightbox(null) }
+
+  function navLightbox(delta) {
+    if (!lightbox) return
+    const nextIdx = (lightbox.index + delta + allShownItems.length) % allShownItems.length
+    const item = allShownItems[nextIdx]
+    setLightbox({ src: item.src, caption: item.caption, index: nextIdx })
+  }
 
   return (
     <div className="relative min-h-screen cursor-none page-enter" style={{ background: D.bg, color: D.text }}>
@@ -339,23 +390,22 @@ function WorksArchive() {
       {/* Search + Filter Bar */}
       <div className="sticky top-[73px] z-40 border-b" style={{ background: D.stickyBg, backdropFilter: 'blur(8px)', borderColor: D.border }}>
         <div className="mx-auto max-w-7xl px-6 md:px-12 pt-4 pb-2">
-          {/* Search */}
           <input
             type="text" placeholder="Search works..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
-            className="w-full px-4 py-2.5 text-sm rounded-sm border outline-none focus:border-accent"
-            style={{ background: D.card, borderColor: D.border, color: D.text, '::placeholder': { color: D.faint } }}
+            className="w-full px-4 py-2.5 text-sm rounded-sm border outline-none transition-colors"
+            style={{ background: D.card, borderColor: D.border, color: D.text }}
           />
           <div className="mt-3 overflow-x-auto pb-2">
             <div className="flex gap-2 whitespace-nowrap">
               <button onClick={() => { setActiveCategory('all'); setSearchQuery('') }}
-                className={`px-4 py-2 text-xs font-heading tracking-[0.1em] uppercase rounded-sm transition-all duration-300 ${activeCategory === 'all' && !searchQuery ? 'text-paper' : 'hover:text-accent'}`}
-                style={activeCategory === 'all' && !searchQuery ? { background: D.accent } : { background: D.filterBarBg, color: D.faint }}>
+                className="px-4 py-2 text-xs font-heading tracking-[0.1em] uppercase rounded-sm transition-all duration-300"
+                style={activeCategory === 'all' && !searchQuery ? { background: D.accent, color: '#fff' } : { background: D.filterBarBg, color: D.faint }}>
                 All ({totalItems})
               </button>
               {categories.map((cat) => (
                 <button key={cat.id} onClick={() => setActiveCategory(cat.id)}
-                  className={`px-4 py-2 text-xs font-heading tracking-[0.1em] uppercase rounded-sm transition-all duration-300 ${activeCategory === cat.id ? 'text-paper' : 'hover:text-accent'}`}
-                  style={activeCategory === cat.id ? { background: D.accent } : { background: D.filterBarBg, color: D.faint }}>
+                  className="px-4 py-2 text-xs font-heading tracking-[0.1em] uppercase rounded-sm transition-all duration-300"
+                  style={activeCategory === cat.id ? { background: D.accent, color: '#fff' } : { background: D.filterBarBg, color: D.faint }}>
                   {cat.label}
                 </button>
               ))}
@@ -368,11 +418,11 @@ function WorksArchive() {
       <AnimatePresence mode="wait">
         <motion.div key={activeCategory + '__' + searchQuery} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
           {shownItems.length > 0 ? (
-            shownItems.map(cat => <CategorySection key={cat.id} category={cat} />)
+            shownItems.map(cat => <CategorySection key={cat.id} category={cat} onImageClick={openLightbox} />)
           ) : (
             <div className="py-24 text-center">
               <p className="text-lg" style={{ color: D.muted }}>No works found matching &ldquo;{searchQuery}&rdquo;</p>
-              <button onClick={() => setSearchQuery('')} className="mt-4 text-sm underline" style={{ color: D.accent }}>Clear search</button>
+              <button onClick={() => setSearchQuery('')} className="mt-4 text-sm" style={{ color: D.accent, textDecoration: 'underline' }}>Clear search</button>
             </div>
           )}
         </motion.div>
@@ -381,14 +431,22 @@ function WorksArchive() {
       {/* Footer */}
       <footer className="py-8 px-6 md:px-12 border-t" style={{ borderColor: D.border }}>
         <div className="mx-auto max-w-7xl flex items-center justify-between">
-          <Link to="/" className="font-display italic text-xl hover:transition-colors" style={{ color: D.text }}
-            onMouseEnter={e => e.currentTarget.style.color = D.accent}
-            onMouseLeave={e => e.currentTarget.style.color = D.text}>
-            Y.S.
-          </Link>
+          <Link to="/" className="font-display italic text-xl" style={{ color: D.text }}>Y.S.</Link>
           <span className="page-number" style={{ color: D.faint }}>{t('precision')}</span>
         </div>
       </footer>
+
+      {/* Lightbox */}
+      <AnimatePresence>
+        {lightbox && (
+          <Lightbox
+            src={lightbox.src} caption={lightbox.caption}
+            onClose={closeLightbox}
+            onPrev={lightbox.index > 0 ? () => navLightbox(-1) : null}
+            onNext={lightbox.index < allShownItems.length - 1 ? () => navLightbox(1) : null}
+          />
+        )}
+      </AnimatePresence>
     </div>
   )
 }

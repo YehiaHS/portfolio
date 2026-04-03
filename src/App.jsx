@@ -181,6 +181,43 @@ const HeroBotanicalBg = () => (
   </div>
 )
 
+/* Random quotes from Hunger Games, Percy Jackson, and Le Petit Prince */
+const QUOTES = [
+  // Hunger Games
+  { text: 'May the odds be ever in your favor.', source: 'The Hunger Games' },
+  { text: 'You don\'t forget what you\'ve survived.', source: 'Mockingjay' },
+  { text: 'Hope is the only thing stronger than fear.', source: 'Catching Fire' },
+  { text: 'Remember, we\'re madly in love, so it\'s all right to kiss me anytime you feel like it.', source: 'The Hunger Games' },
+  { text: 'I am mockingjay. The fire is catching, and if we burn, you burn with us.', source: 'Mockingjay' },
+  // Percy Jackson
+  { text: 'The world isn\'t neat and tidy. None of it makes sense.', source: 'The Lightning Thief' },
+  { text: 'I have a lot on my mind. I don\'t need to be reminded about how doomed we are.', source: 'The Titan\'s Curse' },
+  { text: 'Destiny is a funny thing. You never see how it\'s playing out until the end.', source: 'The Lightning Thief' },
+  { text: 'Even the Fates are bound by the rules of Olympus.', source: 'The Last Olympian' },
+  { text: 'The very nature of you is to rebel and to make the world better.', source: 'The House of Hades' },
+  // Le Petit Prince
+  { text: 'It is only with the heart that one can see rightly; what is essential is invisible to the eye.', source: 'Le Petit Prince' },
+  { text: 'What makes the desert beautiful is that somewhere it hides a well.', source: 'Le Petit Prince' },
+  { text: 'All grown-ups were once children — but only few of them remember it.', source: 'Le Petit Prince' },
+  { text: 'You become responsible, forever, for what you have tamed.', source: 'Le Petit Prince' },
+  { text: 'If you come at four in the afternoon, I\'ll begin to be happy by three.', source: 'Le Petit Prince' },
+  { text: 'It is the time you have wasted for your rose that makes your rose so important.', source: 'Le Petit Prince' },
+]
+
+const QuoteBlock = () => {
+  const [quote] = useState(() => QUOTES[Math.floor(Math.random() * QUOTES.length)])
+  return (
+    <div className="mt-10 md:mt-14">
+      <p className="text-xl md:text-2xl lg:text-3xl font-italic italic text-ink-light/60 max-w-lg leading-relaxed">
+        &ldquo;{quote.text}&rdquo;
+      </p>
+      <p className="mt-2 page-number text-ink-faint/50" style={{ textAlign: 'right' }}>
+        &mdash; {quote.source}
+      </p>
+    </div>
+  )
+}
+
 /* ──────────────────────── HERO ──────────────────────── */
 const Hero = () => {
   const { t } = useLanguage()
@@ -336,9 +373,7 @@ const Hero = () => {
 
               {/* Quote */}
               <AnimatedSection delay={1.0}>
-                <p className="mt-10 md:mt-14 text-xl md:text-2xl lg:text-3xl font-italic italic text-ink-light/60 max-w-lg leading-relaxed">
-                  &ldquo;Where code meets canvas &mdash; building at the intersection of logic and imagination.&rdquo;
-                </p>
+                <QuoteBlock />
               </AnimatedSection>
 
               {/* CTA buttons */}
