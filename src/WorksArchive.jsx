@@ -255,22 +255,29 @@ const Lightbox = ({ src, caption, onClose, onPrev, onNext }) => {
       onClick={onClose}
     >
       {/* Top bar */}
-      <div className="absolute top-6 left-0 right-0 flex items-center justify-between px-12" onClick={e => e.stopPropagation()}>
+      <div className="absolute top-5 left-0 right-0 z-10 flex items-center justify-between px-6" onClick={e => e.stopPropagation()}>
         <p className="text-sm font-light" style={{ color: D.muted }}>{caption}</p>
-        <button onClick={onClose} className="text-3xl hover:text-accent transition-colors" style={{ color: D.text }}>&times;</button>
+        <button onClick={onClose} className="text-3xl hover:text-accent transition-colors w-10 h-10 flex items-center justify-center" style={{ color: D.text }}>&times;</button>
       </div>
-      {/* Image */}
-      <img src={src} alt={caption} className="max-h-[85vh] max-w-[80vw] w-auto object-contain rounded-sm" onClick={e => e.stopPropagation()} />
+      {/* Image container */}
+      <div className="flex items-center justify-center p-12 pt-14" onClick={e => e.stopPropagation()}>
+        <img
+          src={src} alt={caption}
+          style={{ maxHeight: '80vh', maxWidth: '75vw' }}
+          className="object-contain rounded-sm"
+          onClick={e => e.stopPropagation()}
+        />
+      </div>
       {/* Navigation */}
       {onPrev && (
         <button onClick={e => { e.stopPropagation(); onPrev() }}
-          className="absolute left-6 top-1/2 -translate-y-1/2 text-4xl transition-opacity hover:opacity-100" style={{ color: D.text, opacity: 0.5 }}>
+          className="absolute left-4 top-1/2 -translate-y-1/2 text-5xl transition-opacity hover:opacity-100 z-20" style={{ color: D.text, opacity: 0.4 }}>
           &larr;
         </button>
       )}
       {onNext && (
         <button onClick={e => { e.stopPropagation(); onNext() }}
-          className="absolute right-6 top-1/2 -translate-y-1/2 text-4xl transition-opacity hover:opacity-100" style={{ color: D.text, opacity: 0.5 }}>
+          className="absolute right-4 top-1/2 -translate-y-1/2 text-5xl transition-opacity hover:opacity-100 z-20" style={{ color: D.text, opacity: 0.4 }}>
           &rarr;
         </button>
       )}

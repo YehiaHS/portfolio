@@ -187,7 +187,7 @@ const QUOTES = [
   { text: 'May the odds be ever in your favor.', source: 'The Hunger Games' },
   { text: 'You don\'t forget what you\'ve survived.', source: 'Mockingjay' },
   { text: 'Hope is the only thing stronger than fear.', source: 'Catching Fire' },
-  { text: 'Remember, we\'re madly in love, so it\'s all right to kiss me anytime you feel like it.', source: 'The Hunger Games' },
+  { text: 'Fire is catching! And if we burn, you burn with us!', source: 'Mockingjay' },
   { text: 'I am mockingjay. The fire is catching, and if we burn, you burn with us.', source: 'Mockingjay' },
   // Percy Jackson
   { text: 'The world isn\'t neat and tidy. None of it makes sense.', source: 'The Lightning Thief' },
