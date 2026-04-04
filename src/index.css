@@ -887,7 +887,6 @@ ol.accent-number li::before {
     font-weight: 500;
     letter-spacing: 0.15em;
     color: var(--ink-faint);
-    text-align: center;
     line-height: 1.6;
   }
 
