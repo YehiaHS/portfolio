@@ -202,6 +202,7 @@ function BehindTheScenes() {
       <motion.div className="fixed top-0 left-0 right-0 h-[2px] z-[9999] origin-left" style={{ scaleX: scrollPercent, backgroundColor: '#4a9f62' }} />
 
       {/* Top bar */}
+      <div className="fixed top-0 left-0 right-0 z-50">
         <div className="mx-auto max-w-7xl px-6 md:px-12 py-5 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Link
