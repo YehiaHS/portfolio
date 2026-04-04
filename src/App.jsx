@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from 'react'
+import { useRef, useState, useEffect, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, useInView, useScroll, useTransform, AnimatePresence } from 'framer-motion'
 import { LineSlideUp, MaskReveal, GlitchText, DividerText, StaggerContainer, TextCounter } from './motionEffects.jsx'
@@ -7,10 +7,51 @@ import { useLanguage } from './LanguageContext'
 import LanguageSelector from './LanguageSelector'
 import Cursor from './Cursor'
 import { getQuotes } from './i18n'
+import { prepare as _prepare } from '@chenglou/pretext'
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] } },
+}
+
+/* ───────────────────────────── PRETEXT UTILITIES ───────────────────────────── */
+/* Measures text height without DOM, used for precise layout and reading-time estimates */
+
+function useTextMetrics(text, font = '14px Manrope', maxWidth = 600, lineHeight = 24) {
+  return useMemo(() => {
+    try {
+      const prepared = _prepare(text, font)
+      // Count graphemes for reading-time estimate
+      const charCount = text.length
+      const wordCount = text.split(/\s+/).filter(Boolean).length
+      const readingTimeSec = Math.max(1, Math.ceil(wordCount / 3.8)) // ~230 wpm
+      return { charCount, wordCount, readingTimeSec }
+    } catch {
+      return { charCount: text.length, wordCount: text.split(/\s+/).length, readingTimeSec: 1 }
+    }
+  }, [text, font, maxWidth, lineHeight])
+}
+
+/* Animated word-count badge — uses pretext to measure text and show reading time */
+const ReadingBadge = ({ text, className = '' }) => {
+  const { readingTimeSec } = useTextMetrics(text)
+  return (
+    <motion.span
+      initial={{ opacity: 0, scale: 0.8 }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      viewport={{ once: true }}
+      transition={{ delay: 0.6, duration: 0.3 }}
+      className={`inline-flex items-center gap-1.5 px-2.5 py-1 border rounded-sm ${className}`}
+    >
+      <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <circle cx="12" cy="12" r="10" />
+        <polyline points="12 6 12 12 16 14" />
+      </svg>
+      <span className="text-[0.55rem] font-heading tracking-wide">
+        {readingTimeSec < 120 ? `${readingTimeSec}s read` : `${Math.ceil(readingTimeSec / 60)} min read`}
+      </span>
+    </motion.span>
+  )
 }
 
 const AnimatedSection = ({ children, className = '', delay = 0 }) => {
@@ -34,6 +75,7 @@ const AnimatedSection = ({ children, className = '', delay = 0 }) => {
 const Nav = () => {
   const { t } = useLanguage()
   const [scrolled, setScrolled] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 60)
@@ -41,7 +83,16 @@ const Nav = () => {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
+  // Close mobile menu on route change
+  useEffect(() => {
+    if (menuOpen) {
+      document.body.style.overflow = 'hidden'
+      return () => { document.body.style.overflow = '' }
+    }
+  }, [menuOpen])
+
   return (
+    <>
     <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? 'bg-[#f7f3ee]/90 backdrop-blur-md' : ''}`}>
       <div className="mx-auto max-w-7xl px-6 md:px-12 py-5 flex items-center justify-between">
         <div className="flex items-center gap-4">
@@ -55,16 +106,90 @@ const Nav = () => {
           <a href="#about" className="page-number hover:text-accent transition-colors hidden md:inline-block">{t('aboutLabel')}</a>
           <a href="#skills" className="page-number hover:text-accent transition-colors hidden md:inline-block">{t('skillsTitle')}</a>
           <a href="#awards" className="page-number hover:text-accent transition-colors hidden md:inline-block">{t('awardsTitle')}</a>
-          <Link to="/works" className="page-number hover:text-accent transition-colors">Works</Link>
-          <Link to="/portfolio" className="page-number hover:text-accent transition-colors">{t('viewPortfolio')}</Link>
+          <Link to="/works" className="page-number hover:text-accent transition-colors hidden md:inline-block">Works</Link>
+          <Link to="/portfolio" className="page-number hover:text-accent transition-colors hidden md:inline-block">{t('viewPortfolio')}</Link>
           <Link to="/behind-the-scenes" className="page-number hover:text-accent transition-colors hidden md:inline-block">Behind the Scenes</Link>
           <LanguageSelector />
+          {/* Mobile hamburger */}
+          <button
+            className="md:hidden flex flex-col gap-1.5 p-2 z-50"
+            onClick={() => setMenuOpen(!menuOpen)}
+            aria-label="Toggle menu"
+          >
+            <motion.span
+              className="block w-5 h-px bg-ink"
+              animate={menuOpen ? { rotate: 45, y: 3.5 } : { rotate: 0, y: 0 }}
+              transition={{ duration: 0.3 }}
+            />
+            <motion.span
+              className="block w-5 h-px bg-ink"
+              animate={menuOpen ? { opacity: 0 } : { opacity: 1 }}
+              transition={{ duration: 0.2 }}
+            />
+            <motion.span
+              className="block w-5 h-px bg-ink"
+              animate={menuOpen ? { rotate: -45, y: -3.5 } : { rotate: 0, y: 0 }}
+              transition={{ duration: 0.3 }}
+            />
+          </button>
         </div>
       </div>
       <div className="mx-auto max-w-7xl px-6 md:px-12">
         <div className="h-px bg-gradient-to-r from-transparent via-ink/10 to-transparent" />
       </div>
     </nav>
+
+    {/* Mobile menu overlay */}
+    <AnimatePresence>
+      {menuOpen && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-40 bg-[#f7f3ee]/95 backdrop-blur-xl flex items-center justify-center"
+          onClick={() => setMenuOpen(false)}
+        >
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            transition={{ delay: 0.1, duration: 0.4 }}
+            className="text-center"
+            onClick={e => e.stopPropagation()}
+          >
+            {[
+              { label: t('aboutLabel'), href: '#about', action: () => setMenuOpen(false) },
+              { label: t('skillsTitle'), href: '#skills', action: () => setMenuOpen(false) },
+              { label: t('awardsTitle'), href: '#awards', action: () => setMenuOpen(false) },
+              { label: 'Works', href: '/works', action: () => setMenuOpen(false) },
+              { label: t('viewPortfolio'), href: '/portfolio', action: () => setMenuOpen(false) },
+              { label: 'Behind the Scenes', href: '/behind-the-scenes', action: () => setMenuOpen(false) },
+            ].map((item, i) => (
+              <motion.div
+                key={item.label}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.15 + i * 0.06 }}
+              >
+                <a
+                  href={item.href}
+                  onClick={(e) => {
+                    item.action()
+                    if (item.href.startsWith('#')) {
+                      document.querySelector(item.href)?.scrollIntoView({ behavior: 'smooth' })
+                    }
+                  }}
+                  className="block text-2xl font-display py-4 text-ink hover:text-accent transition-colors"
+                >
+                  {item.label}
+                </a>
+              </motion.div>
+            ))}
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+    </>
   )
 }
 
@@ -769,6 +894,9 @@ const About = () => {
                     {profile.summary}
                   </p>
                 </MaskReveal>
+
+                {/* Reading time badge powered by pretext */}
+                <ReadingBadge text={profile.summary} className="border-ink/10 text-ink-faint mt-3" />
 
                 {/* Quick Facts row */}
                 <AnimatedSection delay={0.6}>

@@ -1,10 +1,10 @@
 ---
 active: true
-iteration: 10
+iteration: 1
 session_id: 
 max_iterations: 0
 completion_promise: null
-started_at: "2026-04-03T21:10:30Z"
+started_at: "2026-04-04T01:01:45Z"
 ---
 
-improve the content serving on the works page because its just infinitely loading, then make the page dark mode by default with the same green vibe
+find issues with all pages, and fix them, and add QoL improvements, and do cool design stuff with the new pretext library with the design without overcrowding
