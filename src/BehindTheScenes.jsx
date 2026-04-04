@@ -61,18 +61,6 @@ const videoGallery = [
     description: 'Integrated marketing campaign planning',
     duration: 'Full clip',
   },
-  {
-    src: '/portfolio/videos/open-day-tiktok.mp4',
-    title: 'Open Day — TikTok',
-    description: 'Social media content for campus Open Day',
-    duration: 'Short form',
-  },
-  {
-    src: '/portfolio/videos/open-day-tiktok-revised.mp4',
-    title: 'Open Day — TikTok (Revised)',
-    description: 'Revised social media cut with refined edit',
-    duration: 'Short form',
-  },
 ]
 
 /* ───────────────────────── COMPONENTS ───────────────────────── */
