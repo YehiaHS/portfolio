@@ -215,7 +215,7 @@ const Nav = () => {
           <a href="#skills" className="page-number hover:text-accent transition-colors hidden md:inline-block">{t('skillsTitle')}</a>
           <a href="#awards" className="page-number hover:text-accent transition-colors hidden md:inline-block">{t('awardsTitle')}</a>
           <Link to="/works" className="page-number hover:text-accent transition-colors hidden md:inline-block">Works</Link>
-          <Link to="/portfolio" className="page-number hover:text-accent transition-colors hidden md:inline-block">{t('viewPortfolio')}</Link>
+          <Link to="/works" className="page-number hover:text-accent transition-colors hidden md:inline-block">{t('viewPortfolio')}</Link>
           <Link to="/behind-the-scenes" className="page-number hover:text-accent transition-colors hidden md:inline-block">Behind the Scenes</Link>
           <LanguageSelector />
           {/* Mobile hamburger */}
@@ -270,7 +270,7 @@ const Nav = () => {
               { label: t('skillsTitle'), href: '#skills', action: () => setMenuOpen(false) },
               { label: t('awardsTitle'), href: '#awards', action: () => setMenuOpen(false) },
               { label: 'Works', href: '/works', action: () => setMenuOpen(false) },
-              { label: t('viewPortfolio'), href: '/portfolio', action: () => setMenuOpen(false) },
+              { label: t('viewPortfolio'), href: '/works', action: () => setMenuOpen(false) },
               { label: 'Behind the Scenes', href: '/behind-the-scenes', action: () => setMenuOpen(false) },
             ].map((item, i) => (
               <MobileMenuItem key={item.label} item={item} index={i} onClose={() => setMenuOpen(false)} />
@@ -617,7 +617,7 @@ const Hero = () => {
                   {t('explore')}
                 </motion.a>
                 <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
-                  <Link to="/portfolio" className="px-6 py-3 text-[0.7rem] font-heading font-semibold tracking-[0.18em] uppercase border border-ink/20 text-ink hover:border-accent hover:text-accent transition-colors duration-300">
+                  <Link to="/works" className="px-6 py-3 text-[0.7rem] font-heading font-semibold tracking-[0.18em] uppercase border border-ink/20 text-ink hover:border-accent hover:text-accent transition-colors duration-300">
                     {t('viewPortfolio')}
                   </Link>
                 </motion.div>
@@ -2223,8 +2223,8 @@ const Footer = () => {
               <a href="https://linkedin.com/in/yehiahatemsalem" target="_blank" rel="noreferrer" className="block text-sm text-paper/50 hover:text-accent transition-colors font-light">
                 LinkedIn
               </a>
-              <Link to="/portfolio" className="block text-sm text-paper/50 hover:text-accent transition-colors font-light">
-                Portfolio
+              <Link to="/works" className="block text-sm text-paper/50 hover:text-accent transition-colors font-light">
+                Works Archive
               </Link>
             </div>
           </div>
