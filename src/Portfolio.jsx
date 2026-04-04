@@ -382,7 +382,7 @@ const SkillTags = ({ skills }) => {
         <span
           key={s}
           className="page-number px-3 py-1 font-display text-[0.65rem] border text-ink"
-          style={{ backgroundColor: D.cardBg, borderColor: '#2d5a3d25', color: '#0d1a0f' }}
+          style={{ backgroundColor: D.cardBg, borderColor: '#2d5a3d25', color: D.primary }}
         >
           {s}
         </span>
@@ -455,7 +455,7 @@ const OverviewStats = ({ works }) => {
               viewport={{ once: true }}
               transition={{ delay: i * 0.1, duration: 0.5 }}
             >
-              <div className="font-display text-2xl md:text-3xl tracking-tight" style={{ color: '#0d1a0f' }}>
+              <div className="font-display text-2xl md:text-3xl tracking-tight" style={{ color: D.primary }}>
                 <TextCounter target={parseInt(stat.value, 10)} />
               </div>
               <div className="text-[0.6rem] uppercase tracking-widest mt-1 page-number" style={{ color: '#2d5a3d60' }}>{stat.label}</div>
@@ -508,7 +508,7 @@ const ProcessSection = () => {
                 <div className="w-14 h-14 rounded-full flex items-center justify-center mb-3 relative z-10" style={{ backgroundColor: D.cardBg, border: '1px solid #2d5a3d15' }}>
                   <span style={{ color: '#4a9f62', fontSize: '1.25rem' }}>{step.icon}</span>
                 </div>
-                <span className="font-display text-sm" style={{ color: '#0d1a0f' }}>{t(step.key) || step.label}</span>
+                <span className="font-display text-sm" style={{ color: D.primary }}>{t(step.key) || step.label}</span>
                 <span className="text-[0.6rem] page-number mt-1" style={{ color: '#2d5a3d60' }}>{String(i + 1).padStart(2, '0')}</span>
               </motion.div>
             ))}
@@ -564,7 +564,7 @@ const TechniquesTools = () => {
     tertiary: 'border-ink/5',
   }
   const colorMap = {
-    primary: { color: '#0d1a0f' },
+    primary: { color: D.primary },
     secondary: { color: '#2d5a3d' },
     tertiary: { color: '#2d5a3d80' },
   }
@@ -739,7 +739,7 @@ const WorkItem = ({ work, index }) => {
         </motion.p>
 
         {/* Title & Description */}
-        <h3 className="text-2xl md:text-4xl font-display mb-2 tracking-tight leading-tight" style={{ color: '#0d1a0f' }}>{work.title}</h3>
+        <h3 className="text-2xl md:text-4xl font-display mb-2 tracking-tight leading-tight" style={{ color: D.primary }}>{work.title}</h3>
         <MaskReveal>
           <p className="text-sm leading-relaxed mb-4 font-light max-w-2xl" style={{ color: '#2d5a3d' }}>{work.description}</p>
         </MaskReveal>
@@ -913,7 +913,7 @@ const Reflections = () => {
                     {/* Timeline dot */}
                     <div className="absolute -left-[3px] top-2 w-[7px] h-[7px] rounded-full hidden md:block" style={{ backgroundColor: '#4a8f5c40' }} />
 
-                    <h3 className="text-xl md:text-2xl font-display mb-4 tracking-tight" style={{ color: '#0d1a0f' }}>
+                    <h3 className="text-xl md:text-2xl font-display mb-4 tracking-tight" style={{ color: D.primary }}>
                       {stmt.title}
                     </h3>
                     <LineSlideUp>
