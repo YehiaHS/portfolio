@@ -178,7 +178,7 @@ const VideoCard = ({ src, title, description, duration, index }) => {
 /* ───────────────────────── MASONRY GRID ───────────────────────── */
 const MasonryGrid = ({ images }) => {
   return (
-    <div className="columns-1 sm:columns-2 lg:columns-3 gap-4 space-y-4">
+    <div className="columns-1 sm:columns-2 xl:columns-3 lg:columns-2 gap-3 md:gap-4 space-y-3 md:space-y-4">
       {images.map((photo, i) => (
         <div key={photo.src} className="break-inside-avoid">
           <ImageCard src={photo.src} caption={photo.caption} index={i} />
@@ -221,7 +221,7 @@ function BehindTheScenes() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1 }}
-        className="pt-28 pb-16 px-6 md:px-12"
+        className="pt-24 md:pt-28 pb-12 md:pb-16 px-6 md:px-8 lg:px-12"
       >
         <div className="mx-auto max-w-7xl">
           <div className="grid grid-cols-12 gap-8 md:gap-16">
@@ -241,7 +241,7 @@ function BehindTheScenes() {
                 initial={{ opacity: 0, y: 40 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
-                className="text-5xl md:text-7xl lg:text-8xl font-display tracking-tight leading-[0.9] mb-6"
+                className="font-display tracking-tight leading-[0.9] mb-6" style={{ fontSize: 'clamp(2.5rem, 8vw, 9rem)' }}
               >
                 Behind the Scenes
               </motion.h1>
@@ -264,7 +264,7 @@ function BehindTheScenes() {
       </div>
 
       {/* ───── CHINESE CULTURE DAY ───── */}
-      <section className="py-24 px-6 md:px-12">
+      <section className="py-16 md:py-24 px-6 md:px-8 lg:px-12">
         <div className="mx-auto max-w-7xl">
           <div className="mb-14">
             <span className="section-number">Event 01</span>
@@ -278,7 +278,7 @@ function BehindTheScenes() {
       <DividerText text="LIFE" />
 
       {/* ───── OPEN DAY ───── */}
-      <section className="py-24 px-6 md:px-12">
+      <section className="py-16 md:py-24 px-6 md:px-8 lg:px-12">
         <div className="mx-auto max-w-7xl">
           <div className="mb-14">
             <span className="section-number">Event 02</span>
@@ -292,7 +292,7 @@ function BehindTheScenes() {
       <DividerText text="CRAFT" />
 
       {/* ───── VIDEO GALLERY ───── */}
-      <section className="py-24 px-6 md:px-12">
+      <section className="py-16 md:py-24 px-6 md:px-8 lg:px-12">
         <div className="mx-auto max-w-7xl">
           <div className="mb-14">
             <span className="section-number">Motion</span>

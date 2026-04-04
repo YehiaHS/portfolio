@@ -634,9 +634,10 @@ const WorkItem = ({ work, index }) => {
   const [showReflection, setShowReflection] = useState(false)
   const [isHovered, setIsHovered] = useState(false)
   const [imageError, setImageError] = useState(false)
+  const [imageLoaded, setImageLoaded] = useState(false)
   const { t } = useLanguage()
   const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, margin: '-50px' })
+  const isInView = useInView(ref, { once: true, margin: '-20px', amount: 0.1 })
   const meta = PROJECT_META[index] || PROJECT_META[0]
   const FallbackSvg = projectSvgs[index] || projectSvgs[0]
 
@@ -644,8 +645,8 @@ const WorkItem = ({ work, index }) => {
     <motion.div
       ref={ref}
       initial={{ opacity: 0, y: 60 }}
-      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0 }}
-      transition={{ delay: 0.1, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+      animate={isInView ? { opacity: 1, y: 0 } : {}}
+      transition={{ delay: 0.05, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
       className="relative"
       style={{ minHeight: 'calc(100vh - 12rem)' }}
       onMouseEnter={() => setIsHovered(true)}
@@ -686,13 +687,20 @@ const WorkItem = ({ work, index }) => {
           <div className="relative aspect-[4/3] overflow-hidden mb-6">
             <CornerMarks />
           <div className="absolute inset-[11px] overflow-hidden">
+            {!imageError && !imageLoaded && (
+              <div className="absolute inset-0 flex items-center justify-center" style={{ background: 'var(--paper-darker, #111c14)' }}>
+                <div className="w-6 h-6 border-2 rounded-full animate-spin" style={{ borderTopColor: '#4a9f62', borderColor: '#2d5a3d30' }} />
+              </div>
+            )}
             {!imageError && (
               <motion.img
                 src={work.media.src}
                 alt={work.title}
                 className="h-full w-full object-cover"
+                style={{ opacity: imageLoaded ? 1 : 0 }}
                 animate={{ scale: isHovered ? 1.04 : 1 }}
                 transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                onLoad={() => setImageLoaded(true)}
                 onError={() => setImageError(true)}
               />
             )}

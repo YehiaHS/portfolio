@@ -219,17 +219,17 @@ const Hero = () => {
   }, [])
 
   return (
-    <section className="relative min-h-screen flex flex-col justify-center pt-20 px-6 md:px-12 overflow-hidden">
+    <section className="relative min-h-screen flex flex-col justify-center pt-20 px-6 md:px-8 lg:px-12 overflow-hidden">
       <motion.div style={{ opacity: heroOpacity, y: heroY }}>
         <FloatingShapes />
         <HeroBotanicalBg />
 
         {/* Sidebar border edges */}
-        <div className="absolute left-6 md:left-12 top-0 bottom-0 w-px bg-ink/5" />
-        <div className="absolute right-6 md:right-12 top-0 bottom-0 w-px bg-ink/5" />
+        <div className="absolute left-6 md:left-8 lg:left-12 top-0 bottom-0 w-px bg-ink/5" />
+        <div className="absolute right-6 md:right-8 lg:right-12 top-0 bottom-0 w-px bg-ink/5" />
 
         {/* Watermark 01 */}
-        <div className="absolute top-32 right-8 md:right-16 opacity-[0.03] font-heading text-[14rem] md:text-[22rem] font-bold leading-none select-none pointer-events-none">
+        <div className="absolute right-4 md:right-8 lg:right-16 opacity-[0.03] font-heading pointer-events-none select-none" style={{ fontSize: 'clamp(8rem, 20vw, 22rem)', lineHeight: '1', top: 'clamp(3rem, 6vh, 8rem)', fontWeight: 700 }}>
           01
         </div>
 
@@ -267,7 +267,7 @@ const Hero = () => {
 
           <div className="grid grid-cols-12 gap-6">
             {/* Left column */}
-            <div className="col-span-12 md:col-span-5 lg:col-span-4">
+            <div className="col-span-12 md:col-span-6 xl:col-span-5 lg:col-span-4">
               <AnimatedSection delay={0.1}>
                 <p className="page-number mb-2">{t('hello')}</p>
               </AnimatedSection>
@@ -300,8 +300,8 @@ const Hero = () => {
             </div>
 
             {/* Right column - Name + Portrait */}
-            <div className="col-span-12 md:col-span-7 lg:col-span-8 md:pl-12 lg:pl-20">
-              <div className="flex flex-col lg:flex-row lg:items-start gap-8 lg:gap-12">
+            <div className="col-span-12 md:col-span-6 xl:col-span-7 lg:col-span-8 md:pl-8 lg:pl-12 xl:pl-20">
+              <div className="flex flex-col lg:flex-row lg:items-start gap-6 lg:gap-10">
                 {/* Portrait placeholder - visible on lg+ */}
                 <div className="hidden lg:flex flex-shrink-0">
                   <AnimatedSection delay={0.4}>
@@ -402,7 +402,7 @@ const Hero = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 2.2 }}
-          className="absolute bottom-8 left-14 md:left-20 flex items-center gap-3"
+          className="absolute bottom-8 left-8 md:left-12 lg:left-20 flex items-center gap-3"
         >
           <motion.div
             animate={{ y: [0, 6, 0] }}
@@ -462,14 +462,14 @@ const MarqueeStrip = () => {
 
 /* ──────────────────────── DECORATIVE BREAK ──────────────────────── */
 const DecorativeBreak = ({ letter }) => (
-  <div className="flex items-center justify-center py-8 md:py-14">
+  <div className="flex items-center justify-center py-6 md:py-10 lg:py-14">
     <div className="h-px flex-1 bg-gradient-to-r from-transparent to-ink/10" />
     <motion.span
       initial={{ scale: 0.5, opacity: 0 }}
       whileInView={{ scale: 1, opacity: 0.06 }}
       viewport={{ once: true }}
       transition={{ duration: 0.8 }}
-      className="px-8 md:px-16 font-display text-6xl md:text-8xl italic text-accent"
+      className="px-8 md:px-12 lg:px-16 font-display italic text-accent" style={{ fontSize: 'clamp(2.5rem, 8vw, 6rem)' }}
     >
       {letter}
     </motion.span>
@@ -482,7 +482,7 @@ const BotanicalBreak = () => (
   <div className="relative py-16 md:py-24 flex items-center justify-center overflow-hidden">
     {/* Faint background wash */}
     <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#2d5a3d]/[0.02] to-transparent" />
-    <svg className="relative w-40 md:w-64 opacity-20" viewBox="0 0 200 200" fill="none">
+    <svg className="relative w-32 md:w-48 lg:w-64 opacity-20" viewBox="0 0 200 200" fill="none">
       {/* Central leaf */}
       <path d="M100 15 C 140 50 170 90 100 185 C 30 90 60 50 100 15Z"
         fill="url(#leafGrad1)" stroke="#2d5a3d" strokeWidth="0.8" />
@@ -660,9 +660,9 @@ const About = () => {
   }
 
   return (
-    <section id="about" className="relative py-28 md:py-40 px-6 md:px-12">
-      <div className="absolute left-6 md:left-12 top-0 bottom-0 w-px bg-ink/5" />
-      <div className="absolute right-6 md:right-12 top-0 bottom-0 w-px bg-ink/5" />
+    <section id="about" className="relative py-20 md:py-28 lg:py-40 px-6 md:px-8 lg:px-12">
+      <div className="absolute left-6 md:left-8 lg:left-12 top-0 bottom-0 w-px bg-ink/5" />
+      <div className="absolute right-6 md:right-8 lg:right-12 top-0 bottom-0 w-px bg-ink/5" />
 
       {/* Decorative sidebar imagery on wide screens */}
       <div className="hidden lg:block absolute left-0 top-0 bottom-0 w-24 pointer-events-none select-none opacity-[0.04]">
@@ -673,12 +673,12 @@ const About = () => {
       </div>
 
       {/* Greeting watermark */}
-      <div className="absolute top-10 right-6 md:right-20 opacity-[0.03] font-display text-[6rem] md:text-[10rem] font-bold italic select-none pointer-events-none">
+      <div className="absolute top-8 right-4 md:right-12 lg:right-20 opacity-[0.03] font-display pointer-events-none select-none" style={{ fontSize: 'clamp(4rem, 8vw, 10rem)', lineHeight: '1', fontWeight: 'bold', fontStyle: 'italic' }}>
         {getGreeting().split(' ')[0]}
       </div>
 
       <div className="relative mx-auto max-w-7xl">
-        <div className="grid grid-cols-12 gap-12 md:gap-20">
+        <div className="grid grid-cols-12 gap-8 md:gap-16 lg:gap-20">
           {/* Section label */}
           <div className="col-span-12 md:col-span-3 lg:col-span-2">
             <AnimatedSection>
@@ -688,13 +688,13 @@ const About = () => {
           </div>
 
           <div className="col-span-12 md:col-span-9 lg:col-span-10">
-            <div className="grid md:grid-cols-5 gap-12 md:gap-16">
+            <div className="grid md:grid-cols-5 gap-6 md:gap-10 lg:gap-14">
               {/* Left: Editorial portrait + highlights */}
               <div className="md:col-span-2">
                 <AnimatedSection delay={0.2}>
                   <div className="relative">
                     {/* Elapsed editorial portrait panel */}
-                    <div className="aspect-[4/5] bg-paper-dark flex items-center justify-center border border-ink/5 overflow-hidden relative">
+                    <div className="aspect-[4/5] bg-paper-dark flex items-center justify-center border border-ink/5 overflow-hidden relative" style={{ maxWidth: '100%' }}>
                       {/* Diagonal gradient lines */}
                       <svg className="absolute inset-0 w-full h-full opacity-[0.06]" viewBox="0 0 100 125" preserveAspectRatio="none">
                         {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((i) => (
@@ -714,8 +714,8 @@ const About = () => {
                         <circle cx="14" cy="14" r="2" fill="#2d5a3d" />
                       </svg>
                       {/* Center YS monogram */}
-                      <div className="text-center relative z-10">
-                        <span className="block text-[5rem] font-bold font-display italic bg-gradient-to-br from-[#2d5a3d] to-[#4a8f5c] bg-clip-text text-transparent leading-none select-none">YS</span>
+                      <div className="text-center relative z-10 px-2">
+                        <span className="block font-bold font-display italic bg-gradient-to-br from-[#2d5a3d] to-[#4a8f5c] bg-clip-text text-transparent leading-none select-none" style={{ fontSize: 'clamp(3rem, 8vw, 5rem)' }}>YS</span>
                         <div className="w-16 h-px bg-gradient-to-r from-transparent via-accent/30 to-transparent mx-auto my-6" />
                         <p className="page-number text-accent/30">Est. {new Date().getFullYear() - 4}</p>
                       </div>
@@ -758,7 +758,7 @@ const About = () => {
               {/* Right: bio + languages + quick facts */}
               <div className="md:col-span-3 space-y-8">
                 <AnimatedSection delay={0.3}>
-                  <h2 className="text-3xl md:text-4xl lg:text-5xl leading-tight">
+                  <h2 className="leading-tight" style={{ fontSize: 'clamp(1.5rem, 4vw, 3rem)' }}>
                     <span className="italic font-italic text-accent">Creativity</span>
                     <br />meets code
                   </h2>
@@ -874,9 +874,9 @@ const Skills = () => {
 
   return (
     <ColoredPanel variant="sage" className="!py-0 !px-0">
-    <section id="skills" className="relative py-28 md:py-40 px-6 md:px-12">
-      <div className="absolute left-6 md:left-12 top-0 bottom-0 w-px bg-ink/5" />
-      <div className="absolute right-6 md:right-12 top-0 bottom-0 w-px bg-ink/5" />
+    <section id="skills" className="relative py-20 md:py-28 lg:py-40 px-6 md:px-8 lg:px-12">
+      <div className="absolute left-6 md:left-8 lg:left-12 top-0 bottom-0 w-px bg-ink/5" />
+      <div className="absolute right-6 md:right-8 lg:right-12 top-0 bottom-0 w-px bg-ink/5" />
 
       {/* Decorative sidebar imagery */}
       <div className="hidden lg:block absolute left-0 top-0 bottom-0 w-24 pointer-events-none select-none opacity-[0.04]">
@@ -887,7 +887,7 @@ const Skills = () => {
       </div>
 
       <div className="relative mx-auto max-w-7xl">
-        <div className="grid grid-cols-12 gap-12 md:gap-20">
+        <div className="grid grid-cols-12 gap-8 md:gap-16 lg:gap-20">
           <div className="col-span-12 md:col-span-3 lg:col-span-2">
             <AnimatedSection>
               <span className="section-number">03</span>
@@ -1021,12 +1021,12 @@ const Values = () => {
   ]
 
   return (
-    <section id="values" className="relative py-28 md:py-40 px-6 md:px-12">
-      <div className="absolute left-6 md:left-12 top-0 bottom-0 w-px bg-ink/5" />
-      <div className="absolute right-6 md:right-12 top-0 bottom-0 w-px bg-ink/5" />
+    <section id="values" className="relative py-20 md:py-28 lg:py-40 px-6 md:px-8 lg:px-12">
+      <div className="absolute left-6 md:left-8 lg:left-12 top-0 bottom-0 w-px bg-ink/5" />
+      <div className="absolute right-6 md:right-8 lg:right-12 top-0 bottom-0 w-px bg-ink/5" />
 
       <div className="relative mx-auto max-w-7xl">
-        <div className="grid grid-cols-12 gap-12 md:gap-20">
+        <div className="grid grid-cols-12 gap-8 md:gap-16 lg:gap-20">
           <div className="col-span-12 md:col-span-3 lg:col-span-2">
             <AnimatedSection>
               <span className="section-number">04</span>
@@ -1075,9 +1075,9 @@ const Awards = () => {
   const profile = t('profile')
 
   return (
-    <section id="awards" className="relative py-28 md:py-40 px-6 md:px-12">
-      <div className="absolute left-6 md:left-12 top-0 bottom-0 w-px bg-ink/5" />
-      <div className="absolute right-6 md:right-12 top-0 bottom-0 w-px bg-ink/5" />
+    <section id="awards" className="relative py-20 md:py-28 lg:py-40 px-6 md:px-8 lg:px-12">
+      <div className="absolute left-6 md:left-8 lg:left-12 top-0 bottom-0 w-px bg-ink/5" />
+      <div className="absolute right-6 md:right-8 lg:right-12 top-0 bottom-0 w-px bg-ink/5" />
 
       {/* Decorative sidebar imagery */}
       <div className="hidden lg:block absolute left-0 top-0 bottom-0 w-24 pointer-events-none select-none opacity-[0.04]">
@@ -1095,7 +1095,7 @@ const Awards = () => {
       </div>
 
       <div className="relative mx-auto max-w-7xl">
-        <div className="grid grid-cols-12 gap-12 md:gap-20">
+        <div className="grid grid-cols-12 gap-8 md:gap-16 lg:gap-20">
           <div className="col-span-12 md:col-span-3 lg:col-span-2">
             <AnimatedSection>
               <span className="section-number">05</span>
@@ -1200,13 +1200,13 @@ const ToolsSection = () => {
   ]
 
   return (
-    <section id="tools" className="relative py-28 md:py-40 px-6 md:px-12">
+    <section id="tools" className="relative py-20 md:py-28 lg:py-40 px-6 md:px-8 lg:px-12">
       <div className="absolute inset-0 bg-paper-dark pointer-events-none" />
-      <div className="absolute left-6 md:left-12 top-0 bottom-0 w-px bg-ink/5" />
-      <div className="absolute right-6 md:right-12 top-0 bottom-0 w-px bg-ink/5" />
+      <div className="absolute left-6 md:left-8 lg:left-12 top-0 bottom-0 w-px bg-ink/5" />
+      <div className="absolute right-6 md:right-8 lg:right-12 top-0 bottom-0 w-px bg-ink/5" />
 
       <div className="relative mx-auto max-w-7xl">
-        <div className="grid grid-cols-12 gap-12 md:gap-20">
+        <div className="grid grid-cols-12 gap-8 md:gap-16 lg:gap-20">
           <div className="col-span-12 md:col-span-3 lg:col-span-2">
             <AnimatedSection>
               <span className="section-number">06</span>
@@ -1303,12 +1303,12 @@ const Interests = () => {
   ]
 
   return (
-    <section id="interests" className="relative py-28 md:py-32 px-6 md:px-12">
-      <div className="absolute left-6 md:left-12 top-0 bottom-0 w-px bg-ink/5" />
-      <div className="absolute right-6 md:right-12 top-0 bottom-0 w-px bg-ink/5" />
+    <section id="interests" className="relative py-20 md:py-28 lg:py-32 px-6 md:px-8 lg:px-12">
+      <div className="absolute left-6 md:left-8 lg:left-12 top-0 bottom-0 w-px bg-ink/5" />
+      <div className="absolute right-6 md:right-8 lg:right-12 top-0 bottom-0 w-px bg-ink/5" />
 
       <div className="relative mx-auto max-w-7xl">
-        <div className="grid grid-cols-12 gap-12 md:gap-20">
+        <div className="grid grid-cols-12 gap-8 md:gap-16 lg:gap-20">
           <div className="col-span-12 md:col-span-3 lg:col-span-2">
             <AnimatedSection>
               <span className="section-number">07</span>
@@ -1367,10 +1367,10 @@ const Education = () => {
   const profile = t('profile')
 
   return (
-    <section id="education" className="relative py-28 md:py-40 px-6 md:px-12">
+    <section id="education" className="relative py-20 md:py-28 lg:py-40 px-6 md:px-8 lg:px-12">
       <div className="absolute inset-0 bg-paper-dark pointer-events-none" />
-      <div className="absolute left-6 md:left-12 top-0 bottom-0 w-px bg-ink/5" />
-      <div className="absolute right-6 md:right-12 top-0 bottom-0 w-px bg-ink/5" />
+      <div className="absolute left-6 md:left-8 lg:left-12 top-0 bottom-0 w-px bg-ink/5" />
+      <div className="absolute right-6 md:right-8 lg:right-12 top-0 bottom-0 w-px bg-ink/5" />
 
       {/* Decorative sidebar imagery */}
       <div className="hidden lg:block absolute left-0 top-0 bottom-0 w-24 pointer-events-none select-none opacity-[0.04]">
@@ -1382,7 +1382,7 @@ const Education = () => {
       </div>
 
       <div className="relative mx-auto max-w-7xl">
-        <div className="grid grid-cols-12 gap-12 md:gap-20">
+        <div className="grid grid-cols-12 gap-8 md:gap-16 lg:gap-20">
           <div className="col-span-12 md:col-span-3 lg:col-span-2">
             <AnimatedSection>
               <span className="section-number">08</span>
@@ -1565,7 +1565,7 @@ const VisualMoments = () => {
 
   return (
     <ColoredPanel variant="dark" className="!py-0 !px-0">
-    <section className="relative py-28 md:py-40 px-6 md:px-12 overflow-hidden">
+    <section className="relative py-20 md:py-28 lg:py-40 px-6 md:px-8 lg:px-12 overflow-hidden">
       {/* Decorative sidebar imagery */}
       <div className="hidden lg:block absolute left-0 top-0 bottom-0 w-24 pointer-events-none select-none opacity-[0.04]">
         <svg className="absolute top-20 left-3" viewBox="0 0 40 40" fill="none" stroke="#2d5a3d" strokeWidth="1">
@@ -1660,9 +1660,9 @@ const Contact = () => {
   ]
 
   return (
-    <section id="contact" className="relative py-28 md:py-40 px-6 md:px-12">
-      <div className="absolute left-6 md:left-12 top-0 bottom-0 w-px bg-ink/5" />
-      <div className="absolute right-6 md:right-12 top-0 bottom-0 w-px bg-ink/5" />
+    <section id="contact" className="relative py-20 md:py-28 lg:py-40 px-6 md:px-8 lg:px-12">
+      <div className="absolute left-6 md:left-8 lg:left-12 top-0 bottom-0 w-px bg-ink/5" />
+      <div className="absolute right-6 md:right-8 lg:right-12 top-0 bottom-0 w-px bg-ink/5" />
 
       {/* Decorative sidebar imagery */}
       <div className="hidden lg:block absolute left-0 top-0 bottom-0 w-24 pointer-events-none select-none opacity-[0.04]">
@@ -1679,7 +1679,7 @@ const Contact = () => {
       </div>
 
       <div className="relative mx-auto max-w-7xl">
-        <div className="grid grid-cols-12 gap-12 md:gap-20">
+        <div className="grid grid-cols-12 gap-8 md:gap-16 lg:gap-20">
           <div className="col-span-12 md:col-span-3 lg:col-span-2">
             <AnimatedSection>
               <span className="section-number">09</span>
@@ -1689,7 +1689,7 @@ const Contact = () => {
 
           <div className="col-span-12 md:col-span-9 lg:col-span-10">
             <AnimatedSection delay={0.1}>
-              <h2 className="text-4xl md:text-5xl lg:text-7xl mb-4 leading-none">
+              <h2 className="text-3xl md:text-5xl xl:text-7xl mb-4 leading-none">
                 Let&apos;s <span className="italic font-italic text-accent">connect</span>
               </h2>
             </AnimatedSection>
@@ -1703,7 +1703,7 @@ const Contact = () => {
             </AnimatedSection>
 
             {/* Contact cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-ink/5 mb-10">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-px bg-ink/5 mb-10">
               {([
                 {
                   label: t('email'),
@@ -1810,8 +1810,8 @@ const Footer = () => {
       {/* Top accent line */}
       <div className="h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent" />
 
-      <div className="mx-auto max-w-7xl px-6 md:px-12 py-16 md:py-20">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-12">
+      <div className="mx-auto max-w-7xl px-6 md:px-8 lg:px-12 py-12 md:py-16 lg:py-20">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-12 gap-8 md:gap-12">
           {/* Brand column */}
           <div className="md:col-span-4">
             <h3 className="font-display text-2xl italic text-white mb-4">Yehia Salem</h3>

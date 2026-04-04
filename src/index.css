@@ -888,7 +888,7 @@ ol.accent-number li::before {
     letter-spacing: 0.15em;
     color: var(--ink-faint);
     text-align: center;
-    padding: 1rem 0;
+    line-height: 1.6;
   }
 
   /* Margin note */

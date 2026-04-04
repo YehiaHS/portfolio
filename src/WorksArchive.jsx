@@ -177,17 +177,47 @@ const Fallback = () => (
 )
 
 /* ──────────────── IMAGE STATE ──────────────── */
-function useImageState(src) {
-  const [state, setState] = useState('loading')
+const imageCache = new Map()
+
+function useImageState(src, inView) {
+  const [state, setState] = useState(imageCache.has(src) ? imageCache.get(src) : 'idle')
+
   useEffect(() => {
+    if (imageCache.has(src)) {
+      setState(imageCache.get(src))
+      return
+    }
+    if (!inView) {
+      setState('idle')
+      return
+    }
+    setState('loading')
     let cancelled = false
     const img = new Image()
+    const tid = setTimeout(() => {
+      if (!cancelled) {
+        imageCache.set(src, 'error')
+        setState('error')
+      }
+    }, 8000)
+    img.onload = () => {
+      if (!cancelled) {
+        imageCache.set(src, 'loaded')
+        setState('loaded')
+        clearTimeout(tid)
+      }
+    }
+    img.onerror = () => {
+      if (!cancelled) {
+        imageCache.set(src, 'error')
+        setState('error')
+        clearTimeout(tid)
+      }
+    }
     img.src = src
-    const tid = setTimeout(() => { if (!cancelled) setState('error') }, 5000)
-    img.onload = () => { if (!cancelled) { setState('loaded'); clearTimeout(tid) } }
-    img.onerror = () => { if (!cancelled) { setState('error'); clearTimeout(tid) } }
     return () => { cancelled = true; clearTimeout(tid) }
-  }, [src])
+  }, [src, inView])
+
   return state
 }
 
@@ -195,10 +225,10 @@ function useImageState(src) {
 const ImageCard = ({ src, caption, index, onClick }) => {
   const ref = useRef(null)
   const [inView, setInView] = useState(false)
-  const imgState = useImageState(src)
+  const imgState = useImageState(src, inView)
 
   useEffect(() => {
-    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setInView(true) }, { threshold: 0.05 })
+    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setInView(true) }, { threshold: 0, rootMargin: '200px' })
     if (ref.current) obs.observe(ref.current)
     return () => obs.disconnect()
   }, [])
@@ -216,15 +246,18 @@ const ImageCard = ({ src, caption, index, onClick }) => {
       onClick={() => onClick && onClick({ src, caption })}
     >
       <div className="aspect-[3/2] overflow-hidden relative" style={{ background: D.card }}>
-        {imgState === 'loading' && (
+        {(imgState === 'loading' || imgState === 'idle') && (
           <div className="absolute inset-0 flex items-center justify-center" style={{ background: D.skeleton }}>
-            <div className="w-5 h-5 border-2 rounded-full animate-spin" style={{ borderTopColor: D.accent, borderColor: D.faint }} />
+            {imgState === 'loading' && (
+              <div className="w-5 h-5 border-2 rounded-full animate-spin" style={{ borderTopColor: D.accent, borderColor: D.faint }} />
+            )}
           </div>
         )}
-        {imgState === 'error' ? <Fallback /> : (
+        {imgState === 'loaded' && (
           <img src={src} alt={caption} loading="lazy"
             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
         )}
+        {imgState === 'error' && <Fallback />}
       </div>
       <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end pointer-events-none"
         style={{ background: 'linear-gradient(to top, rgba(13,20,16,0.85), transparent)' }}>
