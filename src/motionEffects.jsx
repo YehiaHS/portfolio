@@ -27,16 +27,18 @@ export const LineSlideUp = ({ children, className = '', delay = 0 }) => {
 
 export const MaskReveal = ({ children, className = '', delay = 0 }) => {
   const ref = useRef(null)
-  const inView = useInView(ref, { once: true, margin: '-60px' })
+  const inView = useInView(ref, { once: true, margin: '200px' })
 
   return (
     <div className={`overflow-hidden relative ${className}`} ref={ref}>
-      <motion.div
-        initial={{ scaleX: 1, originX: 0 }}
-        animate={inView ? { scaleX: 0, originX: 1 } : {}}
-        transition={{ duration: 0.8, delay, ease: [0.77, 0, 0.18, 1] }}
-        className="absolute inset-0 z-10 bg-paper"
-      />
+      {inView && (
+        <motion.div
+          initial={{ scaleX: 1, originX: 0 }}
+          animate={{ scaleX: 0, originX: 1 }}
+          transition={{ duration: 0.8, delay, ease: [0.77, 0, 0.18, 1] }}
+          className="absolute inset-0 z-10 bg-paper"
+        />
+      )}
       {children}
     </div>
   )
