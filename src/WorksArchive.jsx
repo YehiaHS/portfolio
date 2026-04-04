@@ -257,7 +257,7 @@ const ImageCard = ({ src, caption, index, onClick }) => {
           </div>
         )}
         {imgState === 'loaded' && (
-          <img src={src} alt={caption} loading="lazy"
+          <img src={src} alt={caption} loading="lazy" decoding="async"
             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
         )}
         {imgState === 'error' && <Fallback />}
@@ -298,7 +298,7 @@ const Lightbox = ({ src, caption, onClose, onPrev, onNext }) => {
       {/* Image container */}
       <div className="flex items-center justify-center p-12 pt-14" onClick={e => e.stopPropagation()}>
         <img
-          src={src} alt={caption}
+          src={src} alt={caption} decoding="async"
           style={{ maxHeight: '80vh', maxWidth: '75vw' }}
           className="object-contain rounded-sm"
           onClick={e => e.stopPropagation()}

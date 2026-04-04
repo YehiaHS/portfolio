@@ -125,19 +125,20 @@ export const StickyImageSection = ({ image, children, className = '' }) => {
 
 /* ──────────────────────── TEXT COUNTER (counts up when in view) ──────────────────────── */
 
-export const TextCounter = ({ end, duration = 2, suffix = '', className = '' }) => {
+export const TextCounter = ({ target, end, duration = 2, suffix = '', className = '' }) => {
+  const finalEnd = target ?? end;
   const ref = useRef(null)
   const [count, setCount] = useState(0)
   const inView = useInView(ref, { once: true })
 
   useEffect(() => {
-    if (!inView) return
+    if (!inView || finalEnd == null) return
     let start = 0
-    const step = end / (duration * 30)
+    const step = finalEnd / (duration * 30)
     const timer = setInterval(() => {
       start += step
-      if (start >= end) {
-        setCount(end)
+      if (start >= finalEnd) {
+        setCount(finalEnd)
         clearInterval(timer)
       } else {
         setCount(Math.floor(start))
@@ -152,7 +153,23 @@ export const TextCounter = ({ end, duration = 2, suffix = '', className = '' }) 
 /* ──────────────────────── STAGGER CHILDREN CONTAINER ──────────────────────── */
 
 export const StaggerContainer = ({ children, className = '', staggerMs = 80 }) => {
+  const ref = useRef(null)
+  const inView = useInView(ref, { once: true, margin: '-80px' })
+
   return (
-    <>{children}</>
+    <div ref={ref} className={className}>
+      {Array.isArray(children)
+        ? children.map((child, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 20 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ delay: i * (staggerMs / 1000), duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            >
+              {child}
+            </motion.div>
+          ))
+        : children}
+    </div>
   )
 }

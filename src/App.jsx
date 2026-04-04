@@ -1,13 +1,13 @@
 import { useRef, useState, useEffect, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, useInView, useScroll, useTransform, AnimatePresence } from 'framer-motion'
-import { LineSlideUp, MaskReveal, GlitchText, DividerText, StaggerContainer, TextCounter } from './motionEffects.jsx'
-import { ColoredPanel, ContentGrid, SplitLayout, GhostButton, StackedCard } from './C2Patterns.jsx'
+import { MaskReveal, GlitchText, DividerText, StaggerContainer, TextCounter } from './motionEffects.jsx'
+import { ColoredPanel } from './C2Patterns.jsx'
 import { useLanguage } from './LanguageContext'
 import LanguageSelector from './LanguageSelector'
 import Cursor from './Cursor'
-import { getQuotes } from './i18n'
-import { prepare as _prepare } from '@chenglou/pretext'
+import { getQuotes, translations } from './i18n'
+import { prepare, layout, layoutWithLines } from '@chenglou/pretext'
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -15,33 +15,34 @@ const fadeUp = {
 }
 
 /* ───────────────────────────── PRETEXT UTILITIES ───────────────────────────── */
-/* Measures text height without DOM, used for precise layout and reading-time estimates */
+/* Uses pretext to measure text layout without DOM, providing real metrics */
 
-function useTextMetrics(text, font = '14px Manrope', maxWidth = 600, lineHeight = 24) {
+function useTextMetrics(text, font = '14px Manrope', maxWidth = 600, lineHeight = 22) {
   return useMemo(() => {
     try {
-      const prepared = _prepare(text, font)
-      // Count graphemes for reading-time estimate
-      const charCount = text.length
+      const prepared = prepare(text, font)
+      const { height, lineCount, lastLineWidth } = layout(prepared, maxWidth, lineHeight)
       const wordCount = text.split(/\s+/).filter(Boolean).length
       const readingTimeSec = Math.max(1, Math.ceil(wordCount / 3.8)) // ~230 wpm
-      return { charCount, wordCount, readingTimeSec }
+      return { height, lineCount, lastLineWidth, wordCount, readingTimeSec, charCount: text.length }
     } catch {
-      return { charCount: text.length, wordCount: text.split(/\s+/).length, readingTimeSec: 1 }
+      const words = text.split(/\s+/).filter(Boolean)
+      return { height: 0, lineCount: 0, lastLineWidth: 0, wordCount: words.length, readingTimeSec: 1, charCount: text.length }
     }
   }, [text, font, maxWidth, lineHeight])
 }
 
-/* Animated word-count badge — uses pretext to measure text and show reading time */
+/* Animated reading-time badge — uses pretext for real text measurement */
 const ReadingBadge = ({ text, className = '' }) => {
-  const { readingTimeSec } = useTextMetrics(text)
+  const { readingTimeSec, lineCount, charCount } = useTextMetrics(text, '14px Manrope', 380)
+  const lines = lineCount || 1
   return (
     <motion.span
       initial={{ opacity: 0, scale: 0.8 }}
       whileInView={{ opacity: 1, scale: 1 }}
       viewport={{ once: true }}
       transition={{ delay: 0.6, duration: 0.3 }}
-      className={`inline-flex items-center gap-1.5 px-2.5 py-1 border rounded-sm ${className}`}
+      className={`inline-flex items-center gap-3 px-2.5 py-1 border rounded-sm ${className}`}
     >
       <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
         <circle cx="12" cy="12" r="10" />
@@ -50,7 +51,114 @@ const ReadingBadge = ({ text, className = '' }) => {
       <span className="text-[0.55rem] font-heading tracking-wide">
         {readingTimeSec < 120 ? `${readingTimeSec}s read` : `${Math.ceil(readingTimeSec / 60)} min read`}
       </span>
+      <span className="w-px h-3" style={{ backgroundColor: '#2d5a3d20' }} />
+      <span className="text-[0.55rem] font-heading tracking-wide" style={{ color: '#2d5a3d60' }}>
+        {lines}l · {charCount}c
+      </span>
     </motion.span>
+  )
+}
+
+/* Text Density Bar — visualizes actual line widths from pretext engine */
+const TextDensityBar = ({ text, className = '' }) => {
+  const ratios = useMemo(() => {
+    try {
+      const prepared = prepare(text, '14px Manrope')
+      const { lines } = layoutWithLines(prepared, 380, 22)
+      const widths = lines.map(l => l.width)
+      const max = Math.max(...widths, 1)
+      return widths.map(w => w / max)
+    } catch {
+      return []
+    }
+  }, [text])
+
+  if (ratios.length < 2) return null
+
+  return (
+    <motion.div
+      className={`overflow-hidden rounded-sm ${className}`}
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      viewport={{ once: true }}
+      transition={{ delay: 0.5, duration: 0.3 }}
+    >
+      <div className="flex items-end gap-[2px] h-6">
+        {ratios.map((r, i) => (
+          <motion.div
+            key={i}
+            initial={{ scaleY: 0 }}
+            whileInView={{ scaleY: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.5 + i * 0.03, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+            className="flex-1 rounded-full origin-bottom"
+            style={{
+              height: `${Math.max(4, r * 100)}%`,
+              backgroundColor: r > 0.8 ? '#4a9f6240' : '#2d5a3d15',
+            }}
+          />
+        ))}
+      </div>
+    </motion.div>
+  )
+}
+
+/*
+ * TextSampleDensity — decorative type specimen strip showing pretext-computed word widths
+ * as an editorial bar chart. Each word from a quote becomes a proportional bar.
+ */
+const TextSampleDensity = ({ className = '' }) => {
+  const bars = useMemo(() => {
+    try {
+      const text = 'creativity meets code'
+      const prepared = prepare(text, '14px Manrope')
+      const { lines } = layoutWithLines(prepared, 500, 22)
+      const allWords = []
+      for (const line of lines) {
+        const words = line.text.split(/\s+/).filter(Boolean)
+        for (const w of words) {
+          const p = prepare(w, '14px Manrope')
+          const l = layout(p, 500, 22)
+          allWords.push({ text: w, width: l.lastLineWidth })
+        }
+      }
+      const maxW = Math.max(...allWords.map(w => w.width), 1)
+      return allWords.map(w => ({ ...w, ratio: w.width / maxW }))
+    } catch { return [] }
+  }, [])
+
+  if (!bars.length) return null
+
+  return (
+    <motion.div
+      className={`mt-6 ${className}`}
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      viewport={{ once: true }}
+      transition={{ delay: 0.6, duration: 0.5 }}
+    >
+      <div className="flex items-end gap-[3px] h-5 justify-center">
+        {bars.map((b, i) => (
+          <motion.div
+            key={b.text + i}
+            className="rounded-sm origin-bottom"
+            title={`"${b.text}" — ${b.width.toFixed(1)}px`}
+            initial={{ scaleY: 0 }}
+            whileInView={{ scaleY: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.6 + i * 0.06, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+            style={{
+              width: `${Math.max(6, b.ratio * 40)}px`,
+              height: `${Math.max(3, b.ratio * 100)}%`,
+              backgroundColor: b.ratio > 0.6 ? '#4a9f6230' : '#2d5a3d10',
+            }}
+          />
+        ))}
+      </div>
+      <p className="mt-2 text-center text-[0.5rem] font-heading tracking-widest text-ink-faint/40 uppercase">
+        Type Sample — "{bars.map(b => b.text).join(' ')}"
+      </p>
+    </motion.div>
   )
 }
 
@@ -165,25 +273,7 @@ const Nav = () => {
               { label: t('viewPortfolio'), href: '/portfolio', action: () => setMenuOpen(false) },
               { label: 'Behind the Scenes', href: '/behind-the-scenes', action: () => setMenuOpen(false) },
             ].map((item, i) => (
-              <motion.div
-                key={item.label}
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.15 + i * 0.06 }}
-              >
-                <a
-                  href={item.href}
-                  onClick={(e) => {
-                    item.action()
-                    if (item.href.startsWith('#')) {
-                      document.querySelector(item.href)?.scrollIntoView({ behavior: 'smooth' })
-                    }
-                  }}
-                  className="block text-2xl font-display py-4 text-ink hover:text-accent transition-colors"
-                >
-                  {item.label}
-                </a>
-              </motion.div>
+              <MobileMenuItem key={item.label} item={item} index={i} onClose={() => setMenuOpen(false)} />
             ))}
           </motion.div>
         </motion.div>
@@ -194,6 +284,39 @@ const Nav = () => {
 }
 
 /* ──────────────────────── FLOATING SHAPES ──────────────────────── */
+/* Mobile menu item — uses Link for routes, plain scroll for anchors */
+function MobileMenuItem({ item, index, onClose }) {
+  const isRoute = item.href.startsWith('/')
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.15 + index * 0.06 }}
+    >
+      {isRoute ? (
+        <Link
+          to={item.href}
+          onClick={onClose}
+          className="block text-2xl font-display py-4 text-ink hover:text-accent transition-colors"
+        >
+          {item.label}
+        </Link>
+      ) : (
+        <a
+          href={item.href}
+          onClick={(e) => {
+            onClose()
+            document.querySelector(item.href)?.scrollIntoView({ behavior: 'smooth' })
+          }}
+          className="block text-2xl font-display py-4 text-ink hover:text-accent transition-colors"
+        >
+          {item.label}
+        </a>
+      )}
+    </motion.div>
+  )
+}
+
 const FloatingShapes = () => {
   const shapes = [
     { id: 1, type: 'circle', x: '10%', y: '20%', size: 60, duration: 25, delay: 0 },
@@ -345,6 +468,7 @@ const Hero = () => {
 
   return (
     <section className="relative min-h-screen flex flex-col justify-center pt-20 px-6 md:px-8 lg:px-12 overflow-hidden">
+      <MouseSpotlight className="z-0" />
       <motion.div style={{ opacity: heroOpacity, y: heroY }}>
         <FloatingShapes />
         <HeroBotanicalBg />
@@ -543,9 +667,11 @@ const Hero = () => {
 
 /* ──────────────────────── TICKER ──────────────────────── */
 const Ticker = () => {
-  const { t } = useLanguage()
-  const tickerItems = [t('ticker.item1'), t('ticker.item2'), t('ticker.item3'), t('ticker.item4')]
-  const doubled = [...tickerItems, ...tickerItems, ...tickerItems]
+  const { t, language } = useLanguage()
+  // Access nested ticker keys directly — t() only does flat lookups
+  const tkr = translations[language]?.ticker || translations.en.ticker
+  const items = [tkr.item1, tkr.item2, tkr.item3, tkr.item4]
+  const doubled = [...items, ...items, ...items]
 
   return (
     <div className="relative bg-ink text-paper py-4 overflow-hidden">
@@ -581,6 +707,58 @@ const MarqueeStrip = () => {
           {doubled}
         </span>
       </motion.div>
+    </div>
+  )
+}
+
+/* ──────────────────────── GRAIN OVERLAY ──────────────────────── */
+const Grain = () => (
+  <svg className="fixed inset-0 w-full h-full pointer-events-none z-[9998] opacity-[0.035] mix-blend-overlay" style={{ pointerEvents: 'none' }}>
+    <filter id="noiseFilter">
+      <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch">
+        <animate attributeName="baseFrequency" values="0.8;0.82;0.79;0.8" dur="0.3s" repeatCount="indefinite" />
+      </feTurbulence>
+    </filter>
+    <rect width="100%" height="100%" filter="url(#noiseFilter)" />
+  </svg>
+)
+
+/* ──────────────────────── MOUSE SPOTLIGHT ──────────────────────── */
+const MouseSpotlight = ({ className = '' }) => {
+  const ref = useRef(null)
+  const [pos, setPos] = useState({ x: 50, y: 50 })
+  const [active, setActive] = useState(false)
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const handle = (e) => {
+      const rect = el.getBoundingClientRect()
+      setPos({ x: e.clientX - rect.left, y: e.clientY - rect.top })
+      setActive(true)
+    }
+    el.addEventListener('mousemove', handle)
+    el.addEventListener('mouseleave', () => setActive(false))
+    el.addEventListener('mouseenter', () => setActive(true))
+    return () => el.removeEventListener('mousemove', handle)
+  }, [])
+
+  return (
+    <div
+      ref={ref}
+      className={`absolute inset-0 pointer-events-none overflow-hidden ${className}`}
+      style={{ opacity: active ? 1 : 0, transition: 'opacity 0.6s ease' }}
+    >
+      <div
+        className="absolute rounded-full"
+        style={{
+          width: 600,
+          height: 600,
+          left: pos.x - 300,
+          top: pos.y - 300,
+          background: 'radial-gradient(circle, rgba(74, 159, 98, 0.06) 0%, transparent 70%)',
+        }}
+      />
     </div>
   )
 }
@@ -747,17 +925,28 @@ const SectionNav = () => {
   }, [])
 
   return (
+    <>
+    {/* Top label — shows active section */}
+    <motion.div
+      className="fixed right-4 top-[50%] -translate-y-[50%] -translate-x-8 z-40 hidden lg:flex pointer-events-none"
+      key={active}
+      initial={{ x: -4, opacity: 0 }}
+      animate={{ x: 0, opacity: 1 }}
+      transition={{ duration: 0.3 }}
+    >
+      <span className="page-number text-[0.5rem] tracking-widest rotate-90 whitespace-nowrap" style={{ color: '#2d5a3d' }}>
+        {active.toUpperCase()}
+      </span>
+    </motion.div>
+    {/* Dots navigation */}
     <div className="fixed right-4 md:right-6 top-1/2 -translate-y-1/2 z-40 hidden lg:flex flex-col gap-3 items-center">
       {sections.map((s) => (
         <button
           key={s.id}
           onClick={() => document.getElementById(s.id)?.scrollIntoView({ behavior: 'smooth' })}
-          className="group flex items-center gap-2"
+          className="group flex items-center gap-1.5"
           title={s.label}
         >
-          <span className="page-number opacity-0 group-hover:opacity-100 transition-opacity text-[0.55rem] tracking-wider">
-            {s.label}
-          </span>
           <motion.span
             className={`block rounded-full transition-all duration-300 ${
               active === s.id ? 'bg-accent w-2 h-2' : 'bg-ink-faint/30 w-1.5 h-1.5 group-hover:bg-ink-faint/60'
@@ -767,6 +956,7 @@ const SectionNav = () => {
         </button>
       ))}
     </div>
+    </>
   )
 }
 
@@ -897,6 +1087,9 @@ const About = () => {
 
                 {/* Reading time badge powered by pretext */}
                 <ReadingBadge text={profile.summary} className="border-ink/10 text-ink-faint mt-3" />
+
+                {/* Text density visualization — pretext-powered */}
+                <TextDensityBar text={profile.summary} className="mt-4" />
 
                 {/* Quick Facts row */}
                 <AnimatedSection delay={0.6}>
@@ -1722,6 +1915,7 @@ const VisualMoments = () => {
               Abstract compositions in green &mdash; echoes of the creative process, digital canvases, and botanical inspirations.
             </p>
           </AnimatedSection>
+          <TextSampleDensity />
         </div>
 
         {/* Gallery strip */}
@@ -1733,19 +1927,18 @@ const VisualMoments = () => {
                 transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
                 className="group relative overflow-hidden border border-ink/5 bg-paper-dark"
               >
-                {/* SVG image */}
-                <div className="aspect-[3/2] overflow-hidden">
+                {/* SVG image with hover overlay */}
+                <div className="aspect-[3/2] overflow-hidden relative">
                   {card.svg}
-                  {/* Hover overlay */}
                   <div className="absolute inset-0 bg-gradient-to-t from-[#0d1a0f]/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 </div>
-                {/* Caption */}
-                <div className="absolute bottom-0 left-0 right-0 p-4 transform translate-y-2 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-500">
+                {/* Hover caption — slides up on hover */}
+                <div className="absolute inset-x-0 bottom-0 p-4 transform translate-y-full group-hover:translate-y-0 transition-transform duration-500">
                   <p className="text-[#f5f5f0] text-sm font-heading font-semibold">{card.caption}</p>
                   <p className="text-[#f5f5f0]/50 text-xs font-light mt-0.5">{card.sub}</p>
                 </div>
-                {/* Caption below (always visible) */}
-                <div className="p-3 group-hover:p-4 transition-all duration-300">
+                {/* Always visible caption */}
+                <div className="p-3">
                   <p className="text-xs font-heading font-semibold text-ink group-hover:text-accent transition-colors">{card.caption}</p>
                   <p className="text-[0.6rem] text-ink-faint font-light mt-0.5">{card.sub}</p>
                 </div>
@@ -1921,17 +2114,61 @@ const Contact = () => {
   )
 }
 
+/* ──────────────────────── BACK TO TOP BUTTON ──────────────────────── */
+const BackToTopButton = () => {
+  const { scrollYProgress } = useScroll()
+  const progress = useTransform(scrollYProgress, [0, 1], [0, 1])
+  const circumference = 2 * Math.PI * 18 // radius 18
+
+  return (
+    <motion.button
+      initial={{ opacity: 0, scale: 0.8 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.8 }}
+      onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+      className="fixed bottom-5 right-5 md:bottom-6 md:right-6 z-50 flex items-center justify-center"
+      title="Back to top"
+      whileHover={{ scale: 1.08 }}
+      whileTap={{ scale: 0.92 }}
+    >
+      <svg viewBox="0 0 44 44" className="w-11 h-11 md:w-12 md:h-12" fill="none">
+        {/* Background ring */}
+        <circle cx="22" cy="22" r="18" strokeWidth="1.5" fill="#0d1410" stroke="#5a6a5e" strokeOpacity="0.3" />
+        {/* Progress ring */}
+        <motion.circle
+          cx="22" cy="22" r="18"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          stroke="#4a9f62"
+          fill="none"
+          strokeDasharray={circumference}
+          style={{ strokeDashoffset: useTransform(progress, v => circumference * (1 - v)) }}
+          transform="rotate(-90 22 22)"
+        />
+        {/* Arrow icon */}
+        <polyline points="28,24 22,18 16,24" stroke="#c8d8cc" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
+          style={{ transition: 'stroke 0.2s ease' }}
+        />
+      </svg>
+    </motion.button>
+  )
+}
+
+const useScrollBottom = (threshold = 600) => {
+  const [visible, setVisible] = useState(false)
+  useEffect(() => {
+    const handleScroll = () => setVisible(window.scrollY > threshold)
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+  return visible
+}
+
 /* ──────────────────────── FOOTER ──────────────────────── */
 const Footer = () => {
   const { t } = useLanguage()
   const profile = t('profile')
-  const [showBackToTop, setShowBackToTop] = useState(false)
-
-  useEffect(() => {
-    const handleScroll = () => setShowBackToTop(window.scrollY > 600)
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+  const showBackToTop = useScrollBottom(600)
 
   return (
     <footer className="relative bg-ink text-paper/70">
@@ -2016,21 +2253,10 @@ const Footer = () => {
         </svg>
       </div>
 
-      {/* Back to top */}
+      {/* Back to top with scroll progress ring */}
       <AnimatePresence>
         {showBackToTop && (
-          <motion.button
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 20 }}
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="fixed bottom-6 right-6 z-50 w-12 h-12 bg-ink text-paper flex items-center justify-center border border-paper/10 hover:border-accent hover:text-accent transition-colors duration-300"
-            title="Back to top"
-          >
-            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <polyline points="18 15 12 9 6 15" />
-            </svg>
-          </motion.button>
+          <BackToTopButton />
         )}
       </AnimatePresence>
     </footer>
@@ -2038,10 +2264,112 @@ const Footer = () => {
 }
 
 /* ──────────────────────── APP ──────────────────────── */
+/* ──────────────────────── KEYBOARD SHORTCUTS ──────────────────────── */
+const shortcuts = [
+  { key: '?', label: 'Show this help' },
+  { key: 'Home', label: 'Scroll to top' },
+  { key: '1–' + ALL_SECTIONS.length, label: 'Jump to section' },
+]
+
+const ALL_SECTIONS = [
+  { id: 'about', label: 'About' },
+  { id: 'skills', label: 'Skills' },
+  { id: 'values', label: 'Values' },
+  { id: 'awards', label: 'Awards' },
+  { id: 'tools', label: 'Tools' },
+  { id: 'education', label: 'Education' },
+  { id: 'interests', label: 'Interests' },
+  { id: 'contact', label: 'Contact' },
+]
+
+const KeyboardShortcuts = () => {
+  const [open, setOpen] = useState(false)
+
+  useEffect(() => {
+    const handler = (e) => {
+      if (e.key === '?' || (e.key === '/' && e.shiftKey)) {
+        e.preventDefault()
+        setOpen(prev => !prev)
+      } else if (e.key === 'Escape') {
+        setOpen(false)
+      } else if (e.key === 'Home') {
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+      } else {
+        // Number keys jump to sections
+        const num = parseInt(e.key)
+        if (num >= 1 && num <= ALL_SECTIONS.length) {
+          e.preventDefault()
+          const section = ALL_SECTIONS[num - 1]
+          document.getElementById(section.id)?.scrollIntoView({ behavior: 'smooth' })
+        }
+      }
+    }
+    window.addEventListener('keydown', handler)
+    return () => window.removeEventListener('keydown', handler)
+  }, [])
+
+  return (
+    <>
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[10000] flex items-center justify-center bg-black/40 backdrop-blur-sm"
+            onClick={() => setOpen(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              transition={{ duration: 0.15, ease: [0.22, 1, 0.36, 1] }}
+              onClick={(e) => e.stopPropagation()}
+              className="bg-paper border border-ink/10 rounded-lg shadow-2xl max-w-sm w-full mx-4 p-6"
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-sm font-heading font-semibold tracking-wider uppercase text-accent">Keyboard Shortcuts</h3>
+                <button onClick={() => setOpen(false)} className="text-ink-faint hover:text-ink transition-colors" aria-label="Close">
+                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+              </div>
+              <div className="space-y-3">
+                {ALL_SECTIONS.map((s, i) => (
+                  <button
+                    key={s.id}
+                    onClick={() => { setOpen(false); document.getElementById(s.id)?.scrollIntoView({ behavior: 'smooth' }) }}
+                    className="flex items-center justify-between w-full group"
+                  >
+                    <span className="text-sm text-ink/80 group-hover:text-accent transition-colors">{s.label}</span>
+                    <kbd className="px-2 py-0.5 text-xs font-mono bg-paper-dark border border-ink/10 rounded text-ink-faint">{i + 1}</kbd>
+                  </button>
+                ))}
+              </div>
+              <button
+                onClick={() => setOpen(false)}
+                className="mt-5 w-full py-2 text-xs font-heading tracking-wider uppercase border border-ink/20 rounded-sm text-ink-faint hover:text-ink hover:border-accent transition-colors"
+              >
+                Close
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+      {/* Subtle hint */}
+      <div className="fixed bottom-5 left-5 z-50 hidden md:flex items-center gap-1.5">
+        <kbd className="px-1.5 py-0.5 text-[0.55rem] font-mono bg-paper/80 border border-ink/10 rounded-sm text-ink-faint/60 backdrop-blur-sm">?</kbd>
+        <span className="text-[0.55rem] text-ink-faint/40">Shortcuts</span>
+      </div>
+    </>
+  )
+}
+
 function App() {
   return (
     <div className="relative min-h-screen text-ink cursor-none page-enter">
       <Cursor />
+      <Grain />
+      <KeyboardShortcuts />
       <Nav />
       <SectionNav />
       <Hero />

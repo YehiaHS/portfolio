@@ -58,7 +58,9 @@ const Cursor = () => {
   const dotX = useSpring(0, { stiffness: 400, damping: 22, mass: 0.12 });
   const dotY = useSpring(0, { stiffness: 400, damping: 22, mass: 0.12 });
 
-  // Trailing secondary dot — follows with extra lag
+  const textX = useSpring(0, { stiffness: 200, damping: 24 })
+  const textY = useSpring(0, { stiffness: 200, damping: 24 })
+  const textOpacity = useSpring(0, { stiffness: 300, damping: 24 })
   const trailX = useSpring(0, { stiffness: 60, damping: 14, mass: 0.6 });
   const trailY = useSpring(0, { stiffness: 60, damping: 14, mass: 0.6 });
 
@@ -165,6 +167,10 @@ const Cursor = () => {
     trailX.set(tx);
     trailY.set(ty);
 
+    textX.set(tx);
+    textY.set(ty + (ringSize.get() || 40) / 2 + 12);
+    textOpacity.set(hoverState === 'link' ? 1 : 0);
+
     // Ring size
     switch (hoverState) {
       case 'text':
@@ -190,6 +196,8 @@ const Cursor = () => {
     <>
       <style>{`
         *, *::before, *::after { cursor: none !important; }
+        /* Show default cursor for mobile/touch */
+        @media (hover: none) { *, *::before, *::after { cursor: auto !important; } }
       `}</style>
 
       {/* Outer ring */}
@@ -242,39 +250,34 @@ const Cursor = () => {
         }}
       />
 
-      {/* Text preview label — appears on hover over links */}
-      {hoverState === 'link' && hoverTarget.current && targetBounds.current && (
-        <motion.div
-          className="pointer-events-none fixed z-[9999] hidden md:block"
-          initial={{ opacity: 0, y: 8, scale: 0.9 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: 8, scale: 0.9 }}
-          transition={{ duration: 0.2, ease: 'easeOut' }}
+      {/* Text Color */}
+      <motion.div
+        className="pointer-events-none fixed z-[9999] hidden md:block"
+        style={{
+          x: textX,
+          y: textY,
+          opacity: textOpacity,
+          transform: 'translate(-50%, calc(-50% + 46px))',
+        }}
+      >
+        <span
           style={{
-            left: ringX.get(),
-            top: ringY.get() + (ringSize.get() || 40) / 2 + 12,
-            transform: 'translateX(-50%)',
+            fontFamily: "'Inter', system-ui, sans-serif",
+            fontSize: '10px',
+            fontWeight: 600,
+            letterSpacing: '0.08em',
+            color: ACCENT,
+            textTransform: 'uppercase',
+            whiteSpace: 'nowrap',
+            background: 'rgba(255,255,255,0.92)',
+            padding: '3px 8px',
+            borderRadius: '4px',
+            boxShadow: '0 1px 4px rgba(0,0,0,0.08)',
           }}
         >
-          <span
-            style={{
-              fontFamily: "'Inter', system-ui, sans-serif",
-              fontSize: '10px',
-              fontWeight: 600,
-              letterSpacing: '0.08em',
-              color: ACCENT,
-              textTransform: 'uppercase',
-              whiteSpace: 'nowrap',
-              background: 'rgba(255,255,255,0.92)',
-              padding: '3px 8px',
-              borderRadius: '4px',
-              boxShadow: '0 1px 4px rgba(0,0,0,0.08)',
-            }}
-          >
-            {hoverTarget.current.textContent?.trim().slice(0, 30) || 'link'}
-          </span>
-        </motion.div>
-      )}
+          {hoverTarget.current?.textContent?.trim().slice(0, 30) || 'link'}
+        </span>
+      </motion.div>
 
       {/* Click ripple */}
       {clickRipple && (

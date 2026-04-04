@@ -143,6 +143,7 @@ const VideoCard = ({ src, title, description, duration, index }) => {
           ref={videoRef}
           src={src}
           className="w-full h-full object-cover"
+          decoding="async"
           onClick={handleToggle}
           playsInline
           onEnded={() => setIsPlaying(false)}

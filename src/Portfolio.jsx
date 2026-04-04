@@ -5,6 +5,7 @@ import { LineSlideUp, MaskReveal, GlitchText, DividerText, StaggerContainer, Tex
 import { useLanguage } from './LanguageContext'
 import LanguageSelector from './LanguageSelector'
 import Cursor from './Cursor'
+import { prepareWithSegments, layoutWithLines, walkLineRanges } from '@chenglou/pretext'
 
 /* ──────────────────────────────────────────────────────────────────
    DARK MODE TOKENS — Portfolio page uses light text on dark bg
@@ -23,11 +24,11 @@ const D = {
    MOCK DATA for visual hierarchy elements not in translation files
    ────────────────────────────────────────────────────────────────── */
 const PROCESS_STEPS = [
-  { key: 'processResearch', label: 'Research', icon: '◉' },
-  { key: 'processConcept', label: 'Concept', icon: '◆' },
-  { key: 'processDesign', label: 'Design', icon: '▣' },
-  { key: 'processReview', label: 'Review', icon: '◇' },
-  { key: 'processDeliver', label: 'Deliver', icon: '▸' },
+  { key: 'research', label: 'Research', icon: '◉' },
+  { key: 'concept', label: 'Concept', icon: '◆' },
+  { key: 'design', label: 'Design', icon: '▣' },
+  { key: 'review', label: 'Review', icon: '◇' },
+  { key: 'deliver', label: 'Deliver', icon: '▸' },
 ]
 
 const ALL_TOOLS = [
@@ -264,9 +265,25 @@ function useScrollProgress() {
   return scrollPercent
 }
 
-/* ──────────────────────────────────────────────────────────────────
-   DECORATIVE COMPONENTS
-   ────────────────────────────────────────────────────────────────── */
+/* ──────────────────────── DECORATIVE COMPONENTS ──────────────────────── */
+
+/* Reading progress indicator — thin vertical line on left edge */
+const ReadingProgress = () => {
+  const { scrollYProgress } = useScroll()
+  const scrollPercent = useTransform(scrollYProgress, [0, 1], [0, 100])
+  return (
+    <motion.div
+      className="fixed left-0 top-0 bottom-0 w-[2px] z-50 origin-top hidden lg:block"
+      style={{
+        scaleY: scrollPercent,
+        background: 'linear-gradient(to bottom, #2d5a3d, #4a9f62)',
+        opacity: 0.5,
+      }}
+    />
+  )
+}
+
+/* ──────────────────────── HEADER LINES ──────────────────────── */
 
 const HeaderLines = () => (
   <svg
@@ -655,8 +672,7 @@ const WorkItem = ({ work, index }) => {
   const FallbackSvg = projectSvgs[index] || projectSvgs[0]
 
   return (
-    <motion.div
-      ref={ref}
+    <motion.div ref={ref}
       initial={{ opacity: 0, y: 60 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
       transition={{ delay: 0.05, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
@@ -709,6 +725,7 @@ const WorkItem = ({ work, index }) => {
               <motion.img
                 src={work.media.src}
                 alt={work.title}
+                decoding="async"
                 className="h-full w-full object-cover"
                 style={{ opacity: imageLoaded ? 1 : 0 }}
                 animate={{ scale: isHovered ? 1.04 : 1 }}
@@ -741,8 +758,9 @@ const WorkItem = ({ work, index }) => {
         {/* Title & Description */}
         <h3 className="text-2xl md:text-4xl font-display mb-2 tracking-tight leading-tight" style={{ color: D.primary }}>{work.title}</h3>
         <MaskReveal>
-          <p className="text-sm leading-relaxed mb-4 font-light max-w-2xl" style={{ color: '#2d5a3d' }}>{work.description}</p>
+          <p className="text-sm leading-relaxed mb-3 font-light max-w-2xl" style={{ color: '#2d5a3d' }}>{work.description}</p>
         </MaskReveal>
+        <DescMetrics text={work.description} />
 
         {/* Difficulty & Impact */}
         <ProgressBar difficulty={meta.difficulty} impact={meta.impact} />
@@ -934,6 +952,106 @@ const Reflections = () => {
   )
 }
 
+/* ───────────────────────────── TYPE WIDTH CHART ───────────────────────────── */
+/* Uses pretext to measure actual rendered widths of project titles and
+   displays them as an editorial bar chart — a typographic fingerprint.   */
+const TypeWidthChart = () => {
+  const titles = ['BUE Film Festival Poster Banner', 'BUE ISFF Logo', 'Film Festival Billboard', 'Book Cover Design']
+
+  const widths = useMemo(() => {
+    try {
+      const measured = titles.map(t => {
+        const p = prepareWithSegments(t, `16px "${'Manrope'}"`)
+        const { lines } = layoutWithLines(p, 2000, 22)
+        const width = lines.reduce((max, l) => Math.max(max, l.width), 0)
+        return { text: t, width }
+      })
+      const maxW = Math.max(...measured.map(m => m.width), 1)
+      return measured.map(m => ({ ...m, ratio: m.width / maxW }))
+    } catch {
+      return titles.map(t => ({ text: t, width: 0, ratio: 0 }))
+    }
+  }, [])
+
+  const maxWidth = widths.length > 0 ? Math.max(...widths.map(w => w.width), 1) : 1
+
+  return (
+    <div className="mx-auto max-w-7xl px-6 md:px-12 py-8">
+      <motion.p
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        className="page-number mb-4" style={{ color: '#2d5a3d60', textAlign: 'center' }}
+      >
+        Type Widths — pretext measured
+      </motion.p>
+      <div className="flex flex-col gap-2 max-w-md mx-auto">
+        {widths.map((w, i) => (
+          <motion.div
+            key={w.text}
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 + i * 0.1, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            className="flex items-center gap-3"
+          >
+            <span className="page-number text-[0.5rem] w-4 text-right" style={{ color: '#2d5a3d40' }}>
+              {String(i + 1).padStart(2, '0')}
+            </span>
+            <div
+              className="h-[3px] rounded-full"
+              style={{
+                width: `${Math.max(8, w.ratio * 200)}px`,
+                background: `linear-gradient(135deg, #2d6b3f${Math.round(w.ratio * 200).toString(16).padStart(2, '0')}, #4a9f62${Math.round(w.ratio * 150).toString(16).padStart(2, '0')})`,
+              }}
+              title={`${w.text} — ${w.width.toFixed(0)}px`}
+            />
+            <span className="page-number text-[0.5rem] tabular-nums" style={{ color: '#2d5a3d30' }}>
+              {w.width.toFixed(0)}
+            </span>
+          </motion.div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+/* ────────────────── DESC METRICS — pretext text balance badge ────────── */
+const DescMetrics = ({ text, maxWidth = 400, lineHeight = 22 }) => {
+  const metrics = useMemo(() => {
+    try {
+      const p = prepareWithSegments(text, '14px Manrope')
+      const { lines } = layoutWithLines(p, maxWidth, lineHeight)
+      const widths = lines.map(l => l.width)
+      const maxW = Math.max(...widths, 1)
+      const avg = widths.reduce((a, b) => a + b, 0) / widths.length
+      const variance = widths.reduce((sum, w) => sum + Math.pow(w - avg, 2), 0) / widths.length
+      const balance = 1 - (Math.sqrt(variance) / maxW)
+      return { lineCount: lines.length, balance }
+    } catch {
+      return { lineCount: 0, balance: 0 }
+    }
+  }, [text, maxWidth, lineHeight])
+
+  const pct = Math.round(metrics.balance * 100)
+  return (
+    <motion.span
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      viewport={{ once: true }}
+      className="inline-flex items-center gap-1.5 px-2 py-0.5 border rounded-sm"
+      style={{ borderColor: '#2d5a3d20' }}
+      title={`Text balance: ${pct}% across ${metrics.lineCount} lines`}
+    >
+      <span className="text-[0.5rem] uppercase tracking-wider" style={{ color: '#2d5a3d40' }}>{metrics.lineCount}l</span>
+      <span className="w-10 h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: '#2d5a3d10' }}>
+        <span className="h-full rounded-full block" style={{ width: `${pct}%`, backgroundColor: pct > 60 ? '#4a9f6260' : '#2d5a3d30' }} />
+      </span>
+      <span className="text-[0.5rem]" style={{ color: '#2d5a3d30' }}>{pct}%</span>
+    </motion.span>
+  )
+}
+
 /* ──────────────────────────────────────────────────────────────────
    MAIN PAGE
    ────────────────────────────────────────────────────────────────── */
@@ -945,18 +1063,34 @@ function Portfolio() {
   const topRef = useRef(null)
   const totalWorks = Array.isArray(works) ? works.length : 0
   const [currentPage, setCurrentPage] = useState(1)
+  const [currentProject, setCurrentProject] = useState('')
 
-  // Track which project section is most visible
+  // Track active project via IntersectionObserver
   useEffect(() => {
-    const handleScroll = () => {
-      if (!Array.isArray(works)) return
-      const viewportH = window.innerHeight
-      const section = Math.floor(window.scrollY / (viewportH * 0.8)) + 1
-      setCurrentPage(Math.min(Math.max(1, section), totalWorks))
-    }
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [works, totalWorks])
+    if (!Array.isArray(works)) return
+    const observer = new IntersectionObserver(
+      (entries) => {
+        let maxRatio = 0
+        let maxTarget = null
+        for (const e of entries) {
+          if (e.isIntersecting && e.intersectionRatio > maxRatio) {
+            maxRatio = e.intersectionRatio;
+            maxTarget = e.target;
+          }
+        }
+        if (maxTarget) {
+          const idx = works.findIndex(w => `project-${w.id}` === maxTarget.id)
+          if (idx >= 0) {
+            setCurrentPage(idx + 1)
+            setCurrentProject(works[idx].title)
+          }
+        }
+      },
+      { rootMargin: '-10% 0px -60% 0px' }
+    )
+    document.querySelectorAll('[data-project]').forEach(el => observer.observe(el))
+    return () => observer.disconnect()
+  }, [works])
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -970,6 +1104,7 @@ function Portfolio() {
       style={{ color: '#c8d8cc' }}
     >
       <Cursor />
+      <ReadingProgress />
 
       {/* Botanical grid background */}
       <BotanicalGridPattern />
@@ -988,8 +1123,8 @@ function Portfolio() {
             to="/"
             className="flex items-center gap-3 font-display italic text-xl hover:transition-colors"
             style={{ color: '#c8d8cc' }}
-            onMouseEnter={(e) => { e.currentTarget.style.color = '#4a9f62' }}
-            onMouseLeave={(e) => { e.currentTarget.style.color = '#0d1a0f' }}
+            onMouseEnter={(e) => { e.currentTarget.style.color = '#63b476' }}
+            onMouseLeave={(e) => { e.currentTarget.style.color = '#c8d8cc' }}
           >
             <span className="text-lg" style={{ color: '#4a9f62' }}>&larr;</span>
             {t('home')}
@@ -997,8 +1132,11 @@ function Portfolio() {
 
           {/* Page indicator */}
           <div className="flex items-center gap-3">
+            {currentProject && (
+              <span className="page-number hidden md:block truncate max-w-[150px]" style={{ color: '#2d5a3d80' }}>{currentProject}</span>
+            )}
             <span className="page-number">
-              <span style={{ color: '#2d5a3d' }}>{String(currentPage).padStart(2, '0')}</span>
+              <span className="text-[0.65rem]" style={{ color: '#4a9f62' }}>{String(currentPage).padStart(2, '0')}</span>
               {' / '}
               <span style={{ color: '#2d5a3d60' }}>{String(totalWorks).padStart(2, '0')}</span>
             </span>
@@ -1067,6 +1205,9 @@ function Portfolio() {
       {/* ───── OVERVIEW STATS ───── */}
       {Array.isArray(works) && <OverviewStats works={works} />}
 
+      {/* ───── TYPE WIDTH CHART (pretext) ───── */}
+      <TypeWidthChart />
+
       {/* ───── DIVIDER ───── */}
       <div className="mx-auto max-w-7xl px-6 md:px-12">
         <div className="h-px" style={{ backgroundImage: 'linear-gradient(to right, #2d5a3d20, #2d5a3d10, transparent)' }} />
@@ -1101,8 +1242,10 @@ function Portfolio() {
         <div className="mx-auto max-w-7xl">
           <StaggerContainer staggerDelay={0.15}>
             {Array.isArray(works) && works.map((work, i) => (
-              <div key={work.id} className="py-12 md:py-20">
+              <div key={work.id} className="py-12 md:py-20" data-project>
+                <div id={`project-${work.id}`}>
                 <WorkItem work={work} index={i} />
+                </div>
               </div>
             ))}
           </StaggerContainer>
