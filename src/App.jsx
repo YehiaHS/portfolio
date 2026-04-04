@@ -2265,12 +2265,6 @@ const Footer = () => {
 
 /* ──────────────────────── APP ──────────────────────── */
 /* ──────────────────────── KEYBOARD SHORTCUTS ──────────────────────── */
-const shortcuts = [
-  { key: '?', label: 'Show this help' },
-  { key: 'Home', label: 'Scroll to top' },
-  { key: '1–' + ALL_SECTIONS.length, label: 'Jump to section' },
-]
-
 const ALL_SECTIONS = [
   { id: 'about', label: 'About' },
   { id: 'skills', label: 'Skills' },
