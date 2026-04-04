@@ -363,6 +363,15 @@ const FeaturedWorkItem = ({ work, index, onClick }) => {
   const [showReflection, setShowReflection] = useState(false)
   const [expanded, setExpanded] = useState(false)
 
+  const titleWidth = useMemo(() => {
+    try {
+      const p = prepareWithSegments(work.title, '1.25rem "Fraunces"')
+      const { lines } = layoutWithLines(p, 2000, 22)
+      const w = Math.max(...lines.map(l => l.width), 1)
+      return w.toFixed(0)
+    } catch { return null }
+  }, [work.title])
+
   useEffect(() => {
     const cached = imageCache.get(work.src)
     if (cached) { setImgState(cached); return }
@@ -439,7 +448,16 @@ const FeaturedWorkItem = ({ work, index, onClick }) => {
         </div>
 
         {/* Title */}
-        <h3 className="text-2xl md:text-4xl font-display mb-2 tracking-tight leading-tight" style={{ color: D.text }}>{work.title}</h3>
+        <div className="flex items-baseline gap-3 mb-2">
+          <h3 className="text-2xl md:text-4xl font-display tracking-tight leading-tight" style={{ color: D.text }}>{work.title}</h3>
+          {titleWidth && (
+            <span className="page-number hidden md:inline-flex items-center gap-1 px-1.5 py-0.5 border rounded-sm flex-shrink-0"
+              style={{ borderColor: '#2d5a3d15', color: '#2d5a3d30', fontSize: '0.5rem' }}
+              title={work.title}>
+              {titleWidth}px
+            </span>
+          )}
+        </div>
 
         {/* Description with expand */}
         <p className={`text-sm leading-relaxed mb-3 font-light max-w-2xl ${expanded ? '' : 'line-clamp-3'}`} style={{ color: '#2d5a3d' }}>
@@ -579,6 +597,38 @@ const Lightbox = ({ src, caption, onClose, onPrev, onNext }) => {
     </motion.div>
   )
 }
+
+/* ──────────────── WORKS STATS BAR ──────────────── */
+const WorksStats = ({ totalItems, totalCategories, featuredCount, viewMode }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 10 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ delay: 0.6, duration: 0.5 }}
+    className="mx-auto max-w-7xl px-6 md:px-12 py-4"
+  >
+    <div className="flex items-center justify-between flex-wrap gap-3">
+      <div className="flex items-center gap-4 md:gap-6">
+        <div className="text-center">
+          <div className="font-display text-lg md:text-xl" style={{ color: D.text }}>{featuredCount}</div>
+          <div className="text-[0.55rem] uppercase tracking-widest" style={{ color: D.faint }}>Featured</div>
+        </div>
+        <div className="h-6 w-px" style={{ background: D.border }} />
+        <div className="text-center">
+          <div className="font-display text-lg md:text-xl" style={{ color: D.text }}>{totalItems}</div>
+          <div className="text-[0.55rem] uppercase tracking-widest" style={{ color: D.faint }}>Total</div>
+        </div>
+        <div className="h-6 w-px" style={{ background: D.border }} />
+        <div className="text-center">
+          <div className="font-display text-lg md:text-xl" style={{ color: D.text }}>{totalCategories}</div>
+          <div className="text-[0.55rem] uppercase tracking-widest" style={{ color: D.faint }}>Categories</div>
+        </div>
+      </div>
+      <div className="page-number hidden md:block" style={{ color: D.faint }}>
+        {viewMode === 'showcase' ? 'Scroll to explore' : `Showing ${totalItems} works`}
+      </div>
+    </div>
+  </motion.div>
+)
 
 /* ──────────────── CATEGORY SECTION ──────────────── */
 const CategorySection = ({ category, index, onImageClick }) => {
@@ -743,6 +793,9 @@ function WorksArchive() {
           </div>
         </div>
       </motion.header>
+
+      {/* Stats bar */}
+      <WorksStats totalItems={totalItems} totalCategories={allCategories.length} featuredCount={FEATURED_WORKS.length} viewMode={viewMode} />
 
       {/* Showcase mode */}
       {viewMode === 'showcase' && (
