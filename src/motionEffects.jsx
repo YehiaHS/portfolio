@@ -153,7 +153,7 @@ export const TextCounter = ({ end, duration = 2, suffix = '', className = '' }) 
 
 export const StaggerContainer = ({ children, className = '', staggerMs = 80 }) => {
   const ref = useRef(null)
-  const inView = useInView(ref, { once: true, margin: '-60px' })
+  const inView = useInView(ref, { once: true, margin: '0px' })
 
   const container = {
     hidden: {},
