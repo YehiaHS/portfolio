@@ -337,10 +337,30 @@ const FeaturedWorkItem = ({ work, index, onClick }) => {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true })
   const [hovered, setHovered] = useState(false)
-  const [imgLoaded, setImgLoaded] = useState(false)
-  const [imgError, setImgError] = useState(false)
+  const [imgState, setImgState] = useState('idle')
   const [showReflection, setShowReflection] = useState(false)
   const [expanded, setExpanded] = useState(false)
+
+  useEffect(() => {
+    const cached = imageCache.get(work.src)
+    if (cached) { setImgState(cached); return }
+    setImgState('loading')
+    let cancelled = false
+    const img = new Image()
+    const resolve = (ok) => {
+      if (cancelled) return
+      const s = ok ? 'loaded' : 'error'
+      imageCache.set(work.src, s)
+      setImgState(s)
+    }
+    if (img.complete && (img.naturalWidth > 0 || img.naturalHeight > 0)) { resolve(true); return }
+    if (img.complete && img.naturalWidth === 0 && img.naturalHeight === 0) { resolve(false); return }
+    const tid = setTimeout(() => resolve(false), 10000)
+    img.onload = () => resolve(true)
+    img.onerror = () => resolve(false)
+    img.src = work.src
+    return () => { cancelled = true; clearTimeout(tid) }
+  }, [work.src])
 
   return (
     <motion.div ref={ref}
@@ -377,23 +397,23 @@ const FeaturedWorkItem = ({ work, index, onClick }) => {
 
         {/* Image */}
         <div className="relative aspect-[4/3] overflow-hidden mb-6 cursor-pointer" onClick={() => onClick(index)}>
-          {(!imgLoaded && !imgError) && (
+          {imgState === "idle" && (
             <div className="absolute inset-0 flex items-center justify-center" style={{ background: D.cardBg }}>
               <div className="w-6 h-6 border-2 rounded-full animate-spin" style={{ borderTopColor: D.accent, borderColor: '#2d5a3d30' }} />
             </div>
           )}
-          {!imgError && (
+          {imgState !== "error" && (
             <motion.img
               src={work.src} alt={work.title} loading="lazy" decoding="async"
               className="h-full w-full object-cover"
-              style={{ opacity: imgLoaded ? 1 : 0 }}
+              style={{ opacity: imgState === "loaded" ? 1 : 0 }}
               animate={{ scale: hovered ? 1.04 : 1 }}
               transition={{ duration: 0.6 }}
-              onLoad={() => setImgLoaded(true)}
-              onError={() => setImgError(true)}
+              onLoad={() => setImgState("loaded")}
+              onError={() => setImgState("error")}
             />
           )}
-          {imgError && <FallbackSvg />}
+          {imgState === "error" && <FallbackSvg />}
         </div>
 
         {/* Title */}
