@@ -180,11 +180,12 @@ const Fallback = () => (
 const imageCache = new Map()
 
 function useImageState(src, inView) {
-  const [state, setState] = useState(imageCache.has(src) ? imageCache.get(src) : 'idle')
+  const [state, setState] = useState(() => imageCache.get(src) || 'idle')
 
   useEffect(() => {
-    if (imageCache.has(src)) {
-      setState(imageCache.get(src))
+    const cached = imageCache.get(src)
+    if (cached) {
+      setState(cached)
       return
     }
     if (!inView) {
@@ -194,26 +195,28 @@ function useImageState(src, inView) {
     setState('loading')
     let cancelled = false
     const img = new Image()
-    const tid = setTimeout(() => {
-      if (!cancelled) {
-        imageCache.set(src, 'error')
-        setState('error')
-      }
-    }, 8000)
-    img.onload = () => {
-      if (!cancelled) {
-        imageCache.set(src, 'loaded')
-        setState('loaded')
-        clearTimeout(tid)
-      }
+
+    const resolve = (ok) => {
+      if (cancelled) return
+      const s = ok ? 'loaded' : 'error'
+      imageCache.set(src, s)
+      setState(s)
     }
-    img.onerror = () => {
-      if (!cancelled) {
-        imageCache.set(src, 'error')
-        setState('error')
-        clearTimeout(tid)
-      }
+
+    // Cached images fire onload synchronously
+    if (img.complete && (img.naturalWidth > 0 || img.naturalHeight > 0)) {
+      resolve(true)
+      return
     }
+    // Also check for error on cached images
+    if (img.complete && img.naturalWidth === 0 && img.naturalHeight === 0) {
+      resolve(false)
+      return
+    }
+
+    const tid = setTimeout(() => resolve(false), 10000)
+    img.onload = () => resolve(true)
+    img.onerror = () => resolve(false)
     img.src = src
     return () => { cancelled = true; clearTimeout(tid) }
   }, [src, inView])
