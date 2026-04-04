@@ -460,7 +460,7 @@ const OverviewStats = ({ works }) => {
 const ProcessSection = () => {
   const { t } = useLanguage()
   const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, margin: '-100px' })
+  const isInView = useInView(ref, { once: true, margin: '0px', amount: 0.1 })
 
   return (
     <section ref={ref} className="px-6 md:px-12 py-16">
@@ -469,7 +469,7 @@ const ProcessSection = () => {
           className="page-number mb-6"
           style={{ color: '#2d5a3d60' }}
           initial={{ opacity: 0 }}
-          animate={isInView ? { opacity: 1 } : { opacity: 0 }}
+          animate={isInView ? { opacity: 1 } : {}}
         >
           Design Methodology
         </motion.p>
@@ -480,7 +480,7 @@ const ProcessSection = () => {
             className="absolute top-7 left-0 h-[1px] hidden md:block"
             style={{ backgroundColor: '#4a8f5c50' }}
             initial={{ width: 0 }}
-            animate={isInView ? { width: '100%' } : { width: 0 }}
+            animate={isInView ? { width: '100%' } : {}}
             transition={{ duration: 1.5, ease: [0.22, 1, 0.36, 1] }}
           />
           <div className="grid grid-cols-2 md:grid-cols-5 gap-6 md:gap-0">
@@ -488,8 +488,8 @@ const ProcessSection = () => {
               <motion.div
                 key={step.key}
                 className="flex flex-col items-center text-center relative"
-                initial={{ opacity: 0, y: 20 }}
-                animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0 }}
+                initial={{ opacity: 1 }}
+                animate={isInView ? { opacity: 1, y: 0 } : { y: 20 }}
                 transition={{ delay: i * 0.15, duration: 0.6 }}
               >
                 <div className="w-14 h-14 rounded-full flex items-center justify-center mb-3 relative z-10" style={{ backgroundColor: '#f5f5f0', border: '1px solid #2d5a3d15' }}>
@@ -523,8 +523,8 @@ const VisualProcessGallery = () => {
               key={i}
               className="overflow-hidden rounded-sm"
               style={{ border: '1px solid #2d5a3d15' }}
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0 }}
+              initial={{ opacity: 1, y: 20 }}
+              animate={isInView ? { opacity: 1, y: 0 } : { y: 20 }}
               transition={{ delay: i * 0.15, duration: 0.7 }}
             >
               <ProcessSnapshotSVG variant={i} />

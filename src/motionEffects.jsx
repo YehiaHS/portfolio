@@ -152,41 +152,7 @@ export const TextCounter = ({ end, duration = 2, suffix = '', className = '' }) 
 /* ──────────────────────── STAGGER CHILDREN CONTAINER ──────────────────────── */
 
 export const StaggerContainer = ({ children, className = '', staggerMs = 80 }) => {
-  const ref = useRef(null)
-  const inView = useInView(ref, { once: true, margin: '0px' })
-
-  const container = {
-    hidden: {},
-    visible: {
-      transition: { staggerChildren: staggerMs / 1000 },
-    },
-  }
-
-  const item = {
-    hidden: { y: 20, opacity: 0, filter: 'blur(4px)' },
-    visible: {
-      y: 0,
-      opacity: 1,
-      filter: 'blur(0px)',
-      transition: { duration: 0.6, ease: [0.77, 0, 0.18, 1] },
-    },
-  }
-
   return (
-    <motion.div
-      ref={ref}
-      variants={container}
-      initial="hidden"
-      animate={inView ? 'visible' : 'hidden'}
-      className={className}
-    >
-      {Array.isArray(children)
-        ? children.map((child, i) => (
-            <motion.div key={i} variants={item}>
-              {child}
-            </motion.div>
-          ))
-        : null}
-    </motion.div>
+    <>{children}</>
   )
 }
