@@ -7,6 +7,19 @@ import LanguageSelector from './LanguageSelector'
 import Cursor from './Cursor'
 
 /* ──────────────────────────────────────────────────────────────────
+   DARK MODE TOKENS — Portfolio page uses light text on dark bg
+   ────────────────────────────────────────────────────────────────── */
+const D = {
+  bg: '#0a0e0c',
+  primary: '#c8d8cc',
+  muted: '#7a8a7e',
+  faint: '#5a6a5e',
+  accent: '#4a9f62',
+  accentDeep: '#2d6b3f',
+  cardBg: '#111c14',
+}
+
+/* ──────────────────────────────────────────────────────────────────
    MOCK DATA for visual hierarchy elements not in translation files
    ────────────────────────────────────────────────────────────────── */
 const PROCESS_STEPS = [
@@ -348,7 +361,7 @@ const ProgressBar = ({ difficulty, impact }) => (
         <div className="h-[2px] rounded-full overflow-hidden" style={{ backgroundColor: '#2d5a3d10' }}>
           <motion.div
             className="h-full rounded-full"
-            style={{ background: value >= 8 ? '#4a8f5c' : '#2d5a3d' }}
+            style={{ background: value >= 8 ? '#4a9f62' : '#2d5a3d' }}
             initial={{ width: 0 }}
             whileInView={{ width: `${value * 10}%` }}
             viewport={{ once: true }}
@@ -369,7 +382,7 @@ const SkillTags = ({ skills }) => {
         <span
           key={s}
           className="page-number px-3 py-1 font-display text-[0.65rem] border text-ink"
-          style={{ backgroundColor: '#f5f5f0', borderColor: '#2d5a3d25', color: '#0d1a0f' }}
+          style={{ backgroundColor: D.cardBg, borderColor: '#2d5a3d25', color: '#0d1a0f' }}
         >
           {s}
         </span>
@@ -378,7 +391,7 @@ const SkillTags = ({ skills }) => {
         <span
           key={s}
           className="px-3 py-1 text-[0.6rem] page-number border"
-          style={{ backgroundColor: '#f5f5f0', borderColor: '#2d5a3d15', color: '#2d5a3d80' }}
+          style={{ backgroundColor: D.cardBg, borderColor: '#2d5a3d15', color: '#2d5a3d80' }}
         >
           {s}
         </span>
@@ -394,7 +407,7 @@ const DropCapParagraph = ({ text, className }) => {
   const newlineIdx = rest.indexOf('\n')
   return (
     <p className={className}>
-      <span className="float-left font-display text-5xl md:text-6xl leading-[0.8] mr-2 mt-1" style={{ color: '#4a8f5c' }}>
+      <span className="float-left font-display text-5xl md:text-6xl leading-[0.8] mr-2 mt-1" style={{ color: '#4a9f62' }}>
         {firstChar}
       </span>
       {newlineIdx > 0 ? (
@@ -492,8 +505,8 @@ const ProcessSection = () => {
                 animate={isInView ? { opacity: 1, y: 0 } : { y: 20 }}
                 transition={{ delay: i * 0.15, duration: 0.6 }}
               >
-                <div className="w-14 h-14 rounded-full flex items-center justify-center mb-3 relative z-10" style={{ backgroundColor: '#f5f5f0', border: '1px solid #2d5a3d15' }}>
-                  <span style={{ color: '#4a8f5c', fontSize: '1.25rem' }}>{step.icon}</span>
+                <div className="w-14 h-14 rounded-full flex items-center justify-center mb-3 relative z-10" style={{ backgroundColor: D.cardBg, border: '1px solid #2d5a3d15' }}>
+                  <span style={{ color: '#4a9f62', fontSize: '1.25rem' }}>{step.icon}</span>
                 </div>
                 <span className="font-display text-sm" style={{ color: '#0d1a0f' }}>{t(step.key) || step.label}</span>
                 <span className="text-[0.6rem] page-number mt-1" style={{ color: '#2d5a3d60' }}>{String(i + 1).padStart(2, '0')}</span>
@@ -556,7 +569,7 @@ const TechniquesTools = () => {
     tertiary: { color: '#2d5a3d80' },
   }
   const hoverBorderMap = {
-    primary: '#4a8f5c',
+    primary: '#4a9f62',
     secondary: '#2d5a3d',
     tertiary: '#2d5a3d80',
   }
@@ -571,7 +584,7 @@ const TechniquesTools = () => {
               key={tool.name}
               className={`px-3 md:px-4 py-1.5 md:py-2 border rounded-sm page-number ${sizeMap[tool.level]} ${borderMap[tool.level]} cursor-default`}
               style={{
-                backgroundColor: '#f5f5f0',
+                backgroundColor: D.cardBg,
                 color: colorMap[tool.level].color,
                 borderColor: '#2d5a3d20',
                 transition: 'all 0.2s ease',
@@ -716,7 +729,7 @@ const WorkItem = ({ work, index }) => {
         {/* Caption */}
         <motion.p
           className="text-[0.65rem] font-light tracking-wide mb-4 italic font-italic"
-          style={{ color: '#2d5a3d80' }}
+          style={{ color: '#7a8a7e' }}
           initial={{ opacity: 0, y: 8 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -760,7 +773,7 @@ const WorkItem = ({ work, index }) => {
           <span
             className="text-sm font-light group-hover:transition-colors"
             style={{ color: '#2d5a3d' }}
-            onMouseEnter={(e) => { e.currentTarget.style.color = '#4a8f5c' }}
+            onMouseEnter={(e) => { e.currentTarget.style.color = '#4a9f62' }}
             onMouseLeave={(e) => { e.currentTarget.style.color = '#2d5a3d' }}
           >
             {showReflection ? t('closeReflection') : t('reflection')}
@@ -769,7 +782,7 @@ const WorkItem = ({ work, index }) => {
             animate={{ rotate: showReflection ? 0 : -90 }}
             transition={{ duration: 0.3 }}
             className="text-sm"
-            style={{ color: '#4a8f5c' }}
+            style={{ color: '#4a9f62' }}
           >
             &#x2193;
           </motion.span>
@@ -786,7 +799,7 @@ const WorkItem = ({ work, index }) => {
               className="overflow-hidden"
             >
               <div className="reflexion-panel pb-4 pt-2">
-                <h4 className="font-display italic text-lg mb-4" style={{ color: '#4a8f5c' }}>
+                <h4 className="font-display italic text-lg mb-4" style={{ color: '#4a9f62' }}>
                   {t('reflection')}
                 </h4>
                 <LineSlideUp>
@@ -800,7 +813,7 @@ const WorkItem = ({ work, index }) => {
                       <span
                         key={s}
                         className="px-3 py-1 text-[0.65rem] page-number border"
-                        style={{ backgroundColor: '#f5f5f0', borderColor: '#2d5a3d15', color: '#2d5a3d' }}
+                        style={{ backgroundColor: D.cardBg, borderColor: '#2d5a3d15', color: '#2d5a3d' }}
                       >
                         {s}
                       </span>
@@ -851,7 +864,7 @@ const Reflections = () => {
           <div className="col-span-12 md:col-span-9 lg:col-span-10">
             <motion.h2
               className="text-3xl md:text-5xl lg:text-6xl font-display tracking-tight leading-[0.95] mb-3"
-              style={{ color: '#0d1a0f' }}
+              style={{ color: '#c8d8cc' }}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -954,7 +967,7 @@ function Portfolio() {
       ref={topRef}
       className="relative min-h-screen cursor-none page-enter"
       dir={isRTL ? 'rtl' : 'ltr'}
-      style={{ color: '#0d1a0f' }}
+      style={{ color: '#c8d8cc' }}
     >
       <Cursor />
 
@@ -964,7 +977,7 @@ function Portfolio() {
       {/* ───── SCROLL PROGRESS BAR (top of viewport) ───── */}
       <motion.div
         className="fixed top-0 left-0 right-0 h-[2px] z-[60] origin-left"
-        style={{ scaleX: scrollPercent, backgroundColor: '#4a8f5c' }}
+        style={{ scaleX: scrollPercent, backgroundColor: '#4a9f62' }}
         aria-hidden="true"
       />
 
@@ -974,11 +987,11 @@ function Portfolio() {
           <Link
             to="/"
             className="flex items-center gap-3 font-display italic text-xl hover:transition-colors"
-            style={{ color: '#0d1a0f' }}
-            onMouseEnter={(e) => { e.currentTarget.style.color = '#4a8f5c' }}
+            style={{ color: '#c8d8cc' }}
+            onMouseEnter={(e) => { e.currentTarget.style.color = '#4a9f62' }}
             onMouseLeave={(e) => { e.currentTarget.style.color = '#0d1a0f' }}
           >
-            <span className="text-lg" style={{ color: '#4a8f5c' }}>&larr;</span>
+            <span className="text-lg" style={{ color: '#4a9f62' }}>&larr;</span>
             {t('home')}
           </Link>
 
@@ -1030,7 +1043,7 @@ function Portfolio() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
                 className="text-5xl md:text-7xl lg:text-8xl font-display tracking-tight leading-[0.9] mb-6"
-                style={{ color: '#0d1a0f' }}
+                style={{ color: '#c8d8cc' }}
               >
                 <GlitchText as="span">{t('portfolioTitle')}</GlitchText>
               </motion.h1>
@@ -1039,7 +1052,7 @@ function Portfolio() {
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.5 }}
                 className="text-base font-light max-w-xl leading-relaxed"
-                style={{ color: '#2d5a3d80' }}
+                style={{ color: '#7a8a7e' }}
               >
                 {t('portfolioDescription')}
               </motion.p>
@@ -1121,7 +1134,7 @@ function Portfolio() {
       {/* ───── ETHICS NOTICE ───── */}
       <section className="px-6 md:px-12 py-16">
         <div className="mx-auto max-w-3xl">
-          <div className="relative border-2 p-8 md:p-12" style={{ borderColor: '#2d5a3d15', backgroundColor: '#f5f5f0' }}>
+          <div className="relative border-2 p-8 md:p-12" style={{ borderColor: '#2d5a3d15', backgroundColor: D.cardBg }}>
             {/* Decorative corners */}
             <div className="absolute -top-[1px] -left-[1px] w-4 h-4 border-t-2 border-l-2" style={{ borderColor: '#4a8f5c40' }} />
             <div className="absolute -top-[1px] -right-[1px] w-4 h-4 border-t-2 border-r-2" style={{ borderColor: '#4a8f5c40' }} />
@@ -1147,8 +1160,8 @@ function Portfolio() {
               <Link
                 to="/"
                 className="font-display italic text-xl hover:transition-colors"
-                style={{ color: '#0d1a0f' }}
-                onMouseEnter={(e) => { e.currentTarget.style.color = '#4a8f5c' }}
+                style={{ color: '#c8d8cc' }}
+                onMouseEnter={(e) => { e.currentTarget.style.color = '#4a9f62' }}
                 onMouseLeave={(e) => { e.currentTarget.style.color = '#0d1a0f' }}
               >
                 YS
@@ -1173,11 +1186,11 @@ function Portfolio() {
                 onClick={scrollToTop}
                 className="page-number text-sm flex items-center gap-2 ml-auto hover:transition-colors"
                 style={{ color: '#2d5a3d60' }}
-                onMouseEnter={(e) => { e.currentTarget.style.color = '#4a8f5c' }}
+                onMouseEnter={(e) => { e.currentTarget.style.color = '#4a9f62' }}
                 onMouseLeave={(e) => { e.currentTarget.style.color = '#2d5a3d60' }}
               >
                 {t('home')}
-                <span className="inline-block" style={{ color: '#4a8f5c' }}>&uarr;</span>
+                <span className="inline-block" style={{ color: '#4a9f62' }}>&uarr;</span>
               </button>
               <p className="text-xs page-number mt-2" style={{ color: '#2d5a3d60' }}>
                 {new Date().toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' })}
@@ -1203,7 +1216,7 @@ function Portfolio() {
       <motion.button
         className="fixed bottom-8 right-8 z-40 w-12 h-12 rounded-full border flex items-center justify-center shadow-lg hover:transition-colors"
         style={{
-          backgroundColor: '#f5f5f0',
+          backgroundColor: D.cardBg,
           borderColor: '#2d5a3d15',
           color: '#2d5a3d',
         }}
@@ -1213,8 +1226,8 @@ function Portfolio() {
         transition={{ delay: 1 }}
         aria-label="Back to top"
         onMouseEnter={(e) => {
-          e.currentTarget.style.borderColor = '#4a8f5c'
-          e.currentTarget.style.color = '#4a8f5c'
+          e.currentTarget.style.borderColor = '#4a9f62'
+          e.currentTarget.style.color = '#4a9f62'
         }}
         onMouseLeave={(e) => {
           e.currentTarget.style.borderColor = '#2d5a3d15'
