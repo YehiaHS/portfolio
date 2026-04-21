@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { useImageLoader } from '../hooks/useImageLoader';
 
-export default function ImageCard({ src, caption, index, onClick, isDoc, className = "", style = {} }) {
+export default function ImageCard({ src, caption, index, onClick, isDoc, badge, className = "", style = {} }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: '100px' });
   const imgState = useImageLoader(isDoc ? null : src, inView);
@@ -21,9 +21,16 @@ export default function ImageCard({ src, caption, index, onClick, isDoc, classNa
       transition={{ delay: Math.min(index * 0.05, 0.4), duration: 0.5 }}
       className={`group relative overflow-hidden rounded-sm border ${onClick ? 'cursor-pointer' : ''} ${className}`}
       style={style}
-      onClick={() => onClick && onClick({ src, caption })}
+      onClick={() => onClick && onClick({ src, caption, isDoc })}
     >
       <div className="aspect-[3/2] overflow-hidden relative bg-paper-dark">
+        {/* Badge in top corner */}
+        {badge && (
+          <div className="absolute top-2 right-2 z-20 px-2 py-1 text-[0.5rem] uppercase tracking-widest font-mono text-[#f5f5f0] bg-[#2d5a3d]/80 backdrop-blur-sm rounded-sm">
+            {badge}
+          </div>
+        )}
+        
         {isDoc ? (
           <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center select-none">
             <div className="mb-4 opacity-20">

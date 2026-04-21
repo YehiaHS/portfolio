@@ -9,6 +9,7 @@ import { FEATURED_WORKS, getArchiveCategories } from './data/archiveData'
 import ImageCard from './components/ImageCard'
 import Lightbox from './components/Lightbox'
 import { useImageLoader } from './hooks/useImageLoader'
+import Fuse from 'fuse.js'
 
 /* ──────────────── FEATURED WORKS (from Portfolio showcase) ──────────────── */
 /* Removed code block */
@@ -235,9 +236,8 @@ const WorksStats = ({ totalItems, totalCategories, featuredCount, viewMode }) =>
 )
 
 /* ──────────────── CATEGORY SECTION ──────────────── */
-const CategorySection = ({ category, index, onImageClick }) => {
+const CategorySection = ({ category, index, onImageClick, isSearchResult }) => {
   const { t } = useLanguage()
-  const { scrollYProgress } = useScroll()
   const sectionRef = useRef(null)
   const isInView = useInView(sectionRef, { once: true, margin: '-10%' })
 
@@ -259,7 +259,15 @@ const CategorySection = ({ category, index, onImageClick }) => {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {category.items.map((item, i) => (
-            <ImageCard key={item.src} src={item.src} caption={item.caption} index={i} isDoc={item.isDoc} onClick={onImageClick} />
+            <ImageCard 
+              key={item.src} 
+              src={item.src} 
+              caption={item.caption} 
+              index={i} 
+              isDoc={item.isDoc} 
+              badge={isSearchResult ? item.categoryLabel : null}
+              onClick={onImageClick} 
+            />
           ))}
         </div>
       </div>
@@ -284,6 +292,25 @@ function WorksArchive() {
   const allCategories = useMemo(() => getArchiveCategories(), [])
   const totalItems = allCategories.reduce((s, c) => s + c.items.length, 0)
 
+  // Flattened items for global fuzzy search
+  const searchableItems = useMemo(() => {
+    return allCategories.flatMap(cat => 
+      cat.items.map(item => ({
+        ...item,
+        categoryLabel: cat.label,
+        categoryId: cat.id
+      }))
+    )
+  }, [allCategories])
+
+  const fuse = useMemo(() => new Fuse(searchableItems, {
+    keys: ['caption', 'categoryLabel'],
+    threshold: 0.35,
+    distance: 100,
+    ignoreLocation: true,
+    useExtendedSearch: true
+  }), [searchableItems])
+
   /* State for archive section */
   const [activeCategory, setActiveCategory] = useState('all')
   const [searchQuery, setSearchQuery] = useState('')
@@ -304,12 +331,21 @@ function WorksArchive() {
 
   /* Archive lightbox */
   const openArchiveLightbox = useCallback((item) => {
-    const filtered = (activeCategory === 'all' ? allCategories : allCategories.filter(c => c.id === activeCategory))
-      .flatMap(cat => cat.items)
-      .filter(it => !searchQuery || it.caption.toLowerCase().includes(searchQuery.toLowerCase()))
+    let filtered = []
+    if (searchQuery) {
+      const results = fuse.search(searchQuery)
+      filtered = results.map(r => r.item)
+      if (activeCategory !== 'all') {
+        filtered = filtered.filter(i => i.categoryId === activeCategory)
+      }
+    } else {
+      filtered = (activeCategory === 'all' ? allCategories : allCategories.filter(c => c.id === activeCategory))
+        .flatMap(cat => cat.items)
+    }
+    
     const idx = filtered.findIndex(i => i.src === item.src)
     setLightbox({ ...item, index: idx, items: filtered, fromArchive: true })
-  }, [activeCategory, allCategories, searchQuery])
+  }, [activeCategory, allCategories, searchQuery, fuse])
 
   /* Lightbox navigation */
   function navLightbox(delta) {
@@ -321,19 +357,38 @@ function WorksArchive() {
     setLightbox({ src: item.src, caption: item.caption, index: nextIdx, items, fromArchive: lightbox.fromArchive })
   }
 
-  /* Filtered categories */
-  const filteredCategories = activeCategory === 'all'
-    ? allCategories
-    : allCategories.filter(c => c.id === activeCategory)
+  /* Filtered categories/items */
+  const { filteredContent, resultsCount } = useMemo(() => {
+    if (!searchQuery) {
+      const cats = activeCategory === 'all' 
+        ? allCategories 
+        : allCategories.filter(c => c.id === activeCategory)
+      return { 
+        filteredContent: cats.map(c => ({ ...c, isSearchResult: false })), 
+        resultsCount: cats.reduce((acc, curr) => acc + curr.items.length, 0) 
+      }
+    }
 
-  const shownItems = searchQuery
-    ? filteredCategories.map(cat => ({
-        ...cat,
-        items: cat.items.filter(item => item.caption.toLowerCase().includes(searchQuery.toLowerCase()))
-      })).filter(cat => cat.items.length > 0)
-    : filteredCategories
+    // Fuzzy search mode
+    const results = fuse.search(searchQuery)
+    let filteredItems = results.map(r => r.item)
 
-  const shownTotal = shownItems.reduce((s, c) => s + c.items.length, 0)
+    if (activeCategory !== 'all') {
+      filteredItems = filteredItems.filter(item => item.categoryId === activeCategory)
+    }
+
+    // If searching, we show a flat list if it's "all" categories, or keep it themed
+    return {
+      filteredContent: [{
+        id: 'search-results',
+        label: activeCategory === 'all' ? 'Search Results' : `${allCategories.find(c => c.id === activeCategory)?.label} Results`,
+        description: `Found ${filteredItems.length} matching items`,
+        items: filteredItems,
+        isSearchResult: true
+      }],
+      resultsCount: filteredItems.length
+    }
+  }, [searchQuery, activeCategory, allCategories, fuse])
 
   return (
     <div className="relative min-h-screen cursor-none page-enter" style={{ background: D.bg, color: D.text }}>
@@ -381,7 +436,7 @@ function WorksArchive() {
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }}>
                 <span className="section-number" style={{ color: D.accent }}>Works</span>
                 <div className="w-8 h-px my-4" style={{ background: `${D.accent}66` }} />
-                <p className="page-number" style={{ color: D.muted }}>{viewMode === 'showcase' ? `${FEATURED_WORKS.length} featured works` : `${shownTotal} works across ${shownItems.length} categories`}</p>
+                <p className="page-number" style={{ color: D.muted }}>{viewMode === 'showcase' ? `${FEATURED_WORKS.length} featured works` : `${resultsCount} works across ${filteredContent.length} sections`}</p>
               </motion.div>
             </div>
             <div className="col-span-12 md:col-span-8 lg:col-span-9">
@@ -477,15 +532,47 @@ function WorksArchive() {
           {/* Sticky filter bar */}
           <div className="sticky top-[57px] z-40 border-b" style={{ background: 'rgba(13, 20, 16, 0.95)', backdropFilter: 'blur(8px)', borderColor: D.border }}>
             <div className="mx-auto max-w-7xl px-6 md:px-12 pt-4 pb-2">
-              <input
-                type="text" placeholder="Search works..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
-                className="w-full px-4 py-2.5 text-sm border outline-none transition-colors"
-                style={{ background: D.cardBg, borderColor: D.border, color: D.text }}
-              />
-              <button onClick={() => { setActiveCategory('all'); setSearchQuery('') }}
-                className="mt-3 text-xs underline mr-2" style={{ color: D.faint }}>
-                Clear all
-              </button>
+              <div className="relative group">
+                <input
+                  type="text" 
+                  placeholder="Thorough search (typos allowed)..." 
+                  value={searchQuery} 
+                  onChange={e => setSearchQuery(e.target.value)}
+                  className="w-full pl-4 pr-12 py-3.5 text-sm border outline-none transition-all duration-300 focus:ring-1 focus:ring-[#4a9f6240]"
+                  style={{ 
+                    background: 'rgba(17, 28, 20, 0.4)', 
+                    backdropFilter: 'blur(4px)',
+                    borderColor: searchQuery ? D.accent : D.border, 
+                    color: D.text,
+                    borderRadius: '2px'
+                  }}
+                />
+                {searchQuery && (
+                  <button 
+                    onClick={() => setSearchQuery('')}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-xs hover:transition-colors"
+                    style={{ color: D.muted }}
+                    onMouseEnter={e => e.currentTarget.style.color = D.accent}
+                    onMouseLeave={e => e.currentTarget.style.color = D.muted}
+                  >
+                    CLEAR
+                  </button>
+                )}
+              </div>
+              <div className="flex items-center justify-between mt-3 px-1">
+                <div className="flex items-center gap-1.5 opacity-60">
+                  <span className="w-1.5 h-1.5 rounded-full" style={{ background: searchQuery ? D.accent : D.muted }} />
+                  <span className="text-[0.65rem] uppercase tracking-widest" style={{ color: D.muted }}>
+                    {searchQuery ? `Fuzzy Match: ${resultsCount} found` : 'Standard Filter'}
+                  </span>
+                </div>
+                { (searchQuery || activeCategory !== 'all') && (
+                  <button onClick={() => { setActiveCategory('all'); setSearchQuery('') }}
+                    className="text-[0.6rem] uppercase tracking-tighter opacity-50 hover:opacity-100 hover:transition-opacity" style={{ color: D.accent }}>
+                    Reset Filters
+                  </button>
+                )}
+              </div>
               <div className="mt-2 overflow-x-auto pb-2">
                 <div className="flex gap-2 whitespace-nowrap">
                   <button onClick={() => { setActiveCategory('all'); setSearchQuery('') }}
@@ -508,12 +595,27 @@ function WorksArchive() {
           {/* Archive content */}
           <AnimatePresence mode="wait">
             <motion.div key={activeCategory + '__' + searchQuery} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
-              {shownItems.length > 0 ? (
-                shownItems.map((cat, i) => <CategorySection key={cat.id} category={cat} index={activeCategory === 'all' ? i : i} onImageClick={openArchiveLightbox} />)
+              {filteredContent.length > 0 && resultsCount > 0 ? (
+                filteredContent.map((cat, i) => (
+                  <CategorySection 
+                    key={cat.id} 
+                    category={cat} 
+                    index={i} 
+                    onImageClick={openArchiveLightbox}
+                    isSearchResult={searchQuery !== ''}
+                  />
+                ))
               ) : (
                 <div className="py-24 text-center">
-                  <p className="text-lg" style={{ color: D.muted }}>No works found matching "{searchQuery}"</p>
-                  <button onClick={() => setSearchQuery('')} className="mt-4 text-sm underline" style={{ color: D.accent }}>Clear search</button>
+                  <BotanicalWatermark />
+                  <p className="text-xl font-display" style={{ color: D.muted }}>No matches found</p>
+                  <p className="text-sm font-light mt-2" style={{ color: D.faint }}>Try searching for a different keyword or category</p>
+                  <button onClick={() => { setSearchQuery(''); setActiveCategory('all') }} 
+                    className="mt-6 px-6 py-2 border rounded-sm text-xs uppercase tracking-widest transition-colors"
+                    style={{ borderColor: D.border, color: D.accent }}
+                  >
+                    Reset Archive
+                  </button>
                 </div>
               )}
             </motion.div>
