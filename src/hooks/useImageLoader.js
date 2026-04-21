@@ -40,20 +40,21 @@ export function useImageLoader(src, enabled = true) {
       setState(nextState)
     }
 
-    // Check if the browser already fully loaded the image
-    if (img.complete && (img.naturalWidth > 0 || img.naturalHeight > 0)) {
-      resolve(true)
-      return
-    }
-    if (img.complete && img.naturalWidth === 0 && img.naturalHeight === 0) {
-      resolve(false)
+    img.onload = () => resolve(true)
+    img.onerror = () => resolve(false)
+    img.src = src
+
+    // Check if the browser already fully loaded the image (cached synchronously)
+    if (img.complete) {
+      if (img.naturalWidth > 0 || img.naturalHeight > 0) {
+        resolve(true)
+      } else {
+        resolve(false)
+      }
       return
     }
 
     const timeout = setTimeout(() => resolve(false), 10_000)
-    img.onload = () => resolve(true)
-    img.onerror = () => resolve(false)
-    img.src = src
 
     return () => {
       cancelled = true
