@@ -4,5 +4,19 @@ module.exports = {
   extends: ['eslint:recommended', 'plugin:react/recommended', 'plugin:react-hooks/recommended'],
   parserOptions: { ecmaFeatures: { jsx: true }, ecmaVersion: 'latest', sourceType: 'module' },
   plugins: ['react', 'react-refresh'],
+  settings: {
+    react: {
+      version: 'detect',
+    },
+  },
+  overrides: [
+    {
+      files: ['scripts/**/*.js', '*.config.js', '.eslintrc.cjs'],
+      env: {
+        browser: false,
+        node: true,
+      },
+    },
+  ],
   rules: { 'react/react-in-jsx-scope': 'off', 'react/prop-types': 'off' },
 }

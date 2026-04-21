@@ -1,28 +1,45 @@
 name: Deploy to GitHub Pages
 
 on:
+  pull_request:
+    branches: ['main']
   push:
     branches: ['main']
   workflow_dispatch:
-
-permissions:
-  contents: write
 
 concurrency:
   group: 'pages'
   cancel-in-progress: true
 
 jobs:
-  build-deploy:
+  verify:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: 'npm'
       - run: npm ci
-      - run: node scripts/build.js
+      - run: npm run check
+
+  deploy:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: verify
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run build
+      - run: npm run verify:build
       - uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
