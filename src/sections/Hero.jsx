@@ -1,13 +1,11 @@
 /**
  * sections/Hero.jsx
  *
- * Wix-Style Interactive Hero Editor
- * All elements are absolute-positioned and draggable.
- * You can drag the elements into the perfect layout, and the coordinates
- * will be shown in the bottom right corner for saving!
+ * Finalized Editorial Hero Section
+ * Coordinates have been meticulously locked-in from the visual editor payload.
  */
 
-import { useState, useRef } from 'react'
+import { useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, useScroll, useTransform, useInView } from 'framer-motion'
 
@@ -32,36 +30,12 @@ export default function Hero() {
   const { scrollY } = useScroll()
   const heroOpacity = useTransform(scrollY, [0, 500], [1, 0])
 
-  // Track live positions of dragged elements
-  const [positions, setPositions] = useState(() => {
-    const saved = localStorage.getItem('heroEditorPositions');
-    if (saved) return JSON.parse(saved);
-    return {
-      hello: { x: 0, y: 0 },
-      yehia: { x: 0, y: 0 },
-      salem: { x: 0, y: 0 },
-      portrait: { x: 0, y: 0 },
-      info: { x: 0, y: 0 },
-      stat0: { x: 0, y: 0 },
-      stat1: { x: 0, y: 0 },
-      stat2: { x: 0, y: 0 },
-      stat3: { x: 0, y: 0 },
-    };
-  });
-
-  // Auto-save to localStorage
-  import('react').then(React => {
-    React.useEffect(() => {
-      localStorage.setItem('heroEditorPositions', JSON.stringify(positions));
-    }, [positions]);
-  });
-
-  const handleDrag = (key, event, info) => {
-    setPositions(prev => ({
-      ...prev,
-      [key]: { x: prev[key].x + info.delta.x, y: prev[key].y + info.delta.y }
-    }));
-  };
+  const statsOffsets = [
+    { vw: 8.98, vh: 21.68 }, // stat0
+    { vw: 10.34, vh: -9.14 }, // stat1
+    { vw: 9.45, vh: -7.51 },  // stat2
+    { vw: 12.25, vh: -16.79 } // stat3
+  ];
 
   return (
     <section className="relative h-screen min-h-[800px] w-full overflow-hidden bg-[#0d1410] font-body flex items-center justify-center pt-16">
@@ -71,19 +45,14 @@ export default function Hero() {
         <div className="w-[600px] h-[600px] bg-[#4a9f62]/5 rounded-full blur-[120px]" />
       </div>
 
-      <motion.div style={{ opacity: heroOpacity }} className="absolute inset-0 w-full h-full max-w-[1400px] mx-auto">
+      <motion.div style={{ opacity: heroOpacity }} className="absolute inset-0 w-full h-full max-w-[1400px] mx-auto pointer-events-none">
         
         {/* The Huge 01 */}
         <div className="absolute -right-[2%] top-[5%] opacity-[0.02] font-display font-bold select-none pointer-events-none z-0" style={{ fontSize: 'clamp(15rem, 35vh, 30rem)', lineHeight: 0.8 }}>
           01
         </div>
 
-        {/* 
-          PURE CANVAS LAYOUT 
-          All elements are direct siblings to guarantee z-index parity. 
-        */}
-
-        {/* 1. STATS (z-30) - Now Individually Draggable */}
+        {/* 1. STATS (z-30) */}
         {[
           { n: '3', l: 'Languages' },
           { n: '2', l: 'Degrees' },
@@ -92,9 +61,11 @@ export default function Hero() {
         ].map((stat, i) => (
           <motion.div 
             key={stat.l}
-            drag dragMomentum={false} onDrag={(e, info) => handleDrag(`stat${i}`, e, info)}
-            className="absolute z-30 cursor-move hidden lg:block text-center"
-            style={{ left: '5%', top: `${20 + i * 15}%` }}
+            className="absolute z-30 hidden lg:block text-center pointer-events-auto"
+            style={{ 
+              left: `calc(5% + ${statsOffsets[i].vw}vw)`, 
+              top: `calc(${20 + i * 15}% + ${statsOffsets[i].vh}vh)` 
+            }}
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.8 + (i * 0.1), duration: 0.8 }}
@@ -106,48 +77,48 @@ export default function Hero() {
 
         {/* 2. "Hello I'm" (z-10) */}
         <motion.h3 
-          drag dragMomentum={false} onDrag={(e, i) => handleDrag('hello', e, i)}
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}
-          className="absolute left-[28%] top-[20%] text-[clamp(1.5rem,3vw,2.5rem)] font-serif-italic text-ink z-10 cursor-move"
+          className="absolute text-[clamp(1.5rem,3vw,2.5rem)] font-serif-italic text-ink z-10 pointer-events-none"
+          style={{ left: 'calc(28% + 13.74vw)', top: 'calc(20% + 13.95vh)' }}
         >
           Hello, I'm
         </motion.h3>
 
         {/* 3. "Yehia" (z-10) */}
         <motion.h1 
-          drag dragMomentum={false} onDrag={(e, i) => handleDrag('yehia', e, i)}
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}
-          className="absolute left-[25%] top-[25%] text-[clamp(7rem,12vw,14rem)] xl:text-[16rem] font-bold tracking-tighter text-ink leading-[0.75] font-display m-0 z-10 cursor-move"
+          className="absolute text-[clamp(7rem,12vw,14rem)] xl:text-[16rem] font-bold tracking-tighter text-ink leading-[0.75] font-display m-0 z-10 pointer-events-none"
+          style={{ left: 'calc(25% + 14.21vw)', top: 'calc(25% + 11.69vh)' }}
         >
           Yehia
         </motion.h1>
 
         {/* 4. THE PORTRAIT (z-20) */}
         <motion.div 
-          drag dragMomentum={false} onDrag={(e, i) => handleDrag('portrait', e, i)}
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1.5, delay: 0.7 }}
-          className="absolute bottom-0 left-[35%] h-[80vh] lg:h-[88vh] z-20 cursor-move flex items-end"
+          className="absolute z-20 flex items-end pointer-events-none"
+          style={{ left: 'calc(35% - 7.64vw)', bottom: 'calc(0% - 1.28vh)', height: '88vh' }}
         >
           <img 
             src={`${import.meta.env.BASE_URL}images/Yehia_Professional.png`}
             alt="Yehia Salem"
-            className="w-auto h-full max-h-[1000px] object-contain object-bottom drop-shadow-2xl pointer-events-none"
+            className="w-auto h-full max-h-[1000px] object-contain object-bottom drop-shadow-2xl"
           />
         </motion.div>
 
         {/* 5. "Salem" (z-30) */}
         <motion.h1 
-          drag dragMomentum={false} onDrag={(e, i) => handleDrag('salem', e, i)}
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}
-          className="absolute left-[35%] top-[45%] text-[clamp(6.5rem,11.5vw,13.5rem)] xl:text-[15rem] font-serif-italic tracking-tighter text-[#4a9f62] leading-[0.7] m-0 z-30 cursor-move"
+          className="absolute text-[clamp(6.5rem,11.5vw,13.5rem)] xl:text-[15rem] font-serif-italic tracking-tighter text-[#4a9f62] leading-[0.7] m-0 z-30 pointer-events-none"
+          style={{ left: 'calc(35% + 11.75vw)', top: 'calc(45% + 6.86vh)' }}
         >
           Salem
         </motion.h1>
 
         {/* 6. INFO BLOCK & BUTTONS (z-30) */}
         <motion.div 
-          drag dragMomentum={false} onDrag={(e, i) => handleDrag('info', e, i)}
-          className="absolute left-[55%] top-[65%] max-w-[420px] z-30 cursor-move bg-[#0d1410]/50 p-4 rounded backdrop-blur-sm"
+          className="absolute max-w-[420px] z-30 bg-[#0d1410]/20 p-6 rounded-lg backdrop-blur-md pointer-events-auto shadow-2xl border border-[#4a9f62]/10"
+          style={{ left: 'calc(55% + 8.09vw)', top: 'calc(65% + 3.11vh)' }}
         >
           <AnimatedSection delay={0.9}>
             <p className="text-ink-light text-[0.8rem] md:text-[0.85rem] font-body tracking-wide mb-1 opacity-80 pointer-events-none">
@@ -172,16 +143,16 @@ export default function Hero() {
           <AnimatedSection delay={1.3}>
             <div className="flex flex-col gap-4">
               <div className="flex flex-wrap items-center gap-4">
-                <Link to="#about" className="w-[80px] h-[32px] bg-[#d4e4d8] hover:bg-white transition-colors duration-300 rounded-sm pointer-events-auto"></Link>
-                <Link to="/works" className="text-[0.6rem] font-heading font-bold tracking-[0.2em] uppercase text-ink hover:text-accent flex items-center gap-2 transition-colors pointer-events-auto">
+                <Link to="#about" className="w-[80px] h-[32px] bg-[#d4e4d8] hover:bg-white transition-colors duration-300 rounded-sm"></Link>
+                <Link to="/works" className="text-[0.6rem] font-heading font-bold tracking-[0.2em] uppercase text-ink hover:text-accent flex items-center gap-2 transition-colors">
                   VIEW PORTFOLIO <span className="text-sm">→</span>
                 </Link>
-                <Link to="/behind-the-scenes" className="text-[0.6rem] font-heading font-bold tracking-[0.2em] uppercase text-ink-faint hover:text-ink transition-colors ml-2 pointer-events-auto">
+                <Link to="/behind-the-scenes" className="text-[0.6rem] font-heading font-bold tracking-[0.2em] uppercase text-ink-faint hover:text-ink transition-colors ml-2">
                   BEHIND THE SCENES
                 </Link>
               </div>
               <div className="ml-[96px]">
-                <Link to="/works" className="text-[0.6rem] font-heading font-bold tracking-[0.2em] uppercase text-ink-faint hover:text-ink transition-colors pointer-events-auto">
+                <Link to="/works" className="text-[0.6rem] font-heading font-bold tracking-[0.2em] uppercase text-ink-faint hover:text-ink transition-colors">
                   COMPLETE WORKS
                 </Link>
               </div>
@@ -190,31 +161,6 @@ export default function Hero() {
         </motion.div>
 
       </motion.div>
-
-      {/* FLOATING WIX-STYLE EDITOR DASHBOARD */}
-      <div className="fixed bottom-4 right-4 bg-black/90 border border-[#4a9f62] text-[#d4e4d8] p-4 rounded-lg z-50 shadow-2xl font-mono text-xs backdrop-blur-md">
-        <h4 className="text-[#4a9f62] font-bold mb-2 uppercase tracking-widest border-b border-[#4a9f62]/30 pb-2">🛠️ Drag & Drop Editor</h4>
-        <p className="mb-4 text-white/50 max-w-[250px]">Drag any element on the screen to position it perfectly. Click 'Copy Layout' and paste it to me!</p>
-        
-        <div className="grid grid-cols-2 gap-x-4 gap-y-2 mb-4 max-h-[200px] overflow-y-auto">
-          {Object.entries(positions).map(([key, pos]) => (
-            <div key={key} className="flex flex-col">
-              <span className="uppercase text-[#4a9f62]/70 text-[10px]">{key}</span>
-              <span>X: {Math.round(pos.x)} | Y: {Math.round(pos.y)}</span>
-            </div>
-          ))}
-        </div>
-
-        <button 
-          onClick={() => {
-            navigator.clipboard.writeText(JSON.stringify(positions, null, 2));
-            alert('Layout copied to clipboard! Paste it back in the chat.');
-          }}
-          className="w-full py-2 bg-[#4a9f62] text-white rounded font-bold hover:bg-[#63b476] transition-colors pointer-events-auto cursor-pointer"
-        >
-          COPY LAYOUT
-        </button>
-      </div>
     </section>
   )
 }
