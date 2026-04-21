@@ -73,14 +73,33 @@ export default function Hero() {
             ))}
           </div>
 
+          {/* CENTER COLUMN: The Portrait Cutout */}
+          {/* 
+            Sandwiched perfectly because it is inside the exact same container as the text,
+            with explicit z-20, meaning z-10 text is behind and z-30 text is in front.
+          */}
+          <motion.div 
+            style={{ y: imageY }}
+            initial={{ opacity: 0, y: 100 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1.5, delay: 0.7, ease: [0.16, 1, 0.3, 1] }}
+            className="absolute bottom-0 left-[45%] lg:left-[40%] xl:left-[38%] -translate-x-1/2 h-[80vh] lg:h-[88vh] z-20 pointer-events-none flex items-end"
+          >
+            <img 
+              src={`${import.meta.env.BASE_URL}images/Yehia_Professional.png`}
+              alt="Yehia Salem"
+              className="w-auto h-full max-h-[1000px] object-contain object-bottom drop-shadow-2xl"
+            />
+          </motion.div>
+
           {/* RIGHT COLUMN: Typography & Content */}
-          <div className="flex-1 relative z-10 h-full flex flex-col justify-center">
+          <div className="flex-1 relative h-full flex flex-col justify-center">
             
-            <div className="relative w-full pl-[5%] lg:pl-[10%] pointer-events-auto">
+            <div className="relative w-full pl-[15%] lg:pl-[20%] pointer-events-auto">
               {/* "Hello, I'm" - Back layer */}
               <motion.h3 
                 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.8 }}
-                className="text-[clamp(1.5rem,3vw,2.5rem)] font-serif-italic text-ink z-10 mb-[-1rem] lg:mb-[-1.5rem] ml-[0.5rem] lg:ml-[1rem] relative"
+                className="text-[clamp(1.5rem,3vw,2.5rem)] font-serif-italic text-ink z-10 mb-[-1rem] lg:mb-[-1.5rem] ml-[0.5rem] lg:ml-[1rem] relative pointer-events-none"
               >
                 Hello, I'm
               </motion.h3>
@@ -88,7 +107,7 @@ export default function Hero() {
               {/* "Yehia" - Back layer */}
               <motion.h1 
                 initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4, duration: 1 }}
-                className="text-[clamp(7rem,12vw,14rem)] xl:text-[16rem] font-bold tracking-tighter text-ink leading-[0.75] font-display m-0 z-10 relative"
+                className="text-[clamp(7rem,12vw,14rem)] xl:text-[16rem] font-bold tracking-tighter text-ink leading-[0.75] font-display m-0 z-10 relative pointer-events-none"
               >
                 Yehia
               </motion.h1>
@@ -96,14 +115,14 @@ export default function Hero() {
               {/* "Salem" - Front layer (z-30) */}
               <motion.h1 
                 initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6, duration: 1 }}
-                className="text-[clamp(6.5rem,11.5vw,13.5rem)] xl:text-[15rem] font-serif-italic tracking-tighter text-[#5c9e6a] leading-[0.7] m-0 ml-[10%] relative z-30 mt-[-clamp(1.5rem,3vw,4rem)]"
+                className="text-[clamp(6.5rem,11.5vw,13.5rem)] xl:text-[15rem] font-serif-italic tracking-tighter text-[#4a9f62] leading-[0.7] m-0 ml-[-5%] relative z-30 mt-[-clamp(1.5rem,3vw,4rem)] pointer-events-none"
               >
                 Salem
               </motion.h1>
             </div>
 
             {/* Info Block - Pushed Right & aligned under 'Salem' */}
-            <div className="mt-8 ml-[10%] md:ml-[15%] lg:ml-[30%] xl:ml-[35%] max-w-[420px] relative z-30 pointer-events-auto">
+            <div className="mt-8 ml-[20%] md:ml-[30%] lg:ml-[40%] xl:ml-[45%] max-w-[420px] relative z-30 pointer-events-auto">
               <AnimatedSection delay={0.9}>
                 <p className="text-ink-light text-[0.8rem] md:text-[0.85rem] font-body tracking-wide mb-1 opacity-80">
                   Multidisciplinary Designer & Creative Technologist
@@ -150,24 +169,6 @@ export default function Hero() {
             </div>
           </div>
         </div>
-
-        {/* CENTER COLUMN: The Portrait Cutout */}
-        {/* 
-          Sandwiched between "Yehia" (z-10) and "Salem" (z-30) because it's in the same stacking context!
-        */}
-        <motion.div 
-          style={{ y: imageY }}
-          initial={{ opacity: 0, y: 100 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.5, delay: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          className="absolute bottom-0 left-[50%] lg:left-[45%] xl:left-[42%] -translate-x-1/2 h-[80vh] lg:h-[95vh] z-20 pointer-events-none flex items-end"
-        >
-          <img 
-            src={`${import.meta.env.BASE_URL}images/Yehia_Professional.png`}
-            alt="Yehia Salem"
-            className="w-auto h-full max-h-[1000px] object-contain object-bottom drop-shadow-2xl"
-          />
-        </motion.div>
       </motion.div>
     </section>
   )
