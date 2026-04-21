@@ -8,6 +8,7 @@ import { prepareWithSegments, layoutWithLines } from '@chenglou/pretext'
 import { FEATURED_WORKS, getArchiveCategories } from './data/archiveData'
 import ImageCard from './components/ImageCard'
 import Lightbox from './components/Lightbox'
+import { useImageLoader } from './hooks/useImageLoader'
 
 /* ──────────────── FEATURED WORKS (from Portfolio showcase) ──────────────── */
 /* Removed code block */
@@ -68,7 +69,7 @@ const FeaturedWorkItem = ({ work, index, onClick }) => {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true })
   const [hovered, setHovered] = useState(false)
-  const [imgState, setImgState] = useState('idle')
+  const imgState = useImageLoader(work.src, isInView)
   const [showReflection, setShowReflection] = useState(false)
   const [expanded, setExpanded] = useState(false)
 
@@ -81,26 +82,7 @@ const FeaturedWorkItem = ({ work, index, onClick }) => {
     } catch { return null }
   }, [work.title])
 
-  useEffect(() => {
-    const cached = imageCache.get(work.src)
-    if (cached) { setImgState(cached); return }
-    setImgState('loading')
-    let cancelled = false
-    const img = new Image()
-    const resolve = (ok) => {
-      if (cancelled) return
-      const s = ok ? 'loaded' : 'error'
-      imageCache.set(work.src, s)
-      setImgState(s)
-    }
-    if (img.complete && (img.naturalWidth > 0 || img.naturalHeight > 0)) { resolve(true); return }
-    if (img.complete && img.naturalWidth === 0 && img.naturalHeight === 0) { resolve(false); return }
-    const tid = setTimeout(() => resolve(false), 10000)
-    img.onload = () => resolve(true)
-    img.onerror = () => resolve(false)
-    img.src = work.src
-    return () => { cancelled = true; clearTimeout(tid) }
-  }, [work.src])
+
 
   return (
     <motion.div ref={ref}
