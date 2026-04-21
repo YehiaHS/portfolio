@@ -1,4 +1,4 @@
-import { cpSync, existsSync, mkdirSync, rmSync } from 'fs'
+import { cpSync, existsSync, mkdirSync, rmSync, readdirSync, statSync } from 'fs'
 import { dirname, join } from 'path'
 import { fileURLToPath } from 'url'
 import { build as viteBuild } from 'vite'
@@ -36,6 +36,24 @@ if (existsSync(viteSvg)) {
 
 if (existsSync(portfolioPublicDir)) {
   cpSync(portfolioPublicDir, dist, { recursive: true, overwrite: false })
+  
+  // Cleanup large source files from dist to keep the build small
+  const prune = (dir) => {
+    const entries = readdirSync(dir, { withFileTypes: true });
+    for (const entry of entries) {
+      const fullPath = join(dir, entry.name);
+      if (entry.isDirectory()) {
+        prune(fullPath);
+      } else {
+        const isOriginalImage = entry.name.endsWith('.png') && !entry.name.includes('_min');
+        const isOriginalVideo = entry.name.endsWith('.mp4') && !entry.name.includes('_min');
+        if (isOriginalImage || isOriginalVideo) {
+          rmSync(fullPath);
+        }
+      }
+    }
+  };
+  prune(dist);
 }
 
 if (existsSync(imagesDir)) {
