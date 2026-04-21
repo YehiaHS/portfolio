@@ -18,8 +18,8 @@ const expectedPaths = [
   'assets',
   'images/hero-pattern.svg',
   'images/monogram-frame.svg',
-  'photos/chinese-culture/photo21.jpg',
-  'videos/0218-part2.mp4',
+  'design/FF_Poster_1_min.jpg',
+  'video/OpenDay_Overview_min.mp4',
 ]
 
 assert(existsSync(dist), 'dist/ was not generated')
