@@ -5,6 +5,7 @@ import { useLanguage } from './LanguageContext'
 import LanguageSelector from './LanguageSelector'
 import Cursor from './Cursor'
 import { DividerText } from './motionEffects.jsx'
+import ImageCard from './components/ImageCard'
 
 /* ───────────────────────── IMAGE DATA ───────────────────────── */
 const chineseCulturePhotos = [
@@ -65,41 +66,7 @@ const videoGallery = [
 
 /* ───────────────────────── COMPONENTS ───────────────────────── */
 
-const ImageCard = ({ src, caption, index }) => {
-  const ref = useRef(null)
-  const inView = useInView(ref, { once: true, margin: '-40px' })
-  const [loaded, setLoaded] = useState(false)
-
-  return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={inView ? { opacity: 1, scale: 1 } : {}}
-      transition={{ delay: (index % 6) * 0.06, duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
-      className="group relative overflow-hidden rounded-sm border border-ink/5 bg-paper-dark"
-    >
-      <div className="aspect-[3/2] overflow-hidden bg-[#e0e2d8]">
-        {!loaded && (
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="w-6 h-6 border-2 border-accent/20 border-t-accent/60 rounded-full animate-spin" />
-          </div>
-        )}
-        <img
-          src={src}
-          alt={caption}
-          onLoad={() => setLoaded(true)}
-          style={{ display: loaded ? 'block' : 'none' }}
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-          loading="lazy"
-        />
-      </div>
-      {/* Hover caption overlay */}
-      <div className="absolute inset-0 bg-gradient-to-t from-[#0d1a0f]/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end">
-        <p className="p-4 text-[#f5f5f0] text-sm font-light">{caption}</p>
-      </div>
-    </motion.div>
-  )
-}
+/* Removed internal ImageCard */
 
 const VideoCard = ({ src, title, description, duration, index }) => {
   const ref = useRef(null)
