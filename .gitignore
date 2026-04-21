@@ -14,3 +14,13 @@ pnpm-debug.log*
 !.vscode/extensions.json
 .idea
 .DS_Store
+
+# Large Assets (Source)
+public/portfolio/video/*.mp4
+!public/portfolio/video/*_min.mp4
+public/portfolio/design/*.png
+!public/portfolio/design/*_min.*
+public/portfolio/festival-posters/New Posters/*.png
+!public/portfolio/festival-posters/New Posters/*_min.*
+public/portfolio/misc-design/*.png
+!public/portfolio/misc-design/*_min.*

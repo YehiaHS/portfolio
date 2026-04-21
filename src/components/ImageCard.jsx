@@ -2,14 +2,22 @@ import React, { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { useImageLoader } from '../hooks/useImageLoader';
 
-export default function ImageCard({ src, caption, index, onClick, isDoc, badge, className = "", style = {} }) {
+const resolvePath = (path) => {
+  if (!path || path.startsWith('http')) return path;
+  const base = (import.meta.env.BASE_URL || '/').replace(/\/$/, '');
+  if (path.startsWith(base)) return path;
+  return `${base}${path.startsWith('/') ? '' : '/'}${path}`;
+};
+
+export default function ImageCard({ src, caption, index, onClick, isDoc, isVideo, driveFallback, badge, className = "", style = {} }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: '100px' });
-  const imgState = useImageLoader(isDoc ? null : src, inView);
+  const resolvedSrc = resolvePath(src);
+  const imgState = useImageLoader((isDoc || isVideo) ? null : resolvedSrc, inView);
 
-  // Skip unsupported file formats (unless they are marked as documents)
+  // Skip unsupported file formats (unless they are marked as documents or videos)
   const ext = src.split('.').pop().toLowerCase();
-  if (!isDoc && ['psd', 'zip', 'rar', 'ai', 'sketch', 'pdf'].includes(ext)) {
+  if (!isDoc && !isVideo && ['psd', 'zip', 'rar', 'ai', 'sketch', 'pdf', 'mp4', 'mov'].includes(ext)) {
     return null;
   }
 
@@ -21,7 +29,7 @@ export default function ImageCard({ src, caption, index, onClick, isDoc, badge, 
       transition={{ delay: Math.min(index * 0.05, 0.4), duration: 0.5 }}
       className={`group relative overflow-hidden rounded-sm border ${onClick ? 'cursor-pointer' : ''} ${className}`}
       style={style}
-      onClick={() => onClick && onClick({ src, caption, isDoc })}
+      onClick={() => onClick && onClick({ src: resolvedSrc, caption, isDoc, isVideo, driveFallback })}
     >
       <div className="aspect-[3/2] overflow-hidden relative bg-paper-dark">
         {/* Badge in top corner */}
@@ -45,6 +53,26 @@ export default function ImageCard({ src, caption, index, onClick, isDoc, badge, 
             <div className="text-[0.6rem] uppercase tracking-[0.2em] font-display mb-1" style={{ color: '#2d5a3d40' }}>Research Paper</div>
             <div className="text-[0.6rem] font-mono opacity-30" style={{ color: '#2d5a3d' }}>{ext.toUpperCase()}</div>
           </div>
+        ) : isVideo ? (
+          <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center select-none">
+            <div className="mb-4 transition-transform duration-500 group-hover:scale-110">
+              <div className="w-14 h-14 rounded-full border border-accent/30 flex items-center justify-center bg-accent/10 backdrop-blur-sm">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" className="text-accent ml-1">
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+              </div>
+            </div>
+            <div className="text-[0.6rem] uppercase tracking-[0.2em] font-display mb-1 text-accent/50">Video Production</div>
+            <div className="text-[0.6rem] font-mono opacity-30 text-accent">MP4</div>
+            
+            {/* Subtle background flair */}
+            <div className="absolute inset-0 -z-10 opacity-10">
+              <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+                <path d="M0,50 Q25,0 50,50 T100,50" fill="none" stroke="currentColor" strokeWidth="0.5" />
+                <path d="M0,60 Q25,10 50,60 T100,60" fill="none" stroke="currentColor" strokeWidth="0.5" />
+              </svg>
+            </div>
+          </div>
         ) : (
           <>
             {(imgState === 'loading' || imgState === 'idle') && (
@@ -54,12 +82,11 @@ export default function ImageCard({ src, caption, index, onClick, isDoc, badge, 
             )}
             {imgState !== 'error' && (
               <img 
-                src={src} 
+                src={resolvedSrc} 
                 alt={caption} 
                 loading="lazy" 
                 decoding="async"
-                style={{ display: imgState === 'loaded' ? 'block' : 'none' }}
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
+                className={`w-full h-full object-cover transition-all duration-700 ${imgState === 'loaded' ? 'opacity-100 scale-100 blur-0' : 'opacity-0 scale-110 blur-xl'}`}
               />
             )}
           </>

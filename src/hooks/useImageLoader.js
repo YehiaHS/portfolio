@@ -36,7 +36,7 @@ export function useImageLoader(src, enabled = true) {
     const resolve = (ok) => {
       if (cancelled) return
       const nextState = ok ? 'loaded' : 'error'
-      imageCache.set(src, nextState)
+      if (ok) imageCache.set(src, nextState) // Only cache successes
       setState(nextState)
     }
 

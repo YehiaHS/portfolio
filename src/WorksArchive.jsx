@@ -118,25 +118,49 @@ const FeaturedWorkItem = ({ work, index, onClick }) => {
           <span className="page-number" style={{ color: '#2d5a3d60' }}>{work.year}</span>
         </div>
 
-        {/* Image */}
+        {/* Image / Video */}
         <div className="relative aspect-[4/3] overflow-hidden mb-6 cursor-pointer" onClick={() => onClick(index)}>
-          {imgState === "idle" && (
-            <div className="absolute inset-0 flex items-center justify-center" style={{ background: D.cardBg }}>
-              <div className="w-6 h-6 border-2 rounded-full animate-spin" style={{ borderTopColor: D.accent, borderColor: '#2d5a3d30' }} />
+          {work.isVideo ? (
+            <video 
+              src={work.src} 
+              muted 
+              loop 
+              playsInline 
+              className="h-full w-full object-cover"
+              onMouseOver={e => e.currentTarget.play()}
+              onMouseOut={e => { e.currentTarget.pause(); e.currentTarget.currentTime = 0; }}
+            />
+          ) : (
+            <>
+              {imgState === "idle" && (
+                <div className="absolute inset-0 flex items-center justify-center" style={{ background: D.cardBg }}>
+                  <div className="w-6 h-6 border-2 rounded-full animate-spin" style={{ borderTopColor: D.accent, borderColor: '#2d5a3d30' }} />
+                </div>
+              )}
+              {imgState !== "error" && (
+                <motion.img
+                  src={work.src} alt={work.title} loading="lazy" decoding="async"
+                  className="h-full w-full object-cover"
+                  style={{ opacity: imgState === "loaded" ? 1 : 0 }}
+                  animate={{ scale: hovered ? 1.04 : 1 }}
+                  transition={{ duration: 0.6 }}
+                  onLoad={() => setImgState("loaded")}
+                  onError={() => setImgState("error")}
+                />
+              )}
+              {imgState === "error" && <FallbackSvg />}
+            </>
+          )}
+          
+          {/* Overlay for video */}
+          {work.isVideo && (
+            <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#0d1410]/20 backdrop-blur-[2px]">
+              <div className="w-12 h-12 rounded-full border border-[#f5f5f0]/30 flex items-center justify-center bg-[#f5f5f0]/10">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="#f5f5f0"><path d="M8 5v14l11-7z" /></svg>
+              </div>
+              <span className="mt-2 text-[0.6rem] uppercase tracking-[0.2em] font-mono text-[#f5f5f0]">Play Recap</span>
             </div>
           )}
-          {imgState !== "error" && (
-            <motion.img
-              src={work.src} alt={work.title} loading="lazy" decoding="async"
-              className="h-full w-full object-cover"
-              style={{ opacity: imgState === "loaded" ? 1 : 0 }}
-              animate={{ scale: hovered ? 1.04 : 1 }}
-              transition={{ duration: 0.6 }}
-              onLoad={() => setImgState("loaded")}
-              onError={() => setImgState("error")}
-            />
-          )}
-          {imgState === "error" && <FallbackSvg />}
         </div>
 
         {/* Title */}
@@ -261,10 +285,8 @@ const CategorySection = ({ category, index, onImageClick, isSearchResult }) => {
           {category.items.map((item, i) => (
             <ImageCard 
               key={item.src} 
-              src={item.src} 
-              caption={item.caption} 
+              {...item}
               index={i} 
-              isDoc={item.isDoc} 
               badge={isSearchResult ? item.categoryLabel : null}
               onClick={onImageClick} 
             />
@@ -320,12 +342,16 @@ function WorksArchive() {
   /* Featured works lightbox */
   const handleFeaturedClick = useCallback((idx) => {
     const idx_ = idx
-    const allFeatured = FEATURED_WORKS.map(w => ({ src: w.src, caption: w.title }))
-    setLightbox({
-      src: allFeatured[idx_].src,
-      caption: allFeatured[idx_].caption,
-      index: idx_,
-      items: allFeatured,
+    const allFeatured = FEATURED_WORKS.map(w => ({ 
+      src: w.src, 
+      caption: w.title, 
+      isVideo: w.isVideo, 
+      driveFallback: w.driveFallback 
+    }))
+    setLightbox({ 
+      ...allFeatured[idx_], 
+      index: idx_, 
+      items: allFeatured 
     })
   }, [])
 
@@ -637,7 +663,10 @@ function WorksArchive() {
       <AnimatePresence>
         {lightbox && (
           <Lightbox
-            src={lightbox.src} caption={lightbox.caption}
+            src={lightbox.src} 
+            caption={lightbox.caption}
+            isVideo={lightbox.isVideo}
+            driveFallback={lightbox.driveFallback}
             onClose={() => setLightbox(null)}
             onPrev={lightbox.items && lightbox.index > 0 ? () => navLightbox(-1) : null}
             onNext={lightbox.items && lightbox.index < lightbox.items.length - 1 ? () => navLightbox(1) : null}

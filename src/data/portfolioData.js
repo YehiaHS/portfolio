@@ -21,9 +21,10 @@ export const profileData = {
     email: 'yehiahatemsalem@gmail.com',
   },
   summary:
-    'Highly motivated dual-degree student blending creativity and technology across marketing communications and computer science. Experienced in digital media creation, storytelling, and problem solving with fluency in Arabic, English, and French.',
+    'Highly motivated dual-degree student blending creativity and technology across marketing communications and computer science. Experienced in digital media creation, professional event coverage, and high-end social media production (TikTok/Short-form), with fluency in Arabic, English, and French.',
   highlights: [
     'Dual-degree student (IMC & Computer Science)',
+    'Professional Social Media Content Creator & Video Editor',
     'IELTS Overall Band 8.5',
     'Cairo Mobile Film Festival Winner (Under 18)',
   ],

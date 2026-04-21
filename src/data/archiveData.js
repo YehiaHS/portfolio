@@ -56,6 +56,18 @@ export const FEATURED_WORKS = [
       'Editorial design pushed me into a different discipline — one where typography, pacing, and narrative structure become the primary tools. Designing a book cover meant capturing the essence of an entire narrative in a single frame.',
     skillsGained: ['Editorial Design', 'Typographic Mastery', 'Narrative Storytelling'],
   },
+  {
+    id: 'featured-5',
+    title: 'Professional Masterclass TikTok Recap',
+    description: 'High-end social media coverage for Hisham Soliman & Amr Koura, optimized for viral retention and brand authority.',
+    category: 'Video Production',
+    src: '/portfolio/video/Masterclass_Recap_v2_min.mp4',
+    isVideo: true,
+    year: '2025',
+    reflection: 'Producing content for high-profile industry experts required a focus on pace, narrative hook, and rhythmic editing. This project sharpened my ability to create commercial-grade social media content under tight deadlines.',
+    skillsGained: ['Event Coverage', 'TikTok Production', 'Short-form Narrative', 'Audience Retention'],
+    driveFallback: 'https://drive.google.com/file/d/1t7yQKYyY8GdJJYKBll8Fa2j_xYg1-h1n/view'
+  },
 ];
 
 /** All browsable archive categories */
@@ -66,16 +78,18 @@ export function getArchiveCategories() {
       label: 'Posters & Banners',
       description: 'Festival posters, event banners, and promotional designs',
       items: [
-        { src: '/portfolio/festival-posters/New Posters/Film Festival Poster.png', caption: 'BUE Film Festival — Main Poster' },
-        { src: '/portfolio/festival-posters/New Posters/Film Festival Poster 2.png', caption: 'BUE Film Festival — Poster Variation 2' },
-        { src: '/portfolio/festival-posters/New Posters/Film Festival Poster 3.png', caption: 'BUE Film Festival — Poster Variation 3' },
-        { src: '/portfolio/festival-posters/New Posters/Film Festival Poster 4.png', caption: 'BUE Film Festival — Poster Variation 4' },
-        { src: '/portfolio/festival-posters/New Posters/Film Festival  5.png', caption: 'BUE Film Festival — Poster Variation 5' },
-        { src: '/portfolio/festival-posters/New Posters/bue poster banner.png', caption: 'BUE Banner Design' },
-        { src: '/portfolio/misc-design/Poster_BUE_Film_Festival_V3.png', caption: 'BUE Film Festival — Version 3' },
-        { src: '/portfolio/misc-design/Poster_BUE_International_Film_Festival.png', caption: 'BUE International Film Festival' },
-        { src: '/portfolio/misc-design/Poster_BUEclipse_eSports_Recruitment.png', caption: 'BUEclipse eSports Recruitment' },
-        { src: '/portfolio/misc-design/Poster_Game_Development_Course_Signup.png', caption: 'Game Development Course Signup' },
+        { src: '/portfolio/design/FF_Poster_1_min.jpg', caption: 'Film Festival Poster — Series 1', driveFallback: '/portfolio/design/FF_Poster_1.png' },
+        { src: '/portfolio/design/FF_Poster_2_min.jpg', caption: 'Film Festival Poster — Series 2', driveFallback: '/portfolio/design/FF_Poster_2.png' },
+        { src: '/portfolio/design/FF_Poster_3_min.jpg', caption: 'Film Festival Poster — Series 3', driveFallback: '/portfolio/design/FF_Poster_3.png' },
+        { src: '/portfolio/design/FF_Poster_4_min.jpg', caption: 'Film Festival Poster — Series 4', driveFallback: '/portfolio/design/FF_Poster_4.png' },
+        { src: '/portfolio/design/FF_Poster_5_min.jpg', caption: 'Film Festival Poster — Series 5', driveFallback: '/portfolio/design/FF_Poster_5.png' },
+        { src: '/portfolio/design/Gaia_Poster_min.jpg', caption: 'Gaia (Nature) Film Poster', driveFallback: '/portfolio/design/Gaia_Poster.png' },
+        { src: '/portfolio/design/BUE_Banner_min.jpg', caption: 'BUE Official Event Banner', driveFallback: '/portfolio/design/BUE_Banner.png' },
+        { src: '/portfolio/festival-posters/New Posters/Film_Festival_Poster_min.jpg', caption: 'BUE Film Festival — Main Poster', driveFallback: '/portfolio/festival-posters/New Posters/Film Festival Poster.png' },
+        { src: '/portfolio/misc-design/Poster_BUE_Film_Festival_V3_min.jpg', caption: 'BUE Film Festival — Version 3', driveFallback: '/portfolio/misc-design/Poster_BUE_Film_Festival_V3.png' },
+        { src: '/portfolio/misc-design/Poster_BUE_International_min.jpg', caption: 'BUE International Film Festival', driveFallback: '/portfolio/misc-design/Poster_BUE_International_Film_Festival.png' },
+        { src: '/portfolio/misc-design/Poster_BUEclipse_min.jpg', caption: 'BUEclipse eSports Recruitment', driveFallback: '/portfolio/misc-design/Poster_BUEclipse_eSports_Recruitment.png' },
+        { src: '/portfolio/misc-design/Poster_Game_Dev_min.jpg', caption: 'Game Development Course Signup', driveFallback: '/portfolio/misc-design/Poster_Game_Development_Course_Signup.png' },
       ],
     },
     {
@@ -88,6 +102,31 @@ export function getArchiveCategories() {
         { src: '/portfolio/logos/Logo_Icon_Creations_Upscaled.png', caption: 'Icon Creations — Upscaled' },
         { src: '/portfolio/logos/Logo_Icon_Creations.png', caption: 'Icon Creations' },
         { src: '/portfolio/logos/Logo_Red_Bull_Decaf.png', caption: 'Red Bull Decaf Brand Concept' },
+      ],
+    },
+    {
+      id: 'video',
+      label: 'Video Production',
+      description: 'Professional event coverage, TikTok recaps, and short-form storytelling',
+      items: [
+        { 
+          src: '/portfolio/video/Masterclass_Recap_v2_min.mp4', 
+          caption: 'Hisham Soliman & Amr Koura Masterclass — TikTok Recap', 
+          isVideo: true,
+          driveFallback: 'https://drive.google.com/file/d/1t7yQKYyY8GdJJYKBll8Fa2j_xYg1-h1n/view'
+        },
+        { 
+          src: '/portfolio/video/Lina_Sofia_Recap_min.mp4', 
+          caption: 'Lina Sofia Event — Professional TikTok Coverage', 
+          isVideo: true,
+          driveFallback: 'https://drive.google.com/file/d/19BGkzG7IhRJsuAXYH0NaG4gcpr5VMXM1/view'
+        },
+        { 
+          src: '/portfolio/video/OpenDay_Overview_min.mp4', 
+          caption: 'BUE Open Day — Social Media Overview', 
+          isVideo: true,
+          driveFallback: 'https://drive.google.com/file/d/1vwqVi0nMhkoUdppS7HGewK5XAAo2HTqY/view'
+        },
       ],
     },
     {
@@ -146,6 +185,8 @@ export function getArchiveCategories() {
       label: 'Research & Publications',
       description: 'Academic reports, research papers, and social impact studies',
       items: [
+        { src: '/portfolio/papers/PR_Strategic_Analysis.pdf', caption: 'Online PR & Marketing: Strategic Analysis', isDoc: true },
+        { src: '/portfolio/papers/Media_Law_Ethics.pdf', caption: 'Media Law and Ethics: Professional Assessment', isDoc: true },
         { src: '/portfolio/papers/SHEIN_Full_Report.docx', caption: 'SHEIN: Comprehensive Brand Analysis (Full Report)', isDoc: true },
         { src: '/portfolio/papers/Anti_Wasta_Project.docx', caption: 'Work Your Worth: The Anti-Wasta Project', isDoc: true },
         { src: '/portfolio/papers/Renewable_Energy_Egypt.pdf', caption: 'Industry Report: Renewable Energy in Egypt', isDoc: true },
