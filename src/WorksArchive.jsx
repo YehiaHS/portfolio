@@ -259,7 +259,7 @@ const CategorySection = ({ category, index, onImageClick }) => {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {category.items.map((item, i) => (
-            <ImageCard key={item.src} src={item.src} caption={item.caption} index={i} onClick={onImageClick} />
+            <ImageCard key={item.src} src={item.src} caption={item.caption} index={i} isDoc={item.isDoc} onClick={onImageClick} />
           ))}
         </div>
       </div>
