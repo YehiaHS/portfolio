@@ -8,6 +8,7 @@
 import Cursor from './Cursor'
 import Nav from './Nav'
 import { DividerText } from './motionEffects.jsx'
+import { motion, useScroll } from 'framer-motion'
 
 // Decorative utilities
 import { Grain, SectionNav, KeyboardShortcuts, BotanicalBreak, MarqueeStrip, GeometricPatternBand, DecorativeEmblem, DecorativeBreak } from './sections/DecorativeBreaks.jsx'
@@ -27,8 +28,16 @@ import Contact from './sections/Contact.jsx'
 import Footer from './sections/Footer.jsx'
 
 export default function App() {
+  const { scrollYProgress } = useScroll()
+
   return (
     <div className="relative min-h-screen text-ink cursor-none page-enter">
+      <motion.div
+        className="scroll-progress-bar"
+        style={{ scaleX: scrollYProgress }}
+        aria-hidden="true"
+      />
+
       {/* Global overlays */}
       <Cursor />
       <Grain />

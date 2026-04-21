@@ -10,7 +10,6 @@ import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, useScroll, useTransform, useInView } from 'framer-motion'
 import { GlitchText } from '../motionEffects.jsx'
-import { useLanguage } from '../LanguageContext'
 
 /* ── Shared fade-up variant ──────────────────────────────────────────────── */
 const fadeUp = {
@@ -36,7 +35,7 @@ export default function Hero() {
   const imageY = useTransform(scrollY, [0, 500], [0, 150])
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#0d1410]">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#0d1410] font-body pt-16">
       
       {/* Background ambient glow */}
       <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none">
@@ -44,14 +43,14 @@ export default function Hero() {
       </div>
 
       {/* The Huge 01 */}
-      <div className="absolute right-4 md:right-16 opacity-[0.02] font-heading font-bold select-none pointer-events-none" style={{ fontSize: 'clamp(12rem, 30vh, 25rem)', top: '5%', lineHeight: 1 }}>
+      <div className="absolute right-8 md:right-24 opacity-[0.02] font-display font-bold select-none pointer-events-none" style={{ fontSize: 'clamp(15rem, 40vh, 30rem)', top: '5%', lineHeight: 1 }}>
         01
       </div>
 
-      <motion.div style={{ opacity: heroOpacity, y: heroY }} className="relative z-10 w-full max-w-[1400px] mx-auto px-6 md:px-12 grid grid-cols-12 h-full items-center min-h-[80vh] pt-20 pb-10">
+      <motion.div style={{ opacity: heroOpacity, y: heroY }} className="relative z-10 w-full max-w-[1500px] mx-auto px-6 md:px-12 flex h-full items-center min-h-[85vh]">
         
         {/* LEFT COLUMN: Vertically Stacked Stats */}
-        <div className="col-span-12 md:col-span-3 lg:col-span-3 hidden md:flex flex-col items-center justify-center gap-12 z-10 relative">
+        <div className="hidden lg:flex flex-col items-center justify-center gap-10 z-30 relative w-1/4 pt-10">
           {[
             { n: '3', l: 'Languages' },
             { n: '2', l: 'Degrees' },
@@ -65,58 +64,58 @@ export default function Hero() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.8 + (i * 0.1), duration: 0.8 }}
             >
-              <div className="text-4xl lg:text-5xl xl:text-[3.5rem] font-display font-bold text-[#4a9f62] mb-2">{stat.n}</div>
-              <div className="text-[0.7rem] lg:text-[0.8rem] font-body text-ink-faint tracking-wider">{stat.l}</div>
+              <div className="text-4xl xl:text-5xl font-display font-bold text-[#3d7a4f] mb-1">{stat.n}</div>
+              <div className="text-[0.65rem] xl:text-[0.75rem] font-body text-ink-faint tracking-wider">{stat.l}</div>
             </motion.div>
           ))}
         </div>
 
         {/* RIGHT COLUMN: Typography & Content */}
-        <div className="col-span-12 md:col-span-9 lg:col-span-8 lg:col-start-5 flex flex-col justify-center relative z-10">
+        <div className="flex-1 flex flex-col justify-center relative z-10 w-full lg:w-3/4">
           
-          <div className="relative">
-            {/* "Hello, I'm" */}
+          <div className="relative pl-4 lg:pl-12">
+            {/* "Hello, I'm" - Back layer */}
             <motion.h3 
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.8 }}
-              className="text-2xl md:text-[2rem] lg:text-[2.5rem] font-serif-italic text-ink mb-[-1rem] md:mb-[-1.5rem] ml-2 md:ml-12"
+              className="text-2xl md:text-[2.2rem] lg:text-[2.8rem] font-serif-italic text-ink mb-[-1.5rem] md:mb-[-2rem] ml-16 md:ml-32 z-10 relative"
             >
               Hello, I'm
             </motion.h3>
             
-            {/* Name */}
-            <div className="relative">
-              <motion.h1 
-                initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4, duration: 1 }}
-                className="text-[6rem] md:text-[10rem] lg:text-[13rem] xl:text-[15rem] font-bold tracking-tighter text-ink leading-[0.85] font-display m-0"
-              >
-                Yehia
-              </motion.h1>
-              <motion.h1 
-                initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6, duration: 1 }}
-                className="text-[5.5rem] md:text-[9rem] lg:text-[11.5rem] xl:text-[13rem] font-serif-italic tracking-tighter text-[#2d5a3d] leading-[0.8] m-0 ml-12 md:ml-24 lg:ml-32"
-              >
-                Salem
-              </motion.h1>
-            </div>
+            {/* "Yehia" - Back layer */}
+            <motion.h1 
+              initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4, duration: 1 }}
+              className="text-[7rem] md:text-[11rem] lg:text-[14rem] xl:text-[16rem] font-bold tracking-tighter text-ink leading-[0.8] font-display m-0 z-10 relative"
+            >
+              Yehia
+            </motion.h1>
+
+            {/* "Salem" - Front layer (z-30) */}
+            <motion.h1 
+              initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6, duration: 1 }}
+              className="text-[6.5rem] md:text-[10rem] lg:text-[13rem] xl:text-[15rem] font-serif-italic tracking-tighter text-[#3d7a4f] leading-[0.7] m-0 ml-16 md:ml-40 lg:ml-56 relative z-30 mt-[-2rem] md:mt-[-3rem] lg:mt-[-4rem]"
+            >
+              Salem
+            </motion.h1>
           </div>
 
-          {/* Info Block */}
-          <div className="mt-10 ml-2 md:ml-24 lg:ml-32 max-w-xl relative z-30">
+          {/* Info Block - Pushed Right */}
+          <div className="mt-16 ml-auto mr-4 lg:mr-24 xl:mr-32 max-w-[380px] relative z-30">
             <AnimatedSection delay={0.9}>
-              <p className="text-ink-light text-sm md:text-base font-body tracking-wide mb-1">
+              <p className="text-ink-light text-[0.8rem] md:text-[0.85rem] font-body tracking-wide mb-1 opacity-80">
                 Multidisciplinary Designer & Creative Technologist
               </p>
-              <p className="text-ink-faint text-xs font-body tracking-wider mb-8">
+              <p className="text-ink-faint text-[0.7rem] font-body tracking-wider mb-8 opacity-60">
                 Heliopolis, Cairo, Egypt
               </p>
             </AnimatedSection>
 
             <AnimatedSection delay={1.1}>
-              <div className="border-l border-ink/10 pl-6 mb-12 max-w-md">
-                <p className="text-ink-faint italic text-lg md:text-xl font-serif-italic leading-relaxed">
+              <div className="border-l border-ink/10 pl-6 mb-12">
+                <p className="text-ink-faint italic text-lg md:text-xl font-serif-italic leading-relaxed opacity-70">
                   “It is only with the heart that one can see rightly; what is essential is invisible to the eye.”
                 </p>
-                <p className="text-right text-ink-faint/60 text-[0.65rem] tracking-widest mt-4 uppercase">
+                <p className="text-right text-ink-faint/50 text-[0.6rem] tracking-widest mt-4 uppercase">
                   — Le Petit Prince
                 </p>
               </div>
@@ -124,22 +123,22 @@ export default function Hero() {
 
             {/* Buttons exactly matching reference */}
             <AnimatedSection delay={1.3}>
-              <div className="flex flex-col gap-6">
-                <div className="flex flex-wrap items-center gap-6">
-                  {/* Pale green solid box */}
-                  <a href="#about" className="w-[100px] h-[36px] bg-[#d4e4d8] hover:bg-white transition-colors duration-300 rounded-sm"></a>
+              <div className="flex flex-col gap-5">
+                <div className="flex flex-wrap items-center gap-4">
+                  {/* Pale green solid box button */}
+                  <Link to="#about" className="w-[80px] h-[32px] bg-[#d4e4d8] hover:bg-white transition-colors duration-300 rounded-sm"></Link>
                   
-                  <Link to="/works" className="text-[0.65rem] font-heading font-bold tracking-[0.2em] uppercase text-ink hover:text-accent flex items-center gap-2 transition-colors">
+                  <Link to="/works" className="text-[0.6rem] font-heading font-bold tracking-[0.2em] uppercase text-ink hover:text-accent flex items-center gap-2 transition-colors">
                     VIEW PORTFOLIO <span className="text-sm">→</span>
                   </Link>
                   
-                  <Link to="/behind-the-scenes" className="text-[0.65rem] font-heading font-bold tracking-[0.2em] uppercase text-ink-faint hover:text-ink transition-colors md:ml-4">
+                  <Link to="/behind-the-scenes" className="text-[0.6rem] font-heading font-bold tracking-[0.2em] uppercase text-ink-faint hover:text-ink transition-colors md:ml-4">
                     BEHIND THE SCENES
                   </Link>
                 </div>
                 
-                <div className="md:ml-[124px]">
-                  <Link to="/works" className="text-[0.65rem] font-heading font-bold tracking-[0.2em] uppercase text-ink-faint hover:text-ink transition-colors">
+                <div className="ml-[96px]">
+                  <Link to="/works" className="text-[0.6rem] font-heading font-bold tracking-[0.2em] uppercase text-ink-faint hover:text-ink transition-colors">
                     COMPLETE WORKS
                   </Link>
                 </div>
@@ -151,25 +150,25 @@ export default function Hero() {
 
       {/* CENTER COLUMN: The Portrait Cutout */}
       {/* 
-        Positioned absolute so it perfectly overlaps the text behind it (z-10) 
-        and slides under the interactive buttons (z-30)
+        Positioned absolute so it is sandwiched between "Yehia" (z-10) and "Salem" (z-30)
       */}
       <motion.div 
         style={{ y: imageY }}
         initial={{ opacity: 0, y: 100 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1.5, delay: 0.7, ease: [0.16, 1, 0.3, 1] }}
-        className="absolute bottom-0 left-[50%] md:left-[45%] lg:left-[42%] -translate-x-1/2 w-[95%] md:w-[65%] lg:w-[48%] xl:w-[45%] max-w-[800px] z-20 pointer-events-none"
+        className="absolute bottom-0 left-[50%] md:left-[45%] lg:left-[42%] -translate-x-1/2 w-[90%] md:w-[60%] lg:w-[45%] xl:w-[42%] max-w-[700px] z-20 pointer-events-none"
       >
         <img 
           src={`${import.meta.env.BASE_URL}images/Yehia_Professional.png`}
           alt="Yehia Salem"
           className="w-full h-auto object-contain object-bottom drop-shadow-2xl"
-          style={{ maxHeight: '90vh' }}
+          style={{ maxHeight: '85vh' }}
         />
       </motion.div>
 
     </section>
   )
 }
+
 
