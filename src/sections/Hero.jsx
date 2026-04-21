@@ -33,13 +33,27 @@ export default function Hero() {
   const heroOpacity = useTransform(scrollY, [0, 500], [1, 0])
 
   // Track live positions of dragged elements
-  const [positions, setPositions] = useState({
-    hello: { x: 0, y: 0 },
-    yehia: { x: 0, y: 0 },
-    salem: { x: 0, y: 0 },
-    portrait: { x: 0, y: 0 },
-    info: { x: 0, y: 0 },
-    stats: { x: 0, y: 0 },
+  const [positions, setPositions] = useState(() => {
+    const saved = localStorage.getItem('heroEditorPositions');
+    if (saved) return JSON.parse(saved);
+    return {
+      hello: { x: 0, y: 0 },
+      yehia: { x: 0, y: 0 },
+      salem: { x: 0, y: 0 },
+      portrait: { x: 0, y: 0 },
+      info: { x: 0, y: 0 },
+      stat0: { x: 0, y: 0 },
+      stat1: { x: 0, y: 0 },
+      stat2: { x: 0, y: 0 },
+      stat3: { x: 0, y: 0 },
+    };
+  });
+
+  // Auto-save to localStorage
+  import('react').then(React => {
+    React.useEffect(() => {
+      localStorage.setItem('heroEditorPositions', JSON.stringify(positions));
+    }, [positions]);
   });
 
   const handleDrag = (key, event, info) => {
@@ -69,29 +83,26 @@ export default function Hero() {
           All elements are direct siblings to guarantee z-index parity. 
         */}
 
-        {/* 1. STATS (z-30) */}
-        <motion.div 
-          drag dragMomentum={false} onDrag={(e, i) => handleDrag('stats', e, i)}
-          className="absolute left-[5%] top-[20%] hidden lg:flex flex-col justify-center gap-12 z-30 cursor-move"
-        >
-          {[
-            { n: '3', l: 'Languages' },
-            { n: '2', l: 'Degrees' },
-            { n: '8.5', l: 'IELTS Score' },
-            { n: '10+', l: 'Design Tools' }
-          ].map((stat, i) => (
-            <motion.div 
-              key={stat.l} 
-              className="text-center"
-              initial={{ opacity: 0, x: -30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.8 + (i * 0.1), duration: 0.8 }}
-            >
-              <div className="text-[3rem] xl:text-[3.5rem] leading-none font-display font-bold text-[#5c9e6a] mb-2">{stat.n}</div>
-              <div className="text-[0.65rem] xl:text-[0.75rem] font-body text-ink-faint tracking-widest">{stat.l}</div>
-            </motion.div>
-          ))}
-        </motion.div>
+        {/* 1. STATS (z-30) - Now Individually Draggable */}
+        {[
+          { n: '3', l: 'Languages' },
+          { n: '2', l: 'Degrees' },
+          { n: '8.5', l: 'IELTS Score' },
+          { n: '10+', l: 'Design Tools' }
+        ].map((stat, i) => (
+          <motion.div 
+            key={stat.l}
+            drag dragMomentum={false} onDrag={(e, info) => handleDrag(`stat${i}`, e, info)}
+            className="absolute z-30 cursor-move hidden lg:block text-center"
+            style={{ left: '5%', top: `${20 + i * 15}%` }}
+            initial={{ opacity: 0, x: -30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.8 + (i * 0.1), duration: 0.8 }}
+          >
+            <div className="text-[3rem] xl:text-[3.5rem] leading-none font-display font-bold text-[#5c9e6a] mb-2">{stat.n}</div>
+            <div className="text-[0.65rem] xl:text-[0.75rem] font-body text-ink-faint tracking-widest">{stat.l}</div>
+          </motion.div>
+        ))}
 
         {/* 2. "Hello I'm" (z-10) */}
         <motion.h3 
@@ -181,10 +192,11 @@ export default function Hero() {
       </motion.div>
 
       {/* FLOATING WIX-STYLE EDITOR DASHBOARD */}
-      <div className="fixed bottom-4 right-4 bg-black/90 border border-[#4a9f62] text-[#d4e4d8] p-4 rounded-lg z-50 shadow-2xl font-mono text-xs backdrop-blur-md pointer-events-none">
+      <div className="fixed bottom-4 right-4 bg-black/90 border border-[#4a9f62] text-[#d4e4d8] p-4 rounded-lg z-50 shadow-2xl font-mono text-xs backdrop-blur-md">
         <h4 className="text-[#4a9f62] font-bold mb-2 uppercase tracking-widest border-b border-[#4a9f62]/30 pb-2">🛠️ Drag & Drop Editor</h4>
-        <p className="mb-4 text-white/50 max-w-[250px]">Drag any element on the screen to position it perfectly. Give me these exact offset values when you are done!</p>
-        <div className="grid grid-cols-2 gap-x-4 gap-y-2">
+        <p className="mb-4 text-white/50 max-w-[250px]">Drag any element on the screen to position it perfectly. Click 'Copy Layout' and paste it to me!</p>
+        
+        <div className="grid grid-cols-2 gap-x-4 gap-y-2 mb-4 max-h-[200px] overflow-y-auto">
           {Object.entries(positions).map(([key, pos]) => (
             <div key={key} className="flex flex-col">
               <span className="uppercase text-[#4a9f62]/70 text-[10px]">{key}</span>
@@ -192,6 +204,16 @@ export default function Hero() {
             </div>
           ))}
         </div>
+
+        <button 
+          onClick={() => {
+            navigator.clipboard.writeText(JSON.stringify(positions, null, 2));
+            alert('Layout copied to clipboard! Paste it back in the chat.');
+          }}
+          className="w-full py-2 bg-[#4a9f62] text-white rounded font-bold hover:bg-[#63b476] transition-colors pointer-events-auto cursor-pointer"
+        >
+          COPY LAYOUT
+        </button>
       </div>
     </section>
   )
