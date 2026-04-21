@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { motion, useSpring, useTransform } from 'framer-motion';
 
-const ACCENT = '#2d5a3d';
-const NEUTRAL = '#0d1a0f';
+const ACCENT = '#8fb09b';
+const NEUTRAL = '#c8d8cc';
 
 const INTERACTIVE_SELECTOR = [
   'a',
@@ -53,16 +53,17 @@ const Cursor = () => {
   const dotTargetY = useRef(0);
 
   // Framer springs — ring is lax, dot is tight
-  const ringX = useSpring(0, { stiffness: 120, damping: 18, mass: 0.35 });
-  const ringY = useSpring(0, { stiffness: 120, damping: 18, mass: 0.35 });
-  const dotX = useSpring(0, { stiffness: 400, damping: 22, mass: 0.12 });
-  const dotY = useSpring(0, { stiffness: 400, damping: 22, mass: 0.12 });
+  // Framer springs — make them exceedingly tight to remove delayed feeling
+  const ringX = useSpring(0, { stiffness: 800, damping: 40, mass: 0.1 });
+  const ringY = useSpring(0, { stiffness: 800, damping: 40, mass: 0.1 });
+  const dotX = useSpring(0, { stiffness: 2000, damping: 40, mass: 0.05 });
+  const dotY = useSpring(0, { stiffness: 2000, damping: 40, mass: 0.05 });
 
-  const textX = useSpring(0, { stiffness: 200, damping: 24 })
-  const textY = useSpring(0, { stiffness: 200, damping: 24 })
-  const textOpacity = useSpring(0, { stiffness: 300, damping: 24 })
-  const trailX = useSpring(0, { stiffness: 60, damping: 14, mass: 0.6 });
-  const trailY = useSpring(0, { stiffness: 60, damping: 14, mass: 0.6 });
+  const textX = useSpring(0, { stiffness: 400, damping: 30 })
+  const textY = useSpring(0, { stiffness: 400, damping: 30 })
+  const textOpacity = useSpring(0, { stiffness: 400, damping: 30 })
+  const trailX = useSpring(0, { stiffness: 400, damping: 30, mass: 0.2 });
+  const trailY = useSpring(0, { stiffness: 400, damping: 30, mass: 0.2 });
 
   // Ring size
   const ringSize = useSpring(40, { stiffness: 200, damping: 24, mass: 0.15 });
@@ -128,30 +129,10 @@ const Cursor = () => {
 
   // Animation loop: apply magnetic attraction + drive springs
   useAnimationFrame(() => {
+
+
     let tx = posX.current;
     let ty = posY.current;
-
-    // Magnetic snap
-    if (hoverTarget.current && targetBounds.current) {
-      const b = targetBounds.current;
-      const strength = magneticStrength.current;
-
-      // Only apply within a generous radius of the element
-      const distX = Math.abs(posX.current - b.centerX);
-      const distY = Math.abs(posY.current - b.centerY);
-      const thresholdX = b.width * 0.7;
-      const thresholdY = b.height * 0.7;
-
-      if (distX < thresholdX && distY < thresholdY) {
-        const easeX = 1 - distX / thresholdX;
-        const easeY = 1 - distY / thresholdY;
-        const ease = Math.max(easeX, easeY);
-        const pull = ease * strength;
-
-        tx = posX.current + (b.centerX - posX.current) * pull;
-        ty = posY.current + (b.centerY - posY.current) * pull;
-      }
-    }
 
     dotTargetX.current = tx;
     dotTargetY.current = ty;
@@ -190,7 +171,7 @@ const Cursor = () => {
 
   const isHovering = hoverState !== 'default';
   const color = isHovering ? ACCENT : NEUTRAL;
-  const borderColor = isHovering ? ACCENT : `${NEUTRAL}26`;
+  const borderColor = isHovering ? ACCENT : `${NEUTRAL}80`;
 
   return (
     <>
