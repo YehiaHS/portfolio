@@ -1,4 +1,4 @@
-import { cpSync, existsSync, mkdirSync, rmSync, readdirSync, statSync } from 'fs'
+import { cpSync, existsSync, mkdirSync, rmSync, readdirSync } from 'fs'
 import { dirname, join } from 'path'
 import { fileURLToPath } from 'url'
 import { build as viteBuild } from 'vite'
