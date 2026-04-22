@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 500" fill="none">
+  <defs>
+    <linearGradient id="mf1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#2d5a3d;stop-opacity:0.12"/>
+      <stop offset="100%" style="stop-color:#4a8f5c;stop-opacity:0.06"/>
+    </linearGradient>
+    <linearGradient id="mf2" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a3526;stop-opacity:0.08"/>
+      <stop offset="100%" style="stop-color:#63b476;stop-opacity:0.04"/>
+    </linearGradient>
+    <linearGradient id="borderGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#2d5a3d;stop-opacity:0.3"/>
+      <stop offset="50%" style="stop-color:#4a8f5c;stop-opacity:0.15"/>
+      <stop offset="100%" style="stop-color:#2d5a3d;stop-opacity:0.3"/>
+    </linearGradient>
+  </defs>
+  <!-- Background -->
+  <rect x="2" y="2" width="396" height="496" rx="0" fill="url(#mf2)"/>
+  <!-- Diagonal decorative lines -->
+  <line x1="0" y1="100" x2="400" y2="0" stroke="#2d5a3d" stroke-opacity="0.04" stroke-width="1"/>
+  <line x1="0" y1="250" x2="400" y2="150" stroke="#2d5a3d" stroke-opacity="0.03" stroke-width="1"/>
+  <line x1="0" y1="400" x2="400" y2="300" stroke="#2d5a3d" stroke-opacity="0.02" stroke-width="1"/>
+  <line x1="0" y1="450" x2="400" y2="350" stroke="#2d5a3d" stroke-opacity="0.02" stroke-width="1"/>
+  <!-- Botanical circles -->
+  <circle cx="320" cy="80" r="30" fill="#2d5a3d" opacity="0.03"/>
+  <circle cx="320" cy="80" r="20" fill="#4a8f5c" opacity="0.04"/>
+  <circle cx="320" cy="80" r="10" fill="#63b476" opacity="0.06"/>
+  <circle cx="80" cy="380" r="25" fill="#1a3526" opacity="0.03"/>
+  <circle cx="80" cy="380" r="15" fill="#2d5a3d" opacity="0.04"/>
+  <!-- Border frame -->
+  <rect x="1" y="1" width="398" height="498" stroke="url(#borderGrad)" stroke-width="1" fill="none"/>
+  <!-- Corner ornaments -->
+  <path d="M15 30 L15 15 L30 15" stroke="#2d5a3d" stroke-width="1.5" opacity="0.3"/>
+  <path d="M385 30 L385 15 L370 15" stroke="#2d5a3d" stroke-width="1.5" opacity="0.3"/>
+  <path d="M15 470 L15 485 L30 485" stroke="#2d5a3d" stroke-width="1.5" opacity="0.3"/>
+  <path d="M385 470 L385 485 L370 485" stroke="#2d5a3d" stroke-width="1.5" opacity="0.3"/>
+  <!-- Center text -->
+  <text x="200" y="260" font-family="Georgia,serif" font-size="100" fill="#2d5a3d" text-anchor="middle" font-style="italic" opacity="0.12">YS</text>
+  <line x1="150" y1="280" x2="250" y2="280" stroke="#2d5a3d" stroke-width="0.8" opacity="0.15"/>
+  <text x="200" y="310" font-family="sans-serif" font-size="9" fill="#2d5a3d" text-anchor="middle" letter-spacing="4" opacity="0.12">EST. 2024</text>
+  <!-- Leaf accents -->
+  <path d="M50 60 Q70 40 90 50 Q100 55 95 70 Q90 80 75 75 Q60 70 50 60Z" fill="#2d5a3d" opacity="0.06"/>
+  <path d="M310 400 Q330 380 350 390 Q360 395 355 410 Q350 420 335 415 Q320 410 310 400Z" fill="#4a8f5c" opacity="0.05"/>
+</svg>
