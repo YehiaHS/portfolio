@@ -6,6 +6,7 @@ import { LanguageProvider } from './LanguageContext.jsx'
 import App from './App.jsx'
 import BehindTheScenes from './BehindTheScenes.jsx'
 import WorksArchive from './WorksArchive.jsx'
+import Showreel from './Showreel.jsx'
 import ErrorBoundary from './ErrorBoundary.jsx'
 import ScrollToTop from './components/ScrollToTop.jsx'
 import './index.css'
@@ -28,6 +29,7 @@ const AnimatedRoutes = () => {
           <Route path="/" element={<App />} />
           <Route path="/works" element={<WorksArchive />} />
           <Route path="/behind-the-scenes" element={<BehindTheScenes />} />
+          <Route path="/showreel" element={<Showreel />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </motion.div>

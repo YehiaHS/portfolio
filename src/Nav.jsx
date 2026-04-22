@@ -73,6 +73,7 @@ export default function Nav() {
     { label: 'Works', href: '/works' },
     { label: t('viewPortfolio'), href: '/works' },
     { label: 'Behind the Scenes', href: '/behind-the-scenes' },
+    { label: 'Showreel', href: '/showreel' },
   ]
 
   return (

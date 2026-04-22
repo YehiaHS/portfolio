@@ -332,6 +332,17 @@ export default function Hero() {
 
   const { t } = useLanguage()
 
+  // Responsive viewport tracking
+  const [windowWidth, setWindowWidth] = useState(
+    typeof window !== 'undefined' ? window.innerWidth : 1200
+  )
+  useEffect(() => {
+    const onResize = () => setWindowWidth(window.innerWidth)
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
+  }, [])
+  const isMobile = windowWidth < 768
+
   const stats = [
     { n: '3', l: 'Languages' },
     { n: '2', l: 'Degrees' },
@@ -689,7 +700,7 @@ export default function Hero() {
   }, [editorConfig])
 
   return (
-    <section className="relative h-screen min-h-[800px] w-full overflow-hidden bg-[#0d1410] font-body flex items-center justify-center pt-16">
+    <section className={`relative w-full overflow-hidden bg-[#0d1410] font-body flex items-center justify-center pt-16 ${isMobile ? 'min-h-[100svh]' : 'h-screen min-h-[800px]'}`}>
       {/* Wix-style editor trigger + panel */}
       {typeof document !== 'undefined' && isEditorOpen && createPortal(
       <div className="fixed bottom-3 right-3 z-[160] pointer-events-auto">
@@ -1194,6 +1205,102 @@ export default function Hero() {
         </div>
       )}
 
+      {/* MOBILE HERO LAYOUT */}
+      {isMobile && (
+        <motion.div
+          style={{ opacity: heroOpacity }}
+          className="relative w-full flex flex-col items-center justify-center px-6 py-12 gap-3"
+        >
+          {editorConfig.visibility.hello && (
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2 }}
+              className="text-xl serif-italic text-ink"
+            >
+              {t('hello')}
+            </motion.p>
+          )}
+
+          {editorConfig.visibility.yehia && (
+            <motion.h1
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.4 }}
+              className="text-[4.5rem] font-bold tracking-tighter text-ink leading-[0.75] font-display text-center m-0"
+            >
+              Yehia
+            </motion.h1>
+          )}
+
+          {editorConfig.visibility.portrait && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 1.5, delay: 0.7 }}
+              className="w-full flex justify-center"
+              style={{ height: '35vh', maxHeight: '400px' }}
+            >
+              <img
+                src={`${import.meta.env.BASE_URL}images/Yehia_Professional.png`}
+                alt="Yehia Salem"
+                draggable={false}
+                onDragStart={(event) => event.preventDefault()}
+                className="w-auto h-full object-contain object-bottom drop-shadow-2xl pointer-events-none"
+              />
+            </motion.div>
+          )}
+
+          {editorConfig.visibility.salem && (
+            <motion.h2
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.6 }}
+              className="text-[3.5rem] serif-italic tracking-tighter text-[#4a9f62] leading-[0.7] text-center m-0"
+            >
+              Salem
+            </motion.h2>
+          )}
+
+          {editorConfig.visibility.info && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.9, duration: 0.8 }}
+              className="w-full max-w-[440px] bg-[#0d1410]/40 rounded-xl backdrop-blur-2xl shadow-[0_40px_80px_-20px_rgba(0,0,0,0.6)] border border-[#4a9f62]/20 p-5 pointer-events-auto"
+              style={{ zIndex: editorConfig.layers.info.z, opacity: editorConfig.layers.info.opacity }}
+            >
+              <AnimatedSection delay={0.9}>
+                <p className="text-ink-light text-[0.85rem] font-body tracking-wide mb-1.5 opacity-90">
+                  {t('tagline')}
+                </p>
+                <p className="text-ink-faint text-[0.7rem] font-body tracking-[0.28em] mb-5 opacity-70 uppercase">
+                  {t('location')}
+                </p>
+              </AnimatedSection>
+
+              <AnimatedSection delay={1.1}>
+                <QuoteBlock />
+              </AnimatedSection>
+
+              <AnimatedSection delay={1.3}>
+                <div className="flex flex-wrap items-center gap-4">
+                  <Link to="#about" className="group relative w-[70px] h-[30px] bg-[#d4e4d8] hover:bg-white transition-all duration-500 rounded-sm overflow-hidden shadow-sm">
+                    <motion.div className="absolute inset-0 bg-[#4a9f62]/10 translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-500" />
+                  </Link>
+                  <Link to="/works" className="text-[0.6rem] font-heading font-bold tracking-[0.28em] uppercase text-ink hover:text-[#4a9f62] flex items-center gap-2 transition-colors group">
+                    {t('viewPortfolio').replace(' ->', '')}{' '}
+                    <motion.span className="text-base" animate={{ x: [0, 5, 0] }} transition={{ duration: 1.5, repeat: Infinity }}>{'\u2192'}</motion.span>
+                  </Link>
+                </div>
+              </AnimatedSection>
+            </motion.div>
+          )}
+        </motion.div>
+      )}
+
+      {/* DESKTOP HERO LAYOUT */}
+      {!isMobile && (
       <motion.div 
         ref={canvasRef} 
         style={{ opacity: heroOpacity, containerType: 'inline-size', containerName: 'hero' }} 
@@ -1317,7 +1424,7 @@ export default function Hero() {
             dragConstraintsRef={canvasRef}
             onCommit={updatePositionFromElement}
             className={`bg-[#0d1410]/40 rounded-xl backdrop-blur-2xl shadow-[0_40px_80px_-20px_rgba(0,0,0,0.6)] border border-[#4a9f62]/20 ${isLayoutEditing && !editorConfig.layers.info.locked ? 'cursor-move outline outline-1 outline-dashed outline-[#4a9f62] pointer-events-auto bg-[#4a9f62]/5' : 'pointer-events-auto'}`}
-            style={{ ...getStyle('info'), width: `${editorConfig.sizes.infoWidth}px`, padding: `${editorConfig.sizes.infoPadding}rem` }}
+            style={{ ...getStyle('info'), width: `min(${editorConfig.sizes.infoWidth}px, calc(100vw - 3rem))`, padding: `${editorConfig.sizes.infoPadding}rem` }}
           >
             <AnimatedSection delay={0.9}>
               <p className="text-ink-light text-[0.85rem] md:text-[0.95rem] font-body tracking-wide mb-1.5 opacity-90 pointer-events-none">
@@ -1349,6 +1456,7 @@ export default function Hero() {
           </EditableLayer>
         )}
       </motion.div>
+      )}
 
       {editorConfig.visibility.scrollIndicator && (
         <motion.div
