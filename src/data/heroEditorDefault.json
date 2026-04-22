@@ -1,0 +1,135 @@
+{
+  "layoutMode": true,
+  "grid": {
+    "columns": 100,
+    "rows": 100,
+    "snap": 0.25
+  },
+  "positions": {
+    "hello": {
+      "x": 55,
+      "y": 22
+    },
+    "yehia": {
+      "x": 46,
+      "y": 31.75
+    },
+    "salem": {
+      "x": 70,
+      "y": 55
+    },
+    "portrait": {
+      "x": 61.5,
+      "y": 10.5
+    },
+    "info": {
+      "x": 64.25,
+      "y": 68.5
+    },
+    "stat0": {
+      "x": 30,
+      "y": 34.5
+    },
+    "stat1": {
+      "x": 31.75,
+      "y": 42.75
+    },
+    "stat2": {
+      "x": 42,
+      "y": 58
+    },
+    "stat3": {
+      "x": 42,
+      "y": 72
+    }
+  },
+  "visibility": {
+    "ambientGlow": true,
+    "serial": true,
+    "stats": true,
+    "hello": true,
+    "yehia": true,
+    "portrait": true,
+    "salem": true,
+    "info": true,
+    "scrollIndicator": true
+  },
+  "tokens": {
+    "--paper": "#0d1410",
+    "--paper-darker": "#111c14",
+    "--paper-darkest": "#162319",
+    "--ink": "#d4e4d8",
+    "--ink-light": "#a8b8ac",
+    "--ink-faint": "#5a6a5e",
+    "--accent": "#4a9f62",
+    "--accent-deep": "#2d6b3f",
+    "--accent-light": "#63b476",
+    "--sage": "#6b8a5e",
+    "--sage-light": "#4a6a3e",
+    "--font-display": "'Fraunces', Georgia, serif",
+    "--font-heading": "'Syne', sans-serif",
+    "--font-body": "'Manrope', system-ui, sans-serif"
+  },
+  "global": {
+    "rootFontSize": 16,
+    "bodyLineHeight": 1.7,
+    "bodyLetterSpacing": 0,
+    "contentMaxWidth": 80
+  },
+  "sizes": {
+    "helloScale": 0.82,
+    "yehiaScale": 1.15,
+    "salemScale": 1,
+    "statsScale": 0.96,
+    "portraitHeight": 92,
+    "portraitScale": 1.28,
+    "infoWidth": 440,
+    "infoPadding": 2
+  },
+  "layers": {
+    "serial": {
+      "z": 1,
+      "locked": false,
+      "opacity": 1
+    },
+    "stats": {
+      "z": 30,
+      "locked": false,
+      "opacity": 1
+    },
+    "hello": {
+      "z": 0,
+      "locked": false,
+      "opacity": 1
+    },
+    "yehia": {
+      "z": 3,
+      "locked": false,
+      "opacity": 1
+    },
+    "portrait": {
+      "z": 20,
+      "locked": false,
+      "opacity": 1
+    },
+    "salem": {
+      "z": 30,
+      "locked": false,
+      "opacity": 1
+    },
+    "info": {
+      "z": 100,
+      "locked": false,
+      "opacity": 1
+    },
+    "scrollIndicator": {
+      "z": 30,
+      "locked": false,
+      "opacity": 1
+    }
+  },
+  "ui": {
+    "simpleMode": true
+  },
+  "customRules": []
+}

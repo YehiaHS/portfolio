@@ -31,7 +31,7 @@ export default function App() {
   const { scrollYProgress } = useScroll()
 
   return (
-    <div className="relative min-h-screen text-ink cursor-none page-enter">
+    <div className="relative min-h-screen text-ink page-enter">
       <motion.div
         className="scroll-progress-bar"
         style={{ scaleX: scrollYProgress }}
@@ -39,7 +39,7 @@ export default function App() {
       />
 
       {/* Global overlays */}
-      <Cursor />
+      {/* <Cursor /> */}
       <Grain />
       <KeyboardShortcuts />
 
