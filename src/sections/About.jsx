@@ -62,26 +62,21 @@ export default function About() {
                 <AnimatedSection delay={0.2}>
                   <div className="relative">
                     <div className="aspect-[4/5] bg-paper-dark flex items-center justify-center border border-ink/5 overflow-hidden relative" style={{ maxWidth: '100%' }}>
-                      <svg className="absolute inset-0 w-full h-full opacity-[0.06]" viewBox="0 0 100 125" preserveAspectRatio="none">
-                        {[0,1,2,3,4,5,6,7,8,9,10,11,12].map((i) => (
-                          <line key={i} x1={i * 10 - 20} y1="125" x2={i * 10 + 30} y2="0" stroke="#2d5a3d" strokeWidth="1.5" />
-                        ))}
+                      <img 
+                        src={`${import.meta.env.BASE_URL}images/about_portrait.jpg`} 
+                        alt="Yehia Salem Portrait" 
+                        className="absolute inset-0 w-full h-full object-cover grayscale-[20%] sepia-[10%] transition-transform duration-700 hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-br from-[#2d5a3d]/[0.15] via-transparent to-[#0d1410]/[0.5] mix-blend-multiply pointer-events-none" />
+                      
+                      <svg className="absolute top-3 left-3 w-8 h-8 opacity-40" viewBox="0 0 32 32" fill="none">
+                        <path d="M0 0h12v2H2v10H0V0z" fill="#fff" />
+                        <circle cx="18" cy="18" r="2" fill="#fff" />
                       </svg>
-                      <div className="absolute inset-0 bg-gradient-to-br from-[#2d5a3d]/[0.05] via-transparent to-[#4a8f5c]/[0.08]" />
-                      <svg className="absolute top-3 left-3 w-8 h-8 opacity-20" viewBox="0 0 32 32" fill="none">
-                        <path d="M0 0h12v2H2v10H0V0z" fill="#2d5a3d" />
-                        <circle cx="18" cy="18" r="2" fill="#2d5a3d" />
+                      <svg className="absolute bottom-3 right-3 w-8 h-8 opacity-40" viewBox="0 0 32 32" fill="none">
+                        <path d="M32 32H20v-2h10V20h2v12z" fill="#fff" />
+                        <circle cx="14" cy="14" r="2" fill="#fff" />
                       </svg>
-                      <svg className="absolute bottom-3 right-3 w-8 h-8 opacity-20" viewBox="0 0 32 32" fill="none">
-                        <path d="M32 32H20v-2h10V20h2v12z" fill="#2d5a3d" />
-                        <circle cx="14" cy="14" r="2" fill="#2d5a3d" />
-                      </svg>
-                      <div className="text-center relative z-10 px-2">
-                        <span className="block font-bold font-display italic bg-gradient-to-br from-[#2d5a3d] to-[#4a8f5c] bg-clip-text text-transparent leading-none select-none" style={{ fontSize: 'clamp(3rem, 8vw, 5rem)' }}>YS</span>
-                        <div className="w-16 h-px bg-gradient-to-r from-transparent via-accent/30 to-transparent mx-auto my-6" />
-                        <p className="page-number text-accent/30">Est. {new Date().getFullYear() - 4}</p>
-                      </div>
-                      <motion.div className="absolute inset-0" animate={{ opacity: [0, 0.15, 0] }} transition={{ duration: 6, repeat: Infinity }} style={{ background: 'radial-gradient(ellipse at center, transparent 30%, rgba(45,90,61,0.06) 100%)' }} />
                     </div>
                     <div className="absolute -top-2 -left-2 w-6 h-6 border-t-2 border-l-2 border-accent/20" />
                     <div className="absolute -top-2 -right-2 w-6 h-6 border-t-2 border-r-2 border-accent/20" />
