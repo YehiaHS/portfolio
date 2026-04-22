@@ -28,6 +28,16 @@ function MobileMenuItem({ item, index, onClose }) {
         >
           {item.label}
         </Link>
+      ) : item.download ? (
+        <a
+          href={item.href}
+          download
+          target="_blank"
+          onClick={onClose}
+          className="block text-2xl font-display py-4 text-ink hover:text-accent transition-colors"
+        >
+          {item.label}
+        </a>
       ) : (
         <a
           href={item.href}
@@ -74,6 +84,7 @@ export default function Nav() {
     { label: t('viewPortfolio'), href: '/works' },
     { label: 'Behind the Scenes', href: '/behind-the-scenes' },
     { label: 'Showreel', href: '/showreel' },
+    { label: 'Resume', href: import.meta.env.BASE_URL + 'Yehia_Salem_Resume.pdf', download: true },
   ]
 
   return (
@@ -102,6 +113,8 @@ export default function Nav() {
                 <a
                   key={link.href + link.label}
                   href={link.href}
+                  download={link.download}
+                  target={link.download ? '_blank' : undefined}
                   className="page-number hover:text-accent transition-colors hidden md:inline-block"
                 >
                   {link.label}
