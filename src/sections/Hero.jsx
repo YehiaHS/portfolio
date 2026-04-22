@@ -1194,7 +1194,11 @@ export default function Hero() {
         </div>
       )}
 
-      <motion.div ref={canvasRef} style={{ opacity: heroOpacity }} className="absolute inset-0 w-full h-full pointer-events-none">
+      <motion.div 
+        ref={canvasRef} 
+        style={{ opacity: heroOpacity, containerType: 'inline-size', containerName: 'hero' }} 
+        className={`absolute inset-0 left-1/2 -translate-x-1/2 w-full max-w-[1400px] h-full pointer-events-none overflow-visible ${isEditorOpen ? 'outline outline-1 outline-[#4a9f62]/10 bg-[#4a9f62]/[0.02]' : ''}`}
+      >
         {editorConfig.visibility.serial && (
           <div className="absolute right-[5%] top-[5%] font-display font-bold select-none pointer-events-none" style={{ fontSize: 'clamp(15rem, 35vh, 30rem)', lineHeight: 0.8, zIndex: editorConfig.layers.serial.z, opacity: 0.02 * editorConfig.layers.serial.opacity }}>
             01
@@ -1211,7 +1215,7 @@ export default function Hero() {
             dragConstraintsRef={canvasRef}
             onCommit={updatePositionFromElement}
             scale={editorConfig.sizes.statsScale}
-            className={`hidden lg:block text-center ${isLayoutEditing && !editorConfig.layers.stats.locked ? 'pointer-events-auto cursor-move border border-dashed border-[#4a9f62]/40 p-2 rounded-md bg-[#0d1410]/35' : 'pointer-events-auto'}`}
+            className={`hidden lg:block text-center ${isLayoutEditing && !editorConfig.layers.stats.locked ? 'pointer-events-auto cursor-move outline outline-1 outline-dashed outline-[#4a9f62]/40 bg-[#4a9f62]/5 rounded-md' : 'pointer-events-auto'}`}
             style={getStyle(`stat${i}`)}
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
@@ -1234,7 +1238,7 @@ export default function Hero() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2 }}
-            className={`text-[clamp(1.5rem,3vw,2.5rem)] serif-italic text-ink ${isLayoutEditing && !editorConfig.layers.hello.locked ? 'pointer-events-auto cursor-move border border-dashed border-[#4a9f62]/40 rounded-md p-1 bg-[#0d1410]/25' : 'pointer-events-none'}`}
+            className={`text-[clamp(1.5rem,3vw,2.5rem)] serif-italic text-ink ${isLayoutEditing && !editorConfig.layers.hello.locked ? 'pointer-events-auto cursor-move outline outline-1 outline-dashed outline-[#4a9f62]/40 rounded-md bg-[#4a9f62]/5' : 'pointer-events-none'}`}
             style={getStyle('hello')}
           >
             {t('hello')}
@@ -1253,7 +1257,7 @@ export default function Hero() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4 }}
-            className={`text-[clamp(6rem,11vw,13rem)] xl:text-[15rem] font-bold tracking-tighter text-ink leading-[0.75] font-display m-0 ${isLayoutEditing && !editorConfig.layers.yehia.locked ? 'pointer-events-auto cursor-move border border-dashed border-[#4a9f62]/40 rounded-md p-1 bg-[#0d1410]/25' : 'pointer-events-none'}`}
+            className={`text-[clamp(6rem,11cqw,13rem)] xl:text-[15rem] font-bold tracking-tighter text-ink leading-[0.75] font-display m-0 ${isLayoutEditing && !editorConfig.layers.yehia.locked ? 'pointer-events-auto cursor-move outline outline-1 outline-dashed outline-[#4a9f62]/40 rounded-md bg-[#4a9f62]/5' : 'pointer-events-none'}`}
             style={getStyle('yehia')}
           >
             Yehia
@@ -1271,7 +1275,7 @@ export default function Hero() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1.5, delay: 0.7 }}
-            className={`flex items-end ${isLayoutEditing && !editorConfig.layers.portrait.locked ? 'pointer-events-auto cursor-move border border-dashed border-[#4a9f62]/40 rounded-md bg-[#0d1410]/20' : 'pointer-events-none'}`}
+            className={`flex items-end ${isLayoutEditing && !editorConfig.layers.portrait.locked ? 'pointer-events-auto cursor-move outline outline-1 outline-dashed outline-[#4a9f62]/40 rounded-md bg-[#4a9f62]/5' : 'pointer-events-none'}`}
             style={{ ...getStyle('portrait'), height: `${editorConfig.sizes.portraitHeight}vh` }}
           >
             <img
@@ -1297,7 +1301,7 @@ export default function Hero() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.6 }}
-            className={`text-[clamp(5.5rem,10vw,12rem)] xl:text-[14rem] serif-italic tracking-tighter text-[#4a9f62] leading-[0.7] m-0 ${isLayoutEditing && !editorConfig.layers.salem.locked ? 'pointer-events-auto cursor-move border border-dashed border-[#4a9f62]/40 rounded-md p-1 bg-[#0d1410]/25' : 'pointer-events-none'}`}
+            className={`text-[clamp(5.5rem,10cqw,12rem)] xl:text-[14rem] serif-italic tracking-tighter text-[#4a9f62] leading-[0.7] m-0 ${isLayoutEditing && !editorConfig.layers.salem.locked ? 'pointer-events-auto cursor-move outline outline-1 outline-dashed outline-[#4a9f62]/40 rounded-md bg-[#4a9f62]/5' : 'pointer-events-none'}`}
             style={getStyle('salem')}
           >
             Salem
@@ -1312,7 +1316,7 @@ export default function Hero() {
             isLayoutEditing={isLayoutEditing}
             dragConstraintsRef={canvasRef}
             onCommit={updatePositionFromElement}
-            className={`bg-[#0d1410]/40 rounded-xl backdrop-blur-2xl shadow-[0_40px_80px_-20px_rgba(0,0,0,0.6)] border border-[#4a9f62]/20 ${isLayoutEditing && !editorConfig.layers.info.locked ? 'cursor-move border-dashed border-[#4a9f62] pointer-events-auto' : 'pointer-events-auto'}`}
+            className={`bg-[#0d1410]/40 rounded-xl backdrop-blur-2xl shadow-[0_40px_80px_-20px_rgba(0,0,0,0.6)] border border-[#4a9f62]/20 ${isLayoutEditing && !editorConfig.layers.info.locked ? 'cursor-move outline outline-1 outline-dashed outline-[#4a9f62] pointer-events-auto bg-[#4a9f62]/5' : 'pointer-events-auto'}`}
             style={{ ...getStyle('info'), width: `${editorConfig.sizes.infoWidth}px`, padding: `${editorConfig.sizes.infoPadding}rem` }}
           >
             <AnimatedSection delay={0.9}>
