@@ -5,13 +5,12 @@
  * live in src/sections/ — this file is intentionally kept minimal.
  */
 
-import Cursor from './Cursor'
 import Nav from './Nav'
 import { DividerText } from './motionEffects.jsx'
 import { motion, useScroll } from 'framer-motion'
 
 // Decorative utilities
-import { Grain, SectionNav, KeyboardShortcuts, BotanicalBreak, MarqueeStrip, GeometricPatternBand, DecorativeEmblem, DecorativeBreak } from './sections/DecorativeBreaks.jsx'
+import { Grain, BotanicalBreak, MarqueeStrip, GeometricPatternBand, DecorativeEmblem, DecorativeBreak } from './sections/DecorativeBreaks.jsx'
 
 // Sections (in render order)
 import Hero from './sections/Hero.jsx'
@@ -41,11 +40,9 @@ export default function App() {
       {/* Global overlays */}
       {/* <Cursor /> */}
       <Grain />
-      <KeyboardShortcuts />
 
       {/* Navigation */}
       <Nav />
-      <SectionNav />
 
       {/* Page sections */}
       <Hero />
