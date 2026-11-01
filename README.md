@@ -20,8 +20,8 @@ Personal portfolio site built with React, Vite, and Tailwind CSS, then published
 ## Project Notes
 
 - The site is deployed under the `/portfolio/` base path.
-- Portfolio media lives in `public/portfolio`, but the final GitHub Pages artifact expects those files at the root of `dist/`.
-- `scripts/build.js` handles that flattening step after Vite finishes bundling.
+- Portfolio media lives in `public/portfolio` and is copied into `dist/` with its subfolders preserved (for example `dist/design`, `dist/photos`).
+- `scripts/build.js` handles that copy step after Vite finishes bundling and generates `404.html` from `index.html` so deep links work on GitHub Pages.
 - `scripts/verify-build.js` checks the assembled output so deployment failures are caught before publishing.
 
 ## CI

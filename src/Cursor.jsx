@@ -36,6 +36,7 @@ function useAnimationFrame(callback, active = true) {
 const Cursor = () => {
   const [visible, setVisible] = useState(false);
   const [hoverState, setHoverState] = useState('default');
+  const [hoverLabel, setHoverLabel] = useState('link');
   const [clickRipple, setClickRipple] = useState(false);
 
   const posX = useRef(0);
@@ -92,6 +93,16 @@ const Cursor = () => {
     mouseDown.current = false;
   }, []);
 
+  // The hit-area div has pointer-events: none, so its mouseleave never fires.
+  // A null relatedTarget on mouseout means the pointer left the window.
+  useEffect(() => {
+    const hideOnLeaveWindow = (e) => {
+      if (!e.relatedTarget) setVisible(false);
+    };
+    document.addEventListener('mouseout', hideOnLeaveWindow);
+    return () => document.removeEventListener('mouseout', hideOnLeaveWindow);
+  }, []);
+
   // Detect hover target and classify
   const handleMouseOver = useCallback((e) => {
     const target = e.target.closest?.(INTERACTIVE_SELECTOR) || e.target;
@@ -103,6 +114,8 @@ const Cursor = () => {
     }
 
     hoverTarget.current = target;
+    // Store the label in state so moving between two elements with the same hover state still re-renders it
+    setHoverLabel(target.textContent?.trim().slice(0, 30) || 'link');
     const rect = target.getBoundingClientRect();
     targetBounds.current = {
       left: rect.left,
@@ -260,7 +273,7 @@ const Cursor = () => {
             boxShadow: '0 1px 4px rgba(0,0,0,0.08)',
           }}
         >
-          {hoverTarget.current?.textContent?.trim().slice(0, 30) || 'link'}
+          {hoverLabel}
         </span>
       </motion.div>
 

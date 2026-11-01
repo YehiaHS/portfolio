@@ -10,7 +10,6 @@ const dist = join(root, 'dist')
 
 const portfolioPublicDir = join(root, 'public', 'portfolio')
 const imagesDir = join(root, 'public', 'images')
-const notFoundPage = join(root, 'public', '404.html')
 const viteSvg = join(tmp, 'vite.svg')
 
 rmSync(tmp, { recursive: true, force: true })
@@ -38,7 +37,7 @@ if (existsSync(viteSvg)) {
 cpSync(join(root, 'public', 'favicon.svg'), join(dist, 'favicon.svg'))
 
 if (existsSync(portfolioPublicDir)) {
-  cpSync(portfolioPublicDir, dist, { recursive: true, overwrite: false })
+  cpSync(portfolioPublicDir, dist, { recursive: true, force: false })
   
   // Cleanup large source files from dist to keep the build small
   const prune = (dir) => {
@@ -66,9 +65,9 @@ if (existsSync(imagesDir)) {
   cpSync(imagesDir, join(dist, 'images'), { recursive: true })
 }
 
-if (existsSync(notFoundPage)) {
-  cpSync(notFoundPage, join(dist, '404.html'))
-}
+// GitHub Pages serves 404.html for unknown paths. Copying the SPA entry lets deep links
+// such as /portfolio/works resolve, and BrowserRouter then renders the right route.
+cpSync(join(dist, 'index.html'), join(dist, '404.html'))
 
 rmSync(tmp, { recursive: true, force: true })
 

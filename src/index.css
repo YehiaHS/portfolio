@@ -2518,6 +2518,10 @@ ol.accent-number li::before {
 .bg-\[\#1a3526\] { background-color: #0a0e0c !important; }
 .bg-ink { background-color: var(--ink) !important; }
 .text-ink { color: var(--ink) !important; }
+/* The page is dark, so these light-theme tokens (dark green) would be unreadable on it */
+.text-ink-light { color: var(--ink-light) !important; }
+.text-accent { color: var(--accent) !important; }
+.text-accent\/50 { color: rgba(74, 159, 98, 0.5) !important; }
 
 /* ============================================================
    HERO + NAV REFRESH
@@ -2679,6 +2683,11 @@ ol.accent-number li::before {
   border-radius: 0.45rem;
   background: rgba(8, 14, 10, 0.98);
   box-shadow: 0 28px 70px rgba(0, 0, 0, 0.45);
+}
+
+/* Letter-spacing breaks Arabic letter joining, so reset it for RTL */
+html[dir="rtl"] .language-menu__item {
+  letter-spacing: 0;
 }
 
 .language-menu__item {

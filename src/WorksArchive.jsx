@@ -70,7 +70,7 @@ const FeaturedWorkItem = ({ work, index, onClick }) => {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true })
   const [hovered, setHovered] = useState(false)
-  const imgState = useImageLoader(work.src, isInView)
+  const imgState = useImageLoader(work.isVideo ? null : work.src, isInView)
   const [showReflection, setShowReflection] = useState(false)
   const [expanded, setExpanded] = useState(false)
 

@@ -30,11 +30,13 @@ export function useImageLoader(src, enabled = true) {
 
     setState('loading')
     let cancelled = false
+    let timeout = null
 
     const img = new Image()
 
     const resolve = (ok) => {
       if (cancelled) return
+      clearTimeout(timeout)
       const nextState = ok ? 'loaded' : 'error'
       if (ok) imageCache.set(src, nextState) // Only cache successes
       setState(nextState)
@@ -54,7 +56,7 @@ export function useImageLoader(src, enabled = true) {
       return
     }
 
-    const timeout = setTimeout(() => resolve(false), 10_000)
+    timeout = setTimeout(() => resolve(false), 10_000)
 
     return () => {
       cancelled = true

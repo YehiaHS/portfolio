@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { motion } from 'framer-motion';
 
@@ -10,6 +10,16 @@ const resolvePath = (path) => {
 };
 
 export default function Lightbox({ src, caption, onClose, onPrev, onNext, isVideo, driveFallback }) {
+  const closeRef = useRef(null);
+
+  // Move focus into the dialog so keyboard input no longer reaches the card behind it,
+  // then return focus to the card that opened it on close.
+  useEffect(() => {
+    const previouslyFocused = document.activeElement;
+    closeRef.current?.focus();
+    return () => previouslyFocused?.focus?.();
+  }, []);
+
   useEffect(() => {
     const onKey = (e) => {
       if (e.key === 'Escape') onClose();
@@ -33,6 +43,9 @@ export default function Lightbox({ src, caption, onClose, onPrev, onNext, isVide
       exit={{ opacity: 0 }}
       className="fixed top-0 left-0 right-0 bottom-0 w-full h-full z-[10000] flex items-center justify-center bg-[#050806]/98 backdrop-blur-xl"
       style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, width: '100vw', height: '100vh' }}
+      role="dialog"
+      aria-modal="true"
+      aria-label={caption}
       onClick={onClose}
     >
       <div className="absolute top-5 left-0 right-0 z-10 flex items-center justify-between px-6" onClick={e => e.stopPropagation()}>
@@ -51,6 +64,7 @@ export default function Lightbox({ src, caption, onClose, onPrev, onNext, isVide
           )}
         </div>
         <button
+          ref={closeRef}
           onClick={onClose}
           aria-label="Close"
           className="text-3xl text-paper hover:text-accent transition-colors w-10 h-10 flex items-center justify-center"

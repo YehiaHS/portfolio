@@ -37,6 +37,6 @@ const indexHtml = readFileSync(join(dist, 'index.html'), 'utf8')
 assert(indexHtml.includes('/portfolio/'), 'index.html is missing the GitHub Pages base path')
 
 const flattenedMediaDir = join(dist, 'photos')
-assert(statSync(flattenedMediaDir).isDirectory(), 'Portfolio media was not flattened into dist/')
+assert(statSync(flattenedMediaDir).isDirectory(), 'Portfolio media was not copied into dist/')
 
 console.log('Build artifacts verified successfully.')
