@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { motion, useInView, useScroll, useTransform } from 'framer-motion'
+import { motion, useInView, useScroll } from 'framer-motion'
 import { useLanguage } from './LanguageContext'
 import LanguageSelector from './LanguageSelector'
 import Cursor from './Cursor'
@@ -148,14 +148,13 @@ const MasonryGrid = ({ images }) => {
 function BehindTheScenes() {
   const { t } = useLanguage()
   const { scrollYProgress } = useScroll()
-  const scrollPercent = useTransform(scrollYProgress, [0, 1], [0, 100])
 
   return (
     <div className="relative min-h-screen text-ink cursor-none page-enter">
       <Cursor />
 
       {/* Scroll progress bar */}
-      <motion.div className="fixed top-0 left-0 right-0 h-[2px] z-[9999] origin-left" style={{ scaleX: scrollPercent, backgroundColor: '#4a9f62' }} />
+      <motion.div className="fixed top-0 left-0 right-0 h-[2px] z-[9999] origin-left" style={{ scaleX: scrollYProgress, backgroundColor: '#4a9f62' }} />
 
       {/* Top bar */}
       <div className="fixed top-0 left-0 right-0 z-50">

@@ -50,8 +50,9 @@ export default function Lightbox({ src, caption, onClose, onPrev, onNext, isVide
             </a>
           )}
         </div>
-        <button 
-          onClick={onClose} 
+        <button
+          onClick={onClose}
+          aria-label="Close"
           className="text-3xl text-paper hover:text-accent transition-colors w-10 h-10 flex items-center justify-center"
         >
           &times;
@@ -83,6 +84,7 @@ export default function Lightbox({ src, caption, onClose, onPrev, onNext, isVide
       {onPrev && (
         <button 
           onClick={e => { e.stopPropagation(); onPrev(); }}
+          aria-label="Previous image"
           className="absolute left-4 top-1/2 -translate-y-1/2 text-5xl text-paper opacity-40 hover:opacity-100 transition-opacity z-20"
         >
           &larr;
@@ -92,6 +94,7 @@ export default function Lightbox({ src, caption, onClose, onPrev, onNext, isVide
       {onNext && (
         <button 
           onClick={e => { e.stopPropagation(); onNext(); }}
+          aria-label="Next image"
           className="absolute right-4 top-1/2 -translate-y-1/2 text-5xl text-paper opacity-40 hover:opacity-100 transition-opacity z-20"
         >
           &rarr;

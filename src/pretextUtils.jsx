@@ -9,7 +9,7 @@
 
 import { useMemo } from 'react'
 import { motion } from 'framer-motion'
-import { prepare, layout, layoutWithLines } from '@chenglou/pretext'
+import { prepare, prepareWithSegments, layout, layoutWithLines, measureNaturalWidth } from '@chenglou/pretext'
 
 /* ── Hook ─────────────────────────────────────────────────────────────────── */
 
@@ -77,7 +77,7 @@ export const ReadingBadge = ({ text, className = '' }) => {
 export const TextDensityBar = ({ text, className = '' }) => {
   const ratios = useMemo(() => {
     try {
-      const prepared = prepare(text, '14px Manrope')
+      const prepared = prepareWithSegments(text, '14px Manrope')
       const { lines } = layoutWithLines(prepared, 380, 22)
       const widths = lines.map((l) => l.width)
       const max = Math.max(...widths, 1)
@@ -127,15 +127,14 @@ export const TextSampleDensity = ({ className = '' }) => {
   const bars = useMemo(() => {
     try {
       const text = 'creativity meets code'
-      const prepared = prepare(text, '14px Manrope')
+      const prepared = prepareWithSegments(text, '14px Manrope')
       const { lines } = layoutWithLines(prepared, 500, 22)
       const allWords = []
       for (const line of lines) {
         const words = line.text.split(/\s+/).filter(Boolean)
         for (const w of words) {
-          const p = prepare(w, '14px Manrope')
-          const l = layout(p, 500, 22)
-          allWords.push({ text: w, width: l.lastLineWidth })
+          const p = prepareWithSegments(w, '14px Manrope')
+          allWords.push({ text: w, width: measureNaturalWidth(p) })
         }
       }
       const maxW = Math.max(...allWords.map((w) => w.width), 1)

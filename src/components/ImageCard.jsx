@@ -29,7 +29,16 @@ export default function ImageCard({ src, caption, index, onClick, isDoc, isVideo
       transition={{ delay: Math.min(index * 0.05, 0.4), duration: 0.5 }}
       className={`group relative overflow-hidden rounded-sm border ${onClick ? 'cursor-pointer' : ''} ${className}`}
       style={style}
+      role={onClick ? 'button' : undefined}
+      tabIndex={onClick ? 0 : undefined}
+      aria-label={onClick ? caption : undefined}
       onClick={() => onClick && onClick({ src: resolvedSrc, caption, isDoc, isVideo, driveFallback })}
+      onKeyDown={(e) => {
+        if (onClick && (e.key === 'Enter' || e.key === ' ')) {
+          e.preventDefault();
+          onClick({ src: resolvedSrc, caption, isDoc, isVideo, driveFallback });
+        }
+      }}
     >
       <div className="aspect-[3/2] overflow-hidden relative bg-paper-dark">
         {/* Badge in top corner */}

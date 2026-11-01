@@ -23,7 +23,7 @@ export function useImageLoader(src, enabled = true) {
       setState(cached)
       return
     }
-    if (!enabled) {
+    if (!src || !enabled) {
       setState('idle')
       return
     }

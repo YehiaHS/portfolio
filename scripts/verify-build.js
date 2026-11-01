@@ -15,6 +15,7 @@ function assert(condition, message) {
 const expectedPaths = [
   'index.html',
   '404.html',
+  'favicon.svg',
   'assets',
   'images/hero-pattern.svg',
   'images/monogram-frame.svg',

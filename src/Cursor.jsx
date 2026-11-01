@@ -78,10 +78,14 @@ const Cursor = () => {
   const handleMouseLeave = useCallback(() => setVisible(false), []);
   const handleMouseEnter = useCallback(() => setVisible(true), []);
 
+  const rippleTimer = useRef(null);
+  useEffect(() => () => clearTimeout(rippleTimer.current), []);
+
   const handleMouseDown = useCallback(() => {
     mouseDown.current = true;
     setClickRipple(true);
-    setTimeout(() => setClickRipple(false), 400);
+    clearTimeout(rippleTimer.current);
+    rippleTimer.current = setTimeout(() => setClickRipple(false), 400);
   }, []);
 
   const handleMouseUp = useCallback(() => {

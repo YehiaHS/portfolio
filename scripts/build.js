@@ -34,6 +34,9 @@ if (existsSync(viteSvg)) {
   cpSync(viteSvg, join(dist, 'vite.svg'))
 }
 
+// index.html links /favicon.svg, which is served from public/ and must be copied explicitly
+cpSync(join(root, 'public', 'favicon.svg'), join(dist, 'favicon.svg'))
+
 if (existsSync(portfolioPublicDir)) {
   cpSync(portfolioPublicDir, dist, { recursive: true, overwrite: false })
   
@@ -47,7 +50,10 @@ if (existsSync(portfolioPublicDir)) {
       } else {
         const isOriginalImage = entry.name.endsWith('.png') && !entry.name.includes('_min');
         const isOriginalVideo = entry.name.endsWith('.mp4') && !entry.name.includes('_min');
-        if (isOriginalImage || isOriginalVideo) {
+        // Only drop an original when a *_min copy exists; other originals are referenced directly by the site
+        const stem = entry.name.replace(/\.(png|mp4)$/, '');
+        const hasMinCopy = entries.some((e) => e.name.startsWith(`${stem}_min.`));
+        if ((isOriginalImage || isOriginalVideo) && hasMinCopy) {
           rmSync(fullPath);
         }
       }

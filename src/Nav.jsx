@@ -60,12 +60,22 @@ export default function Nav() {
     }
   }, [menuOpen])
 
+  useEffect(() => {
+    if (!menuOpen) return undefined
+
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') setMenuOpen(false)
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [menuOpen])
+
   const homeHash = (id) => `${import.meta.env.BASE_URL}#${id}`
   const navLinks = [
     { label: t('aboutLabel'), href: homeHash('about'), type: 'anchor' },
     { label: t('skillsTitle'), href: homeHash('skills'), type: 'anchor' },
     { label: t('awardsTitle'), href: homeHash('awards'), type: 'anchor' },
-    { label: 'Works', href: '/works', type: 'route' },
+    { label: t('navWorks'), href: '/works', type: 'route' },
     { label: stripArrows(t('viewPortfolio')), href: '/works', type: 'route' },
     { label: 'Behind the Scenes', href: '/behind-the-scenes', type: 'route' },
   ]

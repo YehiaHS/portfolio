@@ -144,8 +144,6 @@ const FeaturedWorkItem = ({ work, index, onClick }) => {
                   style={{ opacity: imgState === "loaded" ? 1 : 0 }}
                   animate={{ scale: hovered ? 1.04 : 1 }}
                   transition={{ duration: 0.6 }}
-                  onLoad={() => setImgState("loaded")}
-                  onError={() => setImgState("error")}
                 />
               )}
               {imgState === "error" && <FallbackSvg />}
@@ -357,6 +355,11 @@ function WorksArchive() {
 
   /* Archive lightbox */
   const openArchiveLightbox = useCallback((item) => {
+    // Documents have no image preview, so open them directly instead of in the lightbox
+    if (item.isDoc) {
+      window.open(item.src, '_blank', 'noopener,noreferrer')
+      return
+    }
     let filtered = []
     if (searchQuery) {
       const results = fuse.search(searchQuery)
@@ -368,7 +371,9 @@ function WorksArchive() {
       filtered = (activeCategory === 'all' ? allCategories : allCategories.filter(c => c.id === activeCategory))
         .flatMap(cat => cat.items)
     }
-    
+    // Lightbox navigation skips documents for the same reason
+    filtered = filtered.filter(i => !i.isDoc)
+
     const idx = filtered.findIndex(i => i.src === item.src)
     setLightbox({ ...item, index: idx, items: filtered, fromArchive: true })
   }, [activeCategory, allCategories, searchQuery, fuse])
@@ -380,7 +385,7 @@ function WorksArchive() {
     if (!items) return
     const nextIdx = (lightbox.index + delta + items.length) % items.length
     const item = items[nextIdx]
-    setLightbox({ src: item.src, caption: item.caption, index: nextIdx, items, fromArchive: lightbox.fromArchive })
+    setLightbox({ ...item, index: nextIdx, items, fromArchive: lightbox.fromArchive })
   }
 
   /* Filtered categories/items */

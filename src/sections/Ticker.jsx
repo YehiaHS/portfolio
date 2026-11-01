@@ -14,8 +14,8 @@ export default function Ticker() {
   return (
     <div className="relative bg-ink text-paper py-4 overflow-hidden">
       <motion.div
-        className="flex whitespace-nowrap gap-8 md:gap-14"
-        animate={{ x: [0, -3000] }}
+        className="flex w-max whitespace-nowrap gap-8 md:gap-14"
+        animate={{ x: ['0%', '-33.3333%'] }}
         transition={{ x: { duration: 25, repeat: Infinity, ease: 'linear' } }}
       >
         {doubled.map((item, i) => (

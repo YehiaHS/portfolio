@@ -45,7 +45,7 @@ export function MarqueeStrip() {
   const doubled = text.repeat(6)
   return (
     <div className="relative border-y border-ink/10 bg-paper-dark py-3 overflow-hidden">
-      <motion.div className="flex whitespace-nowrap" animate={{ x: [0, -1500] }} transition={{ x: { duration: 40, repeat: Infinity, ease: 'linear' } }}>
+      <motion.div className="flex w-max whitespace-nowrap" animate={{ x: ['0%', '-16.6667%'] }} transition={{ x: { duration: 40, repeat: Infinity, ease: 'linear' } }}>
         <span className="text-[0.65rem] font-heading font-semibold tracking-[0.2em] text-ink-faint/50 uppercase">{doubled}</span>
       </motion.div>
     </div>
@@ -205,6 +205,10 @@ export function KeyboardShortcuts() {
   const [open, setOpen] = useState(false)
   useEffect(() => {
     const handler = (e) => {
+      // Leave browser shortcuts (Cmd/Ctrl+1..8 tab switching, etc.) and typing in form fields alone
+      if (e.ctrlKey || e.metaKey || e.altKey) return
+      const tag = e.target?.tagName
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || e.target?.isContentEditable) return
       if (e.key === '?' || (e.key === '/' && e.shiftKey)) { e.preventDefault(); setOpen((p) => !p) }
       else if (e.key === 'Escape') setOpen(false)
       else if (e.key === 'Home') window.scrollTo({ top: 0, behavior: 'smooth' })

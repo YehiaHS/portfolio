@@ -145,7 +145,7 @@ export const TextCounter = ({ target, end, duration = 2, suffix = '', className 
       }
     }, 33)
     return () => clearInterval(timer)
-  }, [inView, end, duration])
+  }, [inView, finalEnd, duration])
 
   return <span ref={ref} className={className}>{count}{suffix}</span>
 }

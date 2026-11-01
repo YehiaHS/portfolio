@@ -120,8 +120,8 @@ export const portfolioWorks = [
     description:
       'Official poster design for the British University in Egypt International Student Film Festival, featuring bold typography and cinematic imagery.',
     category: 'Poster Design',
-    thumbnail: getAssetPath('portfolio/festival-posters/New Posters/bue poster banner.png'),
-    media: { type: 'image', src: getAssetPath('portfolio/festival-posters/New Posters/bue poster banner.png') },
+    thumbnail: getAssetPath('festival-posters/New Posters/bue poster banner.png'),
+    media: { type: 'image', src: getAssetPath('festival-posters/New Posters/bue poster banner.png') },
     year: '2024',
     reflection:
       'This project taught me the importance of visual hierarchy in promotional design. Creating a poster for an actual institution rather than a hypothetical brief sharpened my ability to interpret client expectations and translate them into a cohesive visual narrative.',
@@ -133,8 +133,8 @@ export const portfolioWorks = [
     description:
       'Brand identity design for the International Student Film Festival, combining film reel motifs with modern minimalism.',
     category: 'Logo Design',
-    thumbnail: getAssetPath('portfolio/logos/Logo_BUE_Official.png'),
-    media: { type: 'image', src: getAssetPath('portfolio/logos/Logo_BUE_Official.png') },
+    thumbnail: getAssetPath('logos/Logo_BUE_Official.png'),
+    media: { type: 'image', src: getAssetPath('logos/Logo_BUE_Official.png') },
     year: '2024',
     reflection:
       'Designing a logo forced me to distill complex ideas into a single symbolic mark. The iterative process — from initial sketches through multiple critique rounds — improved my visual problem-solving and resilience.',
@@ -146,8 +146,8 @@ export const portfolioWorks = [
     description:
       'Large-scale billboard design for campus-wide festival promotion with high-impact visual hierarchy.',
     category: 'Billboard Design',
-    thumbnail: getAssetPath('portfolio/design-files/POSTER-COMPRESSED.jpg'),
-    media: { type: 'image', src: getAssetPath('portfolio/design-files/POSTER-COMPRESSED.jpg') },
+    thumbnail: getAssetPath('design-files/POSTER-COMPRESSED.jpg'),
+    media: { type: 'image', src: getAssetPath('design-files/POSTER-COMPRESSED.jpg') },
     year: '2024',
     reflection:
       'Scaling a design from poster to billboard required understanding how visual legibility changes with distance and environment. This developed my spatial reasoning and technical production skills.',
@@ -159,8 +159,8 @@ export const portfolioWorks = [
     description:
       'Editorial design project featuring typography exploration and narrative-driven composition.',
     category: 'Book Design',
-    thumbnail: getAssetPath('portfolio/academic/Book_Cover_Sunset_Oasis_English_V2.jpeg'),
-    media: { type: 'image', src: getAssetPath('portfolio/academic/Book_Cover_Sunset_Oasis_English_V2.jpeg') },
+    thumbnail: getAssetPath('academic/Book_Cover_Sunset_Oasis_English_V2.jpeg'),
+    media: { type: 'image', src: getAssetPath('academic/Book_Cover_Sunset_Oasis_English_V2.jpeg') },
     year: '2024',
     reflection:
       'Editorial design pushed me into a different discipline — one where typography, pacing, and narrative structure become the primary tools. Designing a book cover meant capturing the essence of an entire narrative in a single frame.',

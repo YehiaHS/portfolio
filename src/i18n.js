@@ -243,6 +243,8 @@ export const translations = {
     navAwards: 'الجوائز',
     navContact: 'تواصل',
     navWorks: 'الأعمال',
+    whyReachOut: 'لماذا التواصل؟',
+    reachOutText: 'يهتم يحيى بالمساهمة في مشاريع جريئة متعددة التخصصات، حيث تلتقي الحكاية بالتكنولوجيا.',
     backToTop: 'العودة للأعلى',
     emailLabel: 'البريد الإلكتروني',
     phoneLabel: 'الهاتف',
