@@ -4,8 +4,6 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { useLanguage } from './LanguageContext'
 import LanguageSelector from './LanguageSelector'
 
-const stripArrows = (label) => label.replace(/[←→]/g, '').trim()
-
 function MobileMenuItem({ item, index, onClose }) {
   const itemClassName = 'site-nav__mobile-link'
 
@@ -29,7 +27,7 @@ function MobileMenuItem({ item, index, onClose }) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.12 + index * 0.05 }}
     >
-      <a href={item.href} onClick={onClose} className={itemClassName}>
+      <a href={item.href} onClick={onClose} className={itemClassName} download={item.type === 'download' ? '' : undefined}>
         {item.label}
       </a>
     </motion.div>
@@ -76,8 +74,9 @@ export default function Nav() {
     { label: t('skillsTitle'), href: homeHash('skills'), type: 'anchor' },
     { label: t('awardsTitle'), href: homeHash('awards'), type: 'anchor' },
     { label: t('navWorks'), href: '/works', type: 'route' },
-    { label: stripArrows(t('viewPortfolio')), href: '/works', type: 'route' },
-    { label: 'Behind the Scenes', href: '/behind-the-scenes', type: 'route' },
+    { label: t('navBehind'), href: '/behind-the-scenes', type: 'route' },
+    { label: t('navShowreel'), href: '/showreel', type: 'route' },
+    { label: t('navResume'), href: `${import.meta.env.BASE_URL}Yehia_Salem_Resume.pdf`, type: 'download' },
   ]
 
   return (
@@ -99,7 +98,7 @@ export default function Nav() {
                   {link.label}
                 </Link>
               ) : (
-                <a key={`${link.href}-${link.label}`} href={link.href} className="site-nav__link">
+                <a key={`${link.href}-${link.label}`} href={link.href} className="site-nav__link" download={link.type === 'download' ? '' : undefined}>
                   {link.label}
                 </a>
               )

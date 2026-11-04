@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Manrope:wght@200..800&family=Syne:wght@400..800&family=Instrument+Serif:ital@0;1&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -15,7 +13,7 @@
   --paper-darkest: #162319;
   --ink: #d4e4d8;
   --ink-light: #a8b8ac;
-  --ink-faint: #5a6a5e;
+  --ink-faint: #8a9c8e;
   --accent: #4a9f62;
   --accent-deep: #2d6b3f;
   --accent-light: #63b476;
@@ -774,13 +772,13 @@ ol.accent-number li::before {
   }
   100% {
     opacity: 1;
-    transform: translateY(0);
-    filter: blur(0);
+    transform: none;
+    filter: none;
   }
 }
 
 .page-enter {
-  animation: pageReveal 1s var(--ease-out-expo) forwards;
+  animation: pageReveal 1s var(--ease-out-expo) backwards;
 }
 
 .page-enter .page-enter-child {
@@ -1237,36 +1235,6 @@ ol.accent-number li::before {
 }
 
 /* --- Gradient mesh background for hero section --- */
-.hero-mesh {
-  position: relative;
-  overflow: hidden;
-}
-
-.hero-mesh::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  background:
-    radial-gradient(ellipse 80% 60% at 10% 20%, rgba(45, 107, 63, 0.06) 0%, transparent 50%),
-    radial-gradient(ellipse 60% 80% at 85% 15%, rgba(155, 174, 142, 0.05) 0%, transparent 45%),
-    radial-gradient(ellipse 50% 50% at 50% 80%, rgba(74, 159, 98, 0.04) 0%, transparent 40%),
-    radial-gradient(ellipse 70% 40% at 70% 60%, rgba(107, 138, 94, 0.03) 0%, transparent 50%),
-    radial-gradient(ellipse 40% 60% at 30% 40%, rgba(26, 61, 40, 0.03) 0%, transparent 45%);
-  pointer-events: none;
-  animation: meshShift 12s ease-in-out infinite alternate;
-}
-
-.hero-mesh::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  background:
-    linear-gradient(160deg, var(--paper) 0%, transparent 40%),
-    linear-gradient(200deg, rgba(245, 246, 240, 0.9) 0%, transparent 60%);
-  pointer-events: none;
-}
 
 @keyframes meshShift {
   0% {
@@ -1470,8 +1438,6 @@ ol.accent-number li::before {
   .cursor-ring,
   .blob,
   .ampersand-deco,
-  .hero-mesh::before,
-  .hero-mesh::after,
   .botanical-pattern::before {
     display: none !important;
   }
@@ -1567,9 +1533,7 @@ ol.accent-number li::before {
     scroll-behavior: auto !important;
   }
 
-  .blob,
-  .hero-mesh::before,
-  .hero-mesh::after {
+  .blob {
     animation: none !important;
   }
 }
@@ -2490,39 +2454,6 @@ ol.accent-number li::before {
   opacity: 0.06;
 }
 
-/* App.jsx section background overrides */
-.bg-paper { background-color: var(--paper) !important; }
-.bg-paper-dark { background-color: var(--paper-darker) !important; }
-.bg-paper-darker { background-color: var(--paper-darkest) !important; }
-
-/* Override hardcoded light colors used by inline styles & utility classes */
-.bg-\[\#f7f3ee\]\/90 { background-color: rgba(13, 20, 16, 0.92) !important; }
-.bg-white\/60 { background-color: rgba(17, 28, 20, 0.6) !important; }
-.bg-white { background-color: var(--paper-darker) !important; }
-.text-paper { color: var(--ink) !important; }
-.text-paper\/50 { color: rgba(212, 228, 220, 0.5) !important; }
-.text-paper\/40 { color: rgba(212, 228, 220, 0.4) !important; }
-.text-paper\/30 { color: rgba(212, 228, 220, 0.3) !important; }
-.bg-paper-dark\/90 { background-color: rgba(17, 28, 20, 0.9) !important; }
-.bg-paper\/95 { background-color: rgba(13, 20, 16, 0.95) !important; }
-.bg-paper\/90 { background-color: rgba(13, 20, 16, 0.9) !important; }
-
-.border-border, .border-ink\/5 { border-color: rgba(74, 159, 98, 0.1) !important; }
-.border-ink\/6 { border-color: rgba(74, 159, 98, 0.08) !important; }
-.border-ink\/8 { border-color: rgba(74, 159, 98, 0.1) !important; }
-.border-ink\/20 { border-color: rgba(74, 159, 98, 0.15) !important; }
-.border-ink\/10 { border-color: rgba(74, 159, 98, 0.08) !important; }
-.border-paper\/10 { border-color: rgba(74, 159, 98, 0.1) !important; }
-
-/* Hero section backgrounds */
-.bg-\[\#1a3526\] { background-color: #0a0e0c !important; }
-.bg-ink { background-color: var(--ink) !important; }
-.text-ink { color: var(--ink) !important; }
-/* The page is dark, so these light-theme tokens (dark green) would be unreadable on it */
-.text-ink-light { color: var(--ink-light) !important; }
-.text-accent { color: var(--accent) !important; }
-.text-accent\/50 { color: rgba(74, 159, 98, 0.5) !important; }
-
 /* ============================================================
    HERO + NAV REFRESH
    ============================================================ */
@@ -2713,280 +2644,6 @@ html[dir="rtl"] .language-menu__item {
   color: rgba(247, 250, 247, 1);
 }
 
-.hero-section {
-  position: relative;
-  overflow: hidden;
-  background: #061009;
-  min-height: 100svh;
-  padding-top: 5.5rem;
-}
-
-.hero-background,
-.hero-background::before,
-.hero-background::after {
-  position: absolute;
-  inset: 0;
-  content: '';
-}
-
-.hero-background {
-  background:
-    radial-gradient(circle at 74% 44%, rgba(49, 93, 60, 0.42), transparent 28%),
-    radial-gradient(circle at 18% 64%, rgba(42, 78, 50, 0.18), transparent 34%),
-    linear-gradient(90deg, #08120b 0%, #061009 46%, #0b1610 100%);
-  pointer-events: none;
-}
-
-.hero-background::before {
-  background: radial-gradient(circle at 50% 50%, transparent 48%, rgba(0, 0, 0, 0.38) 100%);
-  opacity: 0.9;
-}
-
-.hero-background::after {
-  background-image: linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-  background-size: 180px 180px;
-  opacity: 0.12;
-}
-
-.hero-shell {
-  position: relative;
-  z-index: 1;
-  width: 100%;
-  min-height: calc(100svh - 5.5rem);
-}
-
-.hero-desktop {
-  display: block;
-}
-
-.hero-stage {
-  position: relative;
-  width: min(1700px, calc(100vw - 3rem));
-  min-height: max(760px, calc(100svh - 6rem));
-  margin: 0 auto;
-}
-
-.hero-top-line {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, rgba(242, 239, 232, 0.28), rgba(242, 239, 232, 0.1) 22%, rgba(242, 239, 232, 0.06) 78%, rgba(242, 239, 232, 0.2));
-}
-
-.hero-serial {
-  position: absolute;
-  top: 12%;
-  right: clamp(1rem, 4vw, 4rem);
-  font-family: var(--font-heading);
-  font-size: clamp(11rem, 18vw, 20rem);
-  font-weight: 800;
-  line-height: 0.82;
-  letter-spacing: 0;
-  color: rgba(113, 148, 117, 0.14);
-  user-select: none;
-}
-
-.hero-stats {
-  position: absolute;
-  top: 16%;
-  left: clamp(1rem, 5vw, 5rem);
-  width: clamp(150px, 14vw, 220px);
-  display: grid;
-  gap: clamp(2rem, 4.2vh, 3rem);
-}
-
-.hero-stat {
-  display: grid;
-  gap: 0.55rem;
-}
-
-.hero-stat__value {
-  font-family: var(--font-display);
-  font-size: clamp(3rem, 4.8vw, 5rem);
-  font-weight: 700;
-  line-height: 0.9;
-  color: var(--accent-light);
-}
-
-.hero-stat__label {
-  font-family: var(--font-heading);
-  font-size: clamp(0.72rem, 0.95vw, 1rem);
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: rgba(208, 217, 209, 0.8);
-}
-
-.hero-greeting {
-  position: absolute;
-  top: 18.5%;
-  left: 52.5%;
-  margin: 0;
-  font-family: var(--font-serif-italic);
-  font-size: clamp(2rem, 3vw, 3.4rem);
-  font-style: italic;
-  line-height: 1;
-  color: rgba(247, 242, 235, 0.94);
-  z-index: 4;
-}
-
-.hero-name,
-.hero-surname {
-  position: absolute;
-  margin: 0;
-  line-height: 0.84;
-  letter-spacing: 0;
-}
-
-.hero-name {
-  top: 23%;
-  left: 51%;
-  font-family: var(--font-display);
-  font-size: clamp(7rem, 13vw, 15rem);
-  font-weight: 700;
-  color: rgba(247, 243, 236, 0.98);
-  z-index: 2;
-}
-
-.hero-surname {
-  top: 46%;
-  left: 59%;
-  font-family: var(--font-serif-italic);
-  font-size: clamp(6rem, 10.5vw, 12rem);
-  font-style: italic;
-  color: var(--accent-light);
-  z-index: 5;
-}
-
-.hero-portrait {
-  position: absolute;
-  left: 25.5%;
-  bottom: 0;
-  z-index: 3;
-  width: min(42vw, 720px);
-}
-
-.hero-portrait img {
-  display: block;
-  width: 100%;
-  height: auto;
-  object-fit: contain;
-  filter: drop-shadow(0 32px 80px rgba(0, 0, 0, 0.4));
-}
-
-.hero-copy {
-  position: absolute;
-  top: 58%;
-  left: 66.5%;
-  width: min(28vw, 480px);
-  display: grid;
-  justify-items: start;
-  gap: 0.6rem;
-  z-index: 6;
-}
-
-.hero-tagline,
-.hero-location,
-.hero-actions-caption {
-  margin: 0;
-}
-
-.hero-tagline {
-  font-family: var(--font-heading);
-  font-size: 0.92rem;
-  font-weight: 700;
-  letter-spacing: 0.01em;
-  color: rgba(230, 235, 231, 0.9);
-}
-
-.hero-location {
-  font-family: var(--font-body);
-  font-size: 0.9rem;
-  color: rgba(181, 194, 184, 0.66);
-}
-
-.hero-quote,
-.hero-mobile__quote {
-  margin: 1.25rem 0 0;
-}
-
-.hero-quote p,
-.hero-mobile__quote p {
-  margin: 0;
-  font-family: var(--font-serif-italic);
-  font-size: clamp(1.55rem, 2vw, 2.15rem);
-  line-height: 1.05;
-  color: rgba(180, 190, 180, 0.54);
-}
-
-.hero-quote footer,
-.hero-mobile__quote footer {
-  margin-top: 1.1rem;
-  text-align: right;
-  font-family: var(--font-heading);
-  font-size: 0.58rem;
-  letter-spacing: 0.17em;
-  text-transform: uppercase;
-  color: rgba(180, 190, 180, 0.48);
-}
-
-.hero-actions,
-.hero-mobile__actions {
-  display: flex;
-  align-items: center;
-  gap: 1.15rem;
-  margin-top: 1.45rem;
-}
-
-.hero-pill-link {
-  display: inline-flex;
-  width: clamp(72px, 6vw, 110px);
-  height: clamp(30px, 2.35vw, 42px);
-  border-radius: 3px;
-  background: rgba(247, 243, 236, 0.98);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
-}
-
-.hero-primary-link,
-.hero-secondary-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.55rem;
-  font-family: var(--font-heading);
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: rgba(235, 239, 236, 0.88);
-  text-decoration: none;
-}
-
-.hero-secondary-link {
-  color: rgba(180, 195, 184, 0.76);
-}
-
-.hero-actions-caption {
-  font-family: var(--font-heading);
-  font-size: 0.58rem;
-  letter-spacing: 0.19em;
-  text-transform: uppercase;
-  color: rgba(180, 195, 184, 0.68);
-}
-
-.hero-mobile {
-  display: none;
-}
-
-.hero-mobile__greeting,
-.hero-mobile__name,
-.hero-mobile__surname,
-.hero-mobile__tagline,
-.hero-mobile__location {
-  margin: 0;
-}
-
 @media (max-width: 1220px) {
   .site-nav__links {
     gap: 1rem;
@@ -2994,19 +2651,6 @@ html[dir="rtl"] .language-menu__item {
 
   .site-nav__link {
     font-size: 0.58rem;
-  }
-
-  .hero-stage {
-    width: min(1500px, calc(100vw - 2.25rem));
-  }
-
-  .hero-stats {
-    left: 1.5rem;
-  }
-
-  .hero-copy {
-    left: 64%;
-    width: min(30vw, 430px);
   }
 }
 
@@ -3050,112 +2694,6 @@ html[dir="rtl"] .language-menu__item {
     font-size: 1.4rem;
     color: rgba(247, 243, 236, 0.92);
   }
-
-  .hero-desktop {
-    display: none;
-  }
-
-  .hero-mobile {
-    min-height: calc(100svh - 5.5rem);
-    display: grid;
-    justify-items: center;
-    gap: 0.9rem;
-    padding: 2rem 1.5rem 2.75rem;
-    text-align: center;
-  }
-
-  .hero-mobile__greeting {
-    margin-top: 2.75rem;
-    font-family: var(--font-serif-italic);
-    font-size: clamp(1.6rem, 5vw, 2rem);
-    font-style: italic;
-    color: rgba(247, 242, 235, 0.94);
-  }
-
-  .hero-mobile__name {
-    font-family: var(--font-display);
-    font-size: clamp(4.6rem, 18vw, 7rem);
-    font-weight: 700;
-    line-height: 0.82;
-    color: rgba(247, 243, 236, 0.98);
-  }
-
-  .hero-mobile__portrait {
-    width: min(75vw, 360px);
-    margin-top: -0.2rem;
-  }
-
-  .hero-mobile__portrait img {
-    display: block;
-    width: 100%;
-    height: auto;
-    filter: drop-shadow(0 22px 60px rgba(0, 0, 0, 0.34));
-  }
-
-  .hero-mobile__surname {
-    font-family: var(--font-serif-italic);
-    font-size: clamp(3.8rem, 15vw, 5.5rem);
-    line-height: 0.8;
-    color: var(--accent-light);
-  }
-
-  .hero-mobile__copy {
-    width: min(100%, 420px);
-    display: grid;
-    gap: 0.55rem;
-    justify-items: center;
-  }
-
-  .hero-mobile__tagline {
-    font-family: var(--font-heading);
-    font-size: 1rem;
-    font-weight: 700;
-    color: rgba(230, 235, 231, 0.9);
-  }
-
-  .hero-mobile__location {
-    font-family: var(--font-heading);
-    font-size: 0.72rem;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: rgba(181, 194, 184, 0.7);
-  }
-
-  .hero-mobile__quote p {
-    font-size: clamp(1.3rem, 5vw, 1.7rem);
-  }
-
-  .hero-mobile__stats {
-    width: min(100%, 460px);
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1rem;
-    margin-top: 0.6rem;
-  }
-
-  .hero-mobile__stat {
-    padding: 1rem 0.85rem;
-    border: 1px solid rgba(98, 126, 103, 0.18);
-    border-radius: 0.7rem;
-    background: rgba(9, 16, 11, 0.58);
-    display: grid;
-    gap: 0.35rem;
-  }
-
-  .hero-mobile__stat-value {
-    font-family: var(--font-display);
-    font-size: 2.35rem;
-    line-height: 0.9;
-    color: var(--accent-light);
-  }
-
-  .hero-mobile__stat-label {
-    font-family: var(--font-heading);
-    font-size: 0.64rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: rgba(208, 217, 209, 0.76);
-  }
 }
 
 @media (max-width: 640px) {
@@ -3176,23 +2714,242 @@ html[dir="rtl"] .language-menu__item {
   .site-nav__label {
     display: none;
   }
+}
 
-  .hero-mobile {
-    padding-inline: 1rem;
-  }
+/* ============================================================
+   GARDEN HERO
+   Layers, back to front: name, portrait, canvas, copy.
+   ============================================================ */
 
-  .hero-mobile__actions {
+.garden-hero {
+  position: relative;
+  min-height: 100svh;
+  overflow: hidden;
+  isolation: isolate;
+  background:
+    radial-gradient(60% 70% at 50% 58%, rgba(45, 107, 63, 0.2), transparent 72%),
+    var(--paper);
+}
+
+.garden-name {
+  position: absolute;
+  inset: 12% 0 auto;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  padding-inline: clamp(1.25rem, 2.6vw, 3rem);
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(5rem, 13.4vw, 17rem);
+  font-weight: 340;
+  font-variation-settings: 'opsz' 144;
+  line-height: 0.9;
+  letter-spacing: -0.045em;
+  color: #e6efe7;
+}
+
+.garden-name__first,
+.garden-name__last {
+  display: block;
+}
+
+.garden-portrait {
+  position: absolute;
+  z-index: 2;
+  bottom: 0;
+  left: 50%;
+  width: auto;
+  height: min(80%, 58vw);
+  max-width: none;
+  translate: -50% 0;
+  user-select: none;
+  pointer-events: none;
+}
+
+.garden-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.garden-canvas canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.garden-intro,
+.garden-aside {
+  position: absolute;
+  z-index: 4;
+  bottom: clamp(1.5rem, 4vh, 3rem);
+  width: min(20rem, 23vw);
+  text-shadow: 0 1px 14px rgba(13, 20, 16, 0.95);
+}
+
+.garden-intro {
+  inset-inline-start: clamp(1.25rem, 2.6vw, 3rem);
+}
+
+.garden-aside {
+  inset-inline-end: clamp(1.25rem, 2.6vw, 3rem);
+}
+
+.garden-tagline {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 1.75vw, 1.75rem);
+  font-weight: 380;
+  line-height: 1.2;
+  color: var(--ink);
+}
+
+.garden-location {
+  margin: 0.5rem 0 0;
+  font-size: 0.875rem;
+  color: var(--ink-light);
+}
+
+.garden-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.625rem;
+  margin-top: 1.25rem;
+}
+
+.garden-action {
+  padding: 0.625rem 1.125rem;
+  border: 1px solid rgba(212, 228, 216, 0.32);
+  border-radius: 999px;
+  font-size: 0.875rem;
+  line-height: 1.3;
+  color: var(--ink);
+  background: rgba(13, 20, 16, 0.55);
+  backdrop-filter: blur(6px);
+  transition: background-color var(--duration-normal) var(--ease-smooth), color var(--duration-normal) var(--ease-smooth);
+}
+
+.garden-action:hover {
+  background: rgba(212, 228, 216, 0.14);
+}
+
+.garden-action--primary {
+  border-color: #e6efe7;
+  color: var(--paper);
+  background: #e6efe7;
+}
+
+.garden-action--primary:hover {
+  background: var(--accent-light);
+  border-color: var(--accent-light);
+}
+
+.garden-action:focus-visible,
+.garden-new:focus-visible {
+  outline: 2px solid #ecd27f;
+  outline-offset: 3px;
+}
+
+.garden-new {
+  display: block;
+  margin-top: 0.875rem;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  color: #ecd27f;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.garden-quote {
+  margin: 0;
+  font-family: var(--font-serif-italic);
+  font-size: clamp(1.0625rem, 1.3vw, 1.3125rem);
+  font-style: italic;
+  line-height: 1.35;
+  color: var(--ink);
+}
+
+.garden-quote p {
+  margin: 0;
+}
+
+.garden-quote footer {
+  margin-top: 0.5rem;
+  font-family: var(--font-body);
+  font-size: 0.8125rem;
+  font-style: normal;
+  color: var(--ink-light);
+}
+
+.garden-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.125rem 1rem;
+  padding: 0.875rem 0 0;
+  margin: 0.875rem 0 0;
+  border-top: 1px solid rgba(212, 228, 216, 0.2);
+  list-style: none;
+  font-size: 0.8125rem;
+  color: var(--ink-light);
+}
+
+.garden-facts li {
+  margin: 0;
+  padding: 0;
+}
+
+/* Phones and portrait tablets: first name above the garden, surname across the
+   portrait's lower edge, then the copy in normal flow */
+@media (max-width: 860px), (max-aspect-ratio: 1/1) {
+  .garden-hero {
+    display: flex;
     flex-direction: column;
-    width: 100%;
-    gap: 0.9rem;
+    min-height: 0;
+    padding-top: 4.75rem;
+    background: var(--paper);
   }
 
-  .hero-primary-link,
-  .hero-secondary-link {
-    justify-content: center;
+  /* There's no room for the garden to overlap the name here, so the name goes in front */
+  .garden-name {
+    position: static;
+    z-index: 5;
+    display: block;
+    font-size: 27vw;
+    line-height: 0.82;
+    pointer-events: none;
   }
 
-  .hero-pill-link {
-    width: min(100%, 92px);
+  .garden-name__last {
+    margin-top: 66vw;
+    text-align: end;
+    text-shadow: 0 2px 24px rgba(13, 20, 16, 0.75);
+  }
+
+  .garden-portrait {
+    top: calc(4.75rem + 17vw);
+    bottom: auto;
+    height: 92vw;
+  }
+
+  .garden-intro,
+  .garden-aside {
+    position: relative;
+    inset: auto;
+    width: auto;
+    padding-inline: 1.25rem;
+    text-shadow: none;
+  }
+
+  /* Fades out the portrait's cut edge */
+  .garden-intro {
+    margin-top: -4rem;
+    padding-top: 4.75rem;
+    background: linear-gradient(180deg, transparent, var(--paper) 4rem);
+  }
+
+  .garden-aside {
+    margin-top: 1.75rem;
+    padding-bottom: 2.25rem;
   }
 }

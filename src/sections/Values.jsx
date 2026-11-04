@@ -1,9 +1,7 @@
 /**
  * sections/Values.jsx — Core values / guiding principles section
  */
-import { useRef } from 'react'
-import { motion, useInView } from 'framer-motion'
-import { useLanguage } from '../LanguageContext'
+import { motion } from 'framer-motion'
 import AnimatedSection from '../components/AnimatedSection'
 
 
@@ -32,7 +30,6 @@ const VALUES = [
 ]
 
 export default function Values() {
-  const { t } = useLanguage()
   return (
     <section id="values" className="relative py-20 md:py-28 lg:py-40 px-6 md:px-8 lg:px-12">
       <div className="absolute left-6 md:left-8 lg:left-12 top-0 bottom-0 w-px bg-ink/5" />
@@ -59,7 +56,7 @@ export default function Values() {
               {VALUES.map((v, i) => (
                 <AnimatedSection key={v.title} delay={0.15 + i * 0.1}>
                   <motion.div whileHover={{ y: -4 }} transition={{ duration: 0.3 }} className="editorial-card p-8 md:p-10 flex flex-col gap-4 group">
-                    <div className="text-accent/60 group-hover:text-accent transition-colors duration-300">{v.icon}</div>
+                    <div className="text-accent-light group-hover:text-accent transition-colors duration-300">{v.icon}</div>
                     <h3 className="text-lg font-heading font-semibold text-ink">{v.title}</h3>
                     <p className="text-sm text-ink-light font-light leading-relaxed">{v.desc}</p>
                   </motion.div>

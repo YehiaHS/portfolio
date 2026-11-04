@@ -16,6 +16,7 @@ const expectedPaths = [
   'index.html',
   '404.html',
   'favicon.svg',
+  'Yehia_Salem_Resume.pdf',
   'assets',
   'images/hero-pattern.svg',
   'images/monogram-frame.svg',
@@ -35,6 +36,18 @@ assert(assetFiles.some((file) => file.endsWith('.css')), 'No CSS bundle was gene
 
 const indexHtml = readFileSync(join(dist, 'index.html'), 'utf8')
 assert(indexHtml.includes('/portfolio/'), 'index.html is missing the GitHub Pages base path')
+
+// Only sites with the Drive sync configured have a manifest, but when there is one every file must exist
+const driveManifest = join(dist, 'drive', 'manifest.json')
+if (existsSync(driveManifest)) {
+  for (const category of JSON.parse(readFileSync(driveManifest, 'utf8')).categories) {
+    for (const item of category.items) {
+      for (const name of [item.src, item.thumb, item.poster]) {
+        if (name && !name.startsWith('http')) assert(existsSync(join(dist, 'drive', name)), `Missing Drive file: ${name}`)
+      }
+    }
+  }
+}
 
 const flattenedMediaDir = join(dist, 'photos')
 assert(statSync(flattenedMediaDir).isDirectory(), 'Portfolio media was not copied into dist/')

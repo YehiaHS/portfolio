@@ -15,6 +15,11 @@ const portfolioWorks = _portfolioWorks;
 
 export const translations = {
   en: {
+    navBehind: 'Behind the Scenes',
+    navShowreel: 'Showreel',
+    navResume: 'Resume',
+    completeWorks: 'Complete Works',
+    justAdded: 'Just added',
     home: 'Home',
     portfolio: 'Portfolio',
     viewPortfolio: 'View Portfolio →',
@@ -142,6 +147,11 @@ export const translations = {
     ],
   },
   ar: {
+    navBehind: 'خلف الكواليس',
+    navShowreel: 'العرض التجميعي',
+    navResume: 'السيرة الذاتية',
+    completeWorks: 'جميع الأعمال',
+    justAdded: 'أضيف حديثًا',
     home: 'الرئيسية',
     portfolio: 'معرض الأعمال',
     viewPortfolio: 'عرض معرض الأعمال ←',
@@ -151,7 +161,7 @@ export const translations = {
     contactMe: 'تواصل معي',
     email: 'البريد الإلكتروني',
     phone: 'الهاتف',
-    location: 'الموقع',
+    location: 'مصر الجديدة، القاهرة، مصر',
     skillsTitle: 'المهارات والخبرات',
     awardsTitle: 'الجوائز والتقدير',
     educationTitle: 'التعليم',
@@ -305,6 +315,11 @@ export const translations = {
     ],
   },
   fr: {
+    navBehind: 'Coulisses',
+    navShowreel: 'Showreel',
+    navResume: 'CV',
+    completeWorks: 'Toutes les œuvres',
+    justAdded: 'Nouveau',
     home: 'Accueil',
     portfolio: 'Portfolio',
     viewPortfolio: 'Voir le Portfolio →',
@@ -314,7 +329,7 @@ export const translations = {
     contactMe: 'Contactez-moi',
     email: 'E-mail',
     phone: 'Téléphone',
-    location: 'Localisation',
+    location: 'Héliopolis, Le Caire, Égypte',
     skillsTitle: 'Compétences et Expertise',
     awardsTitle: 'Prix et Reconnaissance',
     educationTitle: 'Éducation',

@@ -1,8 +1,7 @@
 /**
  * sections/Awards.jsx — Awards & Recognition section
  */
-import { useRef } from 'react'
-import { motion, useInView } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { useLanguage } from '../LanguageContext'
 import AnimatedSection from '../components/AnimatedSection'
 
@@ -63,17 +62,17 @@ export default function Awards() {
                               </svg>
                             </span>
                           )}
-                          <span className={`page-number mt-1 ${isIelts ? 'text-accent/70' : 'opacity-40 group-hover:opacity-100 transition-opacity'}`}>
+                          <span className={`page-number mt-1 ${isIelts ? 'text-accent-light' : 'opacity-40 group-hover:opacity-100 transition-opacity'}`}>
                             {String(i + 1).padStart(2, '0')}
                           </span>
                           <div>
                             <h4 className={`text-lg md:text-xl font-medium transition-colors ${isIelts ? 'text-accent font-semibold' : 'text-ink group-hover:text-accent'}`}>
                               {award.name}
                             </h4>
-                            {isIelts && <p className="text-xs text-accent/60 font-light mt-1">Highest recognition &mdash; exceptional English proficiency</p>}
+                            {isIelts && <p className="text-xs text-accent-light font-light mt-1">Highest recognition &mdash; exceptional English proficiency</p>}
                           </div>
                         </div>
-                        <span className={`page-number flex-shrink-0 ${isIelts ? 'text-accent/60' : ''}`}>{award.year}</span>
+                        <span className={`page-number flex-shrink-0 ${isIelts ? 'text-accent-light' : ''}`}>{award.year}</span>
                       </div>
                     </motion.div>
                   </AnimatedSection>

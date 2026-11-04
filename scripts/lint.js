@@ -5,7 +5,7 @@ import { fileURLToPath } from 'url'
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const root = join(__dirname, '..')
 const eslintBin = join(root, 'node_modules', 'eslint', 'bin', 'eslint.js')
-const targets = ['scripts', '.eslintrc.cjs', 'vite.config.js', 'postcss.config.js', 'tailwind.config.js']
+const targets = ['src', 'scripts', '.eslintrc.cjs', 'vite.config.js', 'postcss.config.js', 'tailwind.config.js']
 
 execFileSync(
   process.execPath,

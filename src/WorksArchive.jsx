@@ -1,14 +1,14 @@
 import { useState, useRef, useEffect, useMemo, useCallback } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { motion, AnimatePresence, useScroll, useTransform, useInView } from 'framer-motion'
+import { Link } from 'react-router-dom'
+import { motion, AnimatePresence, useScroll, useInView } from 'framer-motion'
 import { useLanguage } from './LanguageContext'
 import LanguageSelector from './LanguageSelector'
 import Cursor from './Cursor'
-import { prepareWithSegments, layoutWithLines } from '@chenglou/pretext'
 import { FEATURED_WORKS, getArchiveCategories } from './data/archiveData'
 import ImageCard from './components/ImageCard'
 import Lightbox from './components/Lightbox'
 import { useImageLoader } from './hooks/useImageLoader'
+import { latestItems, mergeCategories, useDriveCategories } from './data/driveContent'
 import Fuse from 'fuse.js'
 
 /* ──────────────── FEATURED WORKS (from Portfolio showcase) ──────────────── */
@@ -21,8 +21,8 @@ const D = {
   border: 'rgba(45, 107, 63, 0.1)',
   borderLight: 'rgba(45, 107, 63, 0.05)',
   text: '#c8d8cc',
-  muted: '#7a8a7e',
-  faint: '#3a4a3e',
+  muted: '#a8b8ac',
+  faint: '#8a9c8e',
   accent: '#4a9f62',
   accentDeep: '#2d6b3f',
   cardBgLight: '#111c14',
@@ -74,16 +74,6 @@ const FeaturedWorkItem = ({ work, index, onClick }) => {
   const [showReflection, setShowReflection] = useState(false)
   const [expanded, setExpanded] = useState(false)
 
-  const titleWidth = useMemo(() => {
-    try {
-      const p = prepareWithSegments(work.title, '1.25rem "Fraunces"')
-      const { lines } = layoutWithLines(p, 2000, 22)
-      const w = Math.max(...lines.map(l => l.width), 1)
-      return w.toFixed(0)
-    } catch { return null }
-  }, [work.title])
-
-
 
   return (
     <motion.div ref={ref}
@@ -106,23 +96,36 @@ const FeaturedWorkItem = ({ work, index, onClick }) => {
       <div className="relative z-10 pt-8">
         {/* Category label */}
         <div className="flex items-center gap-3 mb-6">
-          <span className="page-number" style={{ color: '#2d5a3d60' }}>{String(index + 1).padStart(2, '0')}</span>
+          <span className="page-number" style={{ color: D.faint }}>{String(index + 1).padStart(2, '0')}</span>
           <div className="h-px flex-1" style={{ backgroundColor: '#2d5a3d10' }} />
           <motion.span className="text-[0.6rem] uppercase tracking-widest page-number"
             animate={{ y: hovered ? 0 : 4, opacity: hovered ? 1 : 0.6 }}
             transition={{ duration: 0.4 }}
-            style={{ color: '#2d5a3d' }}
+            style={{ color: D.muted }}
           >
             {work.category}
           </motion.span>
-          <span className="page-number" style={{ color: '#2d5a3d60' }}>{work.year}</span>
+          <span className="page-number" style={{ color: D.faint }}>{work.year}</span>
         </div>
 
         {/* Image / Video */}
-        <div className="relative aspect-[4/3] overflow-hidden mb-6 cursor-pointer" onClick={() => onClick(index)}>
+        <div
+          className="relative aspect-[4/3] overflow-hidden mb-6 cursor-pointer"
+          role="button"
+          tabIndex={0}
+          aria-label={work.title}
+          onClick={() => onClick(index)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault()
+              onClick(index)
+            }
+          }}
+        >
           {work.isVideo ? (
             <video 
               src={work.src} 
+              preload="metadata"
               muted 
               loop 
               playsInline 
@@ -164,31 +167,24 @@ const FeaturedWorkItem = ({ work, index, onClick }) => {
         {/* Title */}
         <div className="flex items-baseline gap-3 mb-2">
           <h3 className="text-2xl md:text-4xl font-display tracking-tight leading-tight" style={{ color: D.text }}>{work.title}</h3>
-          {titleWidth && (
-            <span className="page-number hidden md:inline-flex items-center gap-1 px-1.5 py-0.5 border rounded-sm flex-shrink-0"
-              style={{ borderColor: '#2d5a3d15', color: '#2d5a3d30', fontSize: '0.5rem' }}
-              title={work.title}>
-              {titleWidth}px
-            </span>
-          )}
         </div>
 
         {/* Description with expand */}
-        <p className={`text-sm leading-relaxed mb-3 font-light max-w-2xl ${expanded ? '' : 'line-clamp-3'}`} style={{ color: '#2d5a3d' }}>
+        <p className={`text-sm leading-relaxed font-light max-w-2xl ${expanded ? '' : 'line-clamp-3'}`} style={{ color: D.muted }}>
           {work.description}
-          {work.description.length > 120 && (
-            <button onClick={() => setExpanded(!expanded)} className="inline ml-1 underline" style={{ color: D.accent }}>
-              {expanded ? 'less' : 'more'}
-            </button>
-          )}
         </p>
+        {work.description.length > 120 && (
+          <button onClick={() => setExpanded(!expanded)} className="text-sm underline mt-1" style={{ color: D.accent }}>
+            {expanded ? 'less' : 'more'}
+          </button>
+        )}
 
         {/* Reflection toggle */}
         <button onClick={() => setShowReflection(!showReflection)}
           className="flex items-center gap-2 mt-4 mb-2">
-          <span className="text-sm font-light hover:transition-colors" style={{ color: '#2d5a3d' }}
+          <span className="text-sm font-light hover:transition-colors" style={{ color: D.muted }}
             onMouseEnter={e => e.currentTarget.style.color = D.accent}
-            onMouseLeave={e => e.currentTarget.style.color = '#2d5a3d'}
+            onMouseLeave={e => e.currentTarget.style.color = D.muted}
           >
             {showReflection ? t('closeReflection') : t('reflection')}
           </span>
@@ -202,12 +198,12 @@ const FeaturedWorkItem = ({ work, index, onClick }) => {
               exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.4 }} className="overflow-hidden">
               <div className="pb-4 pt-2">
                 <h4 className="font-display italic text-lg mb-3" style={{ color: D.accent }}>{t('reflection')}</h4>
-                <p className="text-sm leading-relaxed font-light" style={{ color: '#2d5a3d' }}>{work.reflection}</p>
+                <p className="text-sm leading-relaxed font-light" style={{ color: D.muted }}>{work.reflection}</p>
                 {work.skillsGained && (
                   <div className="mt-4 flex flex-wrap gap-2">
                     {work.skillsGained.map(s => (
                       <span key={s} className="px-3 py-1 text-[0.6rem] page-number border rounded-sm"
-                        style={{ borderColor: '#2d5a3d15', color: '#2d5a3d', background: D.cardBg }}>{s}</span>
+                        style={{ borderColor: '#2d5a3d15', color: D.muted, background: D.cardBg }}>{s}</span>
                     ))}
                   </div>
                 )}
@@ -226,7 +222,7 @@ const FeaturedWorkItem = ({ work, index, onClick }) => {
 /* Removed code block */
 
 /* ──────────────── WORKS STATS BAR ──────────────── */
-const WorksStats = ({ totalItems, totalCategories, featuredCount, viewMode }) => (
+const WorksStats = ({ totalItems, shownItems, totalCategories, featuredCount, viewMode }) => (
   <motion.div
     initial={{ opacity: 0, y: 10 }}
     animate={{ opacity: 1, y: 0 }}
@@ -251,7 +247,7 @@ const WorksStats = ({ totalItems, totalCategories, featuredCount, viewMode }) =>
         </div>
       </div>
       <div className="page-number hidden md:block" style={{ color: D.faint }}>
-        {viewMode === 'showcase' ? 'Scroll to explore' : `Showing ${totalItems} works`}
+        {viewMode === 'showcase' ? 'Scroll to explore' : `Showing ${shownItems} works`}
       </div>
     </div>
   </motion.div>
@@ -259,7 +255,6 @@ const WorksStats = ({ totalItems, totalCategories, featuredCount, viewMode }) =>
 
 /* ──────────────── CATEGORY SECTION ──────────────── */
 const CategorySection = ({ category, index, onImageClick, isSearchResult }) => {
-  const { t } = useLanguage()
   const sectionRef = useRef(null)
   const isInView = useInView(sectionRef, { once: true, margin: '-10%' })
 
@@ -285,7 +280,7 @@ const CategorySection = ({ category, index, onImageClick, isSearchResult }) => {
               key={item.src} 
               {...item}
               index={i} 
-              badge={isSearchResult ? item.categoryLabel : null}
+              badge={isSearchResult ? item.categoryLabel : item.isNew ? 'New' : null}
               onClick={onImageClick} 
             />
           ))}
@@ -305,11 +300,11 @@ const Divider = () => (
 /* ──────────────── UNIFIED WORKS PAGE ──────────────── */
 function WorksArchive() {
   const { t } = useLanguage()
-  const navigate = useNavigate()
   const { scrollYProgress } = useScroll()
-  const scrollPercent = useTransform(scrollYProgress, [0, 1], [0, 100])
 
-  const allCategories = useMemo(() => getArchiveCategories(), [])
+  const driveCategories = useDriveCategories()
+  const allCategories = useMemo(() => mergeCategories(getArchiveCategories(), driveCategories), [driveCategories])
+  const justAdded = useMemo(() => latestItems(driveCategories, 6), [driveCategories])
   const totalItems = allCategories.reduce((s, c) => s + c.items.length, 0)
 
   // Flattened items for global fuzzy search
@@ -336,6 +331,16 @@ function WorksArchive() {
   const [searchQuery, setSearchQuery] = useState('')
   const [lightbox, setLightbox] = useState(null)
   const [viewMode, setViewMode] = useState('showcase') // 'showcase' or 'archive'
+
+  // Switching modes swaps the whole page, so don't leave the reader stranded mid-way down it
+  const isFirstRender = useRef(true)
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false
+      return
+    }
+    window.scrollTo({ top: 0, behavior: 'instant' })
+  }, [viewMode])
 
   /* Featured works lightbox */
   const handleFeaturedClick = useCallback((idx) => {
@@ -422,7 +427,7 @@ function WorksArchive() {
   }, [searchQuery, activeCategory, allCategories, fuse])
 
   return (
-    <div className="relative min-h-screen cursor-none page-enter" style={{ background: D.bg, color: D.text }}>
+    <div className="relative min-h-screen cursor-none" style={{ background: D.bg, color: D.text }}>
       <Cursor />
 
       {/* Reading progress bar */}
@@ -467,7 +472,7 @@ function WorksArchive() {
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }}>
                 <span className="section-number" style={{ color: D.accent }}>Works</span>
                 <div className="w-8 h-px my-4" style={{ background: `${D.accent}66` }} />
-                <p className="page-number" style={{ color: D.muted }}>{viewMode === 'showcase' ? `${FEATURED_WORKS.length} featured works` : `${resultsCount} works across ${filteredContent.length} sections`}</p>
+                <p className="page-number" style={{ color: D.muted }}>{viewMode === 'showcase' ? `${FEATURED_WORKS.length} featured works` : (searchQuery ? `${resultsCount} results` : `${resultsCount} works across ${filteredContent.length} sections`)}</p>
               </motion.div>
             </div>
             <div className="col-span-12 md:col-span-8 lg:col-span-9">
@@ -485,12 +490,24 @@ function WorksArchive() {
       </motion.header>
 
       {/* Stats bar */}
-      <WorksStats totalItems={totalItems} totalCategories={allCategories.length} featuredCount={FEATURED_WORKS.length} viewMode={viewMode} />
+      <WorksStats totalItems={totalItems} shownItems={resultsCount} totalCategories={allCategories.length} featuredCount={FEATURED_WORKS.length} viewMode={viewMode} />
 
       {/* Showcase mode */}
       {viewMode === 'showcase' && (
         <>
           <Divider />
+          {justAdded.length > 0 && (
+            <section className="px-6 md:px-12 pt-10 pb-4">
+              <div className="mx-auto max-w-7xl">
+                <h2 className="font-display text-2xl md:text-3xl mb-6" style={{ color: D.text }}>{t('justAdded')}</h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {justAdded.map((item, i) => (
+                    <ImageCard key={item.src} {...item} index={i} onClick={openArchiveLightbox} />
+                  ))}
+                </div>
+              </div>
+            </section>
+          )}
           <div className="mx-auto max-w-7xl px-6 md:px-12 pt-8">
             <div className="flex items-center justify-between">
               <p className="page-number text-sm" style={{ color: D.muted }}>Featured Projects</p>
@@ -671,6 +688,7 @@ function WorksArchive() {
             src={lightbox.src} 
             caption={lightbox.caption}
             isVideo={lightbox.isVideo}
+            isEmbed={lightbox.isEmbed}
             driveFallback={lightbox.driveFallback}
             onClose={() => setLightbox(null)}
             onPrev={lightbox.items && lightbox.index > 0 ? () => navLightbox(-1) : null}

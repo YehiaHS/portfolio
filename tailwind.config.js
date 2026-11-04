@@ -7,14 +7,15 @@ export default {
   theme: {
     extend: {
       colors: {
-        paper: '#f5f5f0',
-        'paper-dark': '#eeefe9',
-        ink: '#0d1a0f',
-        'ink-light': '#3a4f3e',
-        'ink-faint': '#7a8f7e',
-        accent: '#2d5a3d',
-        'accent-deep': '#1a3526',
-        'accent-light': '#4a8f5c',
+        paper: '#0d1410',
+        'paper-dark': '#111c14',
+        'paper-darker': '#162319',
+        ink: '#d4e4d8',
+        'ink-light': '#a8b8ac',
+        'ink-faint': '#8a9c8e',
+        accent: '#4a9f62',
+        'accent-deep': '#2d6b3f',
+        'accent-light': '#63b476',
         'accent-muted': '#6ea67e',
         sage: '#6b7e5e',
         'sage-light': '#8fa67e',

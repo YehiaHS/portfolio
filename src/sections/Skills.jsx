@@ -1,8 +1,7 @@
 /**
  * sections/Skills.jsx — Skills & Capabilities section
  */
-import { useRef } from 'react'
-import { motion, useInView } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { useLanguage } from '../LanguageContext'
 import { ColoredPanel } from '../C2Patterns.jsx'
 import AnimatedSection from '../components/AnimatedSection'
@@ -54,7 +53,7 @@ export default function Skills() {
               <div className="grid gap-px bg-ink/5">
                 {profile.skills.map((skill, i) => (
                   <AnimatedSection key={skill.title} delay={i * 0.12}>
-                    <div className="bg-paper p-8 md:p-10 group hover:bg-white transition-colors duration-500">
+                    <div className="bg-paper p-8 md:p-10 group hover:bg-paper-darker transition-colors duration-500">
                       <div className="flex flex-col md:flex-row md:items-start gap-6">
                         <div className="flex items-start gap-4 md:min-w-[200px]">
                           <span className="page-number mt-1">{String(i + 1).padStart(2, '0')}</span>
@@ -90,7 +89,7 @@ export default function Skills() {
                   <div className="flex flex-wrap gap-2">
                     {TOOL_TAGS.map((tool, i) => (
                       <motion.span key={tool} initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: i * 0.03 }}
-                        className="px-3 py-1.5 bg-white border border-ink/8 text-xs font-light text-ink-light hover:border-accent/40 hover:text-accent hover:bg-accent/[0.03] transition-all duration-300 cursor-default">
+                        className="px-3 py-1.5 bg-paper-dark border border-ink/10 text-xs font-light text-ink-light hover:border-accent/40 hover:text-accent hover:bg-accent/[0.03] transition-all duration-300 cursor-default">
                         {tool}
                       </motion.span>
                     ))}

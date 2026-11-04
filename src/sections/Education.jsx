@@ -1,8 +1,7 @@
 /**
  * sections/Education.jsx — Education & Academic History section
  */
-import { useRef } from 'react'
-import { motion, useInView } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { useLanguage } from '../LanguageContext'
 import AnimatedSection from '../components/AnimatedSection'
 
@@ -54,7 +53,7 @@ export default function Education() {
                     </div>
                     <h3 className="text-xl md:text-2xl text-ink mb-3 leading-tight">{item.degree}</h3>
                     <p className="text-sm text-ink-faint font-light">{item.institution}</p>
-                    {item.location && <p className="text-xs text-ink-faint/60 mt-2 font-light">{item.location}</p>}
+                    {item.location && <p className="text-xs text-ink-faint mt-2 font-light">{item.location}</p>}
                     <div className="mt-6 h-px bg-ink/5 relative">
                       <motion.div
                         className="absolute left-0 top-0 bottom-0 bg-accent/40"

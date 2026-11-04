@@ -1,8 +1,7 @@
 /**
  * sections/VisualMoments.jsx — Abstract SVG gallery strip ("Behind the Scenes")
  */
-import { useRef } from 'react'
-import { motion, useInView } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { ColoredPanel } from '../C2Patterns.jsx'
 import { TextSampleDensity } from '../pretextUtils.jsx'
 import AnimatedSection from '../components/AnimatedSection'

@@ -22,7 +22,7 @@ export const LanguageProvider = ({ children }) => {
   const isRTL = current?.rtl || false;
 
   useEffect(() => {
-    try { localStorage.setItem('lang', language); } catch {}
+    try { localStorage.setItem('lang', language); } catch { /* storage unavailable */ }
     document.documentElement.dir = isRTL ? 'rtl' : 'ltr';
     document.documentElement.lang = language;
   }, [language, isRTL]);

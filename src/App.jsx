@@ -14,6 +14,7 @@ import { Grain, BotanicalBreak, MarqueeStrip, GeometricPatternBand, DecorativeEm
 
 // Sections (in render order)
 import Hero from './sections/Hero.jsx'
+import JustAdded from './sections/JustAdded.jsx'
 import Ticker from './sections/Ticker.jsx'
 import About from './sections/About.jsx'
 import Skills from './sections/Skills.jsx'
@@ -30,7 +31,7 @@ export default function App() {
   const { scrollYProgress } = useScroll()
 
   return (
-    <div className="relative min-h-screen text-ink page-enter">
+    <div className="relative min-h-screen text-ink">
       <motion.div
         className="scroll-progress-bar"
         style={{ scaleX: scrollYProgress }}
@@ -46,6 +47,7 @@ export default function App() {
 
       {/* Page sections */}
       <Hero />
+      <JustAdded />
       <Ticker />
       <About />
       <BotanicalBreak />

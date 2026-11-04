@@ -1,5 +1,5 @@
-import { useState, useRef, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { useRef } from 'react'
+import { motion } from 'framer-motion'
 
 /* ────────────────────── COLORED PANEL ────────────────────── */
 // C2MTL: Full-width colored section panels with dot texture
@@ -54,11 +54,6 @@ export const GhostButton = ({ children, variant = 'default', onClick, className 
 export const HCarousel = ({ children, className = '' }) => {
   const trackRef = useRef(null)
 
-  const scroll = (dir) => {
-    if (trackRef.current) {
-      trackRef.current.scrollBy({ left: dir * 350, behavior: 'smooth' })
-    }
-  }
 
   return (
     <div className={`h-carousel ${className}`}>
@@ -69,9 +64,10 @@ export const HCarousel = ({ children, className = '' }) => {
   )
 }
 
-HCarousel.Item = ({ children, className = '' }) => (
+const HCarouselItem = ({ children, className = '' }) => (
   <div className={`h-carousel__item ${className}`}>{children}</div>
 )
+HCarousel.Item = HCarouselItem
 
 /* ────────────────────── COUNTDOWN NUMBER ────────────────────── */
 // C2MTL: Large display number with small label

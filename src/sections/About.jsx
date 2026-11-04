@@ -5,8 +5,7 @@
  * quick-facts row, and pull-quote. Powered by pretext for text metrics.
  */
 
-import { useRef } from 'react'
-import { motion, useInView } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { MaskReveal } from '../motionEffects.jsx'
 import { useLanguage } from '../LanguageContext'
 import { ReadingBadge, TextDensityBar } from '../pretextUtils.jsx'
@@ -122,7 +121,7 @@ export default function About() {
                       { icon: <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="12" cy="12" r="10" /><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" /></svg>, text: 'UTC+2 Cairo' },
                       { icon: <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg>, text: 'Age ~22' },
                     ].map((fact) => (
-                      <span key={fact.text} className="inline-flex items-center gap-2 px-3 py-2 bg-white border border-ink/8 text-xs text-ink-light font-light rounded-sm">
+                      <span key={fact.text} className="inline-flex items-center gap-2 px-3 py-2 bg-paper-dark border border-ink/10 text-xs text-ink-light font-light rounded-sm">
                         {fact.icon}{fact.text}
                       </span>
                     ))}
@@ -169,7 +168,7 @@ export default function About() {
       {/* Decorative pull-quote */}
       <div className="mt-24 md:mt-32 text-center">
         <AnimatedSection>
-          <p className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-italic italic text-ink/15 leading-tight max-w-4xl mx-auto">
+          <p className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-italic italic text-ink/70 leading-tight max-w-4xl mx-auto">
             &ldquo;The best work lives where disciplines collide.&rdquo;
           </p>
         </AnimatedSection>

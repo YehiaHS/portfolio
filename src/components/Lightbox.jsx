@@ -9,7 +9,7 @@ const resolvePath = (path) => {
   return `${base}${path.startsWith('/') ? '' : '/'}${path}`;
 };
 
-export default function Lightbox({ src, caption, onClose, onPrev, onNext, isVideo, driveFallback }) {
+export default function Lightbox({ src, caption, onClose, onPrev, onNext, isVideo, isEmbed, driveFallback }) {
   const closeRef = useRef(null);
 
   // Move focus into the dialog so keyboard input no longer reaches the card behind it,
@@ -56,10 +56,10 @@ export default function Lightbox({ src, caption, onClose, onPrev, onNext, isVide
               href={driveFallback} 
               target="_blank" 
               rel="noopener noreferrer" 
-              className="text-[0.6rem] uppercase tracking-widest text-accent hover:text-accent-deep transition-colors flex items-center gap-1.5"
+              className="text-[0.6rem] uppercase tracking-widest text-accent hover:text-accent-light transition-colors flex items-center gap-1.5"
             >
               <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" /><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" /></svg>
-              Mirror: Google Drive (Original Quality)
+              {driveFallback.startsWith('http') ? 'Mirror: Google Drive (Original Quality)' : 'Full-size original'}
             </a>
           )}
         </div>
@@ -67,19 +67,27 @@ export default function Lightbox({ src, caption, onClose, onPrev, onNext, isVide
           ref={closeRef}
           onClick={onClose}
           aria-label="Close"
-          className="text-3xl text-paper hover:text-accent transition-colors w-10 h-10 flex items-center justify-center"
+          className="text-3xl text-ink hover:text-accent transition-colors w-10 h-10 flex items-center justify-center"
         >
           &times;
         </button>
       </div>
       
-      <div className="flex items-center justify-center p-12 pt-14" onClick={e => e.stopPropagation()}>
-        {isVideo ? (
+      <div className="flex items-center justify-center p-4 pt-14 md:p-12 md:pt-14" onClick={e => e.stopPropagation()}>
+        {isEmbed ? (
+          <iframe
+            src={resolvedSrc}
+            title={caption}
+            allow="autoplay; fullscreen"
+            allowFullScreen
+            className="w-[90vw] max-w-[1100px] aspect-video rounded-sm border-0 bg-black"
+          />
+        ) : isVideo ? (
           <video 
             src={resolvedSrc} 
             controls 
             autoPlay 
-            className="max-h-[80vh] max-w-[75vw] rounded-sm shadow-2xl overflow-hidden" 
+            className="max-h-[80vh] max-w-[90vw] md:max-w-[75vw] rounded-sm shadow-2xl overflow-hidden" 
             onClick={e => e.stopPropagation()}
             style={{ borderRadius: '4px', background: '#000' }}
           />
@@ -88,8 +96,7 @@ export default function Lightbox({ src, caption, onClose, onPrev, onNext, isVide
             src={resolvedSrc} 
             alt={caption} 
             decoding="async"
-            style={{ maxHeight: '80vh', maxWidth: '75vw' }}
-            className="object-contain rounded-sm shadow-2xl"
+            className="max-h-[80vh] max-w-[90vw] md:max-w-[75vw] object-contain rounded-sm shadow-2xl"
             onClick={e => e.stopPropagation()}
           />
         )}
@@ -99,7 +106,7 @@ export default function Lightbox({ src, caption, onClose, onPrev, onNext, isVide
         <button 
           onClick={e => { e.stopPropagation(); onPrev(); }}
           aria-label="Previous image"
-          className="absolute left-4 top-1/2 -translate-y-1/2 text-5xl text-paper opacity-40 hover:opacity-100 transition-opacity z-20"
+          className="absolute left-4 top-1/2 -translate-y-1/2 text-5xl text-ink opacity-40 hover:opacity-100 transition-opacity z-20"
         >
           &larr;
         </button>
@@ -109,7 +116,7 @@ export default function Lightbox({ src, caption, onClose, onPrev, onNext, isVide
         <button 
           onClick={e => { e.stopPropagation(); onNext(); }}
           aria-label="Next image"
-          className="absolute right-4 top-1/2 -translate-y-1/2 text-5xl text-paper opacity-40 hover:opacity-100 transition-opacity z-20"
+          className="absolute right-4 top-1/2 -translate-y-1/2 text-5xl text-ink opacity-40 hover:opacity-100 transition-opacity z-20"
         >
           &rarr;
         </button>

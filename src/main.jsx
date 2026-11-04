@@ -1,15 +1,16 @@
-import React from 'react'
+import React, { Suspense, lazy } from 'react'
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, MotionConfig, motion } from 'framer-motion'
 import { LanguageProvider } from './LanguageContext.jsx'
 import App from './App.jsx'
-import BehindTheScenes from './BehindTheScenes.jsx'
-import WorksArchive from './WorksArchive.jsx'
-import Showreel from './Showreel.jsx'
 import ErrorBoundary from './ErrorBoundary.jsx'
 import ScrollToTop from './components/ScrollToTop.jsx'
 import './index.css'
+
+const BehindTheScenes = lazy(() => import('./BehindTheScenes.jsx'))
+const WorksArchive = lazy(() => import('./WorksArchive.jsx'))
+const Showreel = lazy(() => import('./Showreel.jsx'))
 
 const basename = import.meta.env.BASE_URL
 
@@ -25,6 +26,7 @@ const AnimatedRoutes = () => {
         transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
         className="page-enter"
       >
+        <Suspense fallback={<div className="min-h-screen" />}>
         <Routes>
           <Route path="/" element={<App />} />
           <Route path="/works" element={<WorksArchive />} />
@@ -32,6 +34,7 @@ const AnimatedRoutes = () => {
           <Route path="/showreel" element={<Showreel />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
+        </Suspense>
       </motion.div>
     </AnimatePresence>
   )
@@ -42,8 +45,10 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <ErrorBoundary>
       <LanguageProvider>
         <BrowserRouter basename={basename}>
-          <ScrollToTop />
-          <AnimatedRoutes />
+          <MotionConfig reducedMotion="user">
+            <ScrollToTop />
+            <AnimatedRoutes />
+          </MotionConfig>
         </BrowserRouter>
       </LanguageProvider>
     </ErrorBoundary>

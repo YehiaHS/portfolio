@@ -5,6 +5,9 @@ on:
     branches: ['main']
   push:
     branches: ['main']
+  schedule:
+    # Picks up new files in the Google Drive folder. GitHub may delay these runs by a few minutes.
+    - cron: '*/30 * * * *'
   workflow_dispatch:
 
 concurrency:
@@ -14,6 +17,7 @@ concurrency:
 
 jobs:
   verify:
+    if: github.event_name == 'push' || github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -26,9 +30,35 @@ jobs:
       - run: npm ci
       - run: npm run check
 
+  # Cheap comparison so a quiet Drive folder doesn't republish 300 MB of site every 30 minutes
+  drive-check:
+    if: github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      changed: ${{ steps.check.outputs.changed }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: scripts
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+      - id: check
+        run: node scripts/sync-drive.js --check
+        env:
+          DRIVE_API_KEY: ${{ secrets.DRIVE_API_KEY }}
+          DRIVE_FOLDER_ID: ${{ secrets.DRIVE_FOLDER_ID }}
+
   deploy:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    needs: verify
+    needs: [verify, drive-check]
+    if: >-
+      !cancelled() && github.ref == 'refs/heads/main' && (
+        (github.event_name == 'push' && needs.verify.result == 'success') ||
+        (github.event_name == 'schedule' && needs.drive-check.outputs.changed == 'true') ||
+        github.event_name == 'workflow_dispatch'
+      )
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -39,6 +69,16 @@ jobs:
           node-version-file: '.nvmrc'
           cache: 'npm'
       - run: npm ci
+      # Drive files aren't committed, so they're kept between runs to avoid downloading them again
+      - uses: actions/cache@v4
+        with:
+          path: public/portfolio/drive
+          key: drive-media-${{ github.run_id }}
+          restore-keys: drive-media-
+      - run: npm run sync:drive
+        env:
+          DRIVE_API_KEY: ${{ secrets.DRIVE_API_KEY }}
+          DRIVE_FOLDER_ID: ${{ secrets.DRIVE_FOLDER_ID }}
       - run: npm run build
       - run: npm run verify:build
       - uses: peaceiris/actions-gh-pages@v4

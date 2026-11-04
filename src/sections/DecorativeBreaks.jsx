@@ -46,7 +46,7 @@ export function MarqueeStrip() {
   return (
     <div className="relative border-y border-ink/10 bg-paper-dark py-3 overflow-hidden">
       <motion.div className="flex w-max whitespace-nowrap" animate={{ x: ['0%', '-16.6667%'] }} transition={{ x: { duration: 40, repeat: Infinity, ease: 'linear' } }}>
-        <span className="text-[0.65rem] font-heading font-semibold tracking-[0.2em] text-ink-faint/50 uppercase">{doubled}</span>
+        <span className="text-[0.65rem] font-heading font-semibold tracking-[0.2em] text-ink-faint uppercase">{doubled}</span>
       </motion.div>
     </div>
   )
@@ -55,7 +55,7 @@ export function MarqueeStrip() {
 /* ── GeometricPatternBand ────────────────────────────────────────────────── */
 export function GeometricPatternBand() {
   return (
-    <div className="relative h-32 md:h-40 overflow-hidden bg-[#1a3526]">
+    <div className="relative h-32 md:h-40 overflow-hidden bg-[#0a0e0c]">
       <svg className="absolute inset-0 w-full h-full" viewBox="0 0 1440 160" fill="none" preserveAspectRatio="none">
         {Array.from({ length: 36 }).map((_, i) => (
           <line key={`v${i}`} x1={i * 40} y1="0" x2={i * 40} y2="160" stroke="#2d5a3d" strokeWidth="0.3" opacity="0.3" />
@@ -74,7 +74,7 @@ export function GeometricPatternBand() {
         <path d="M0 100 Q 360 40, 720 100 Q 1080 160, 1440 100" stroke="#4a8f5c" strokeWidth="1" opacity="0.2" />
       </svg>
       <div className="absolute inset-0 flex items-center justify-center">
-        <span className="text-[#f5f5f0]/30 text-[0.6rem] font-heading font-semibold tracking-[0.3em] uppercase">
+        <span className="text-[#f5f5f0]/60 text-[0.6rem] font-heading font-semibold tracking-[0.3em] uppercase">
           Craft &middot; Code &middot; Create
         </span>
       </div>
@@ -174,7 +174,7 @@ export function SectionNav() {
   return (
     <>
       <motion.div className="fixed right-4 top-[50%] -translate-y-[50%] -translate-x-8 z-40 hidden lg:flex pointer-events-none" key={active} initial={{ x: -4, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ duration: 0.3 }}>
-        <span className="page-number text-[0.5rem] tracking-widest rotate-90 whitespace-nowrap" style={{ color: '#2d5a3d' }}>{active.toUpperCase()}</span>
+        <span className="page-number text-[0.5rem] tracking-widest rotate-90 whitespace-nowrap" style={{ color: '#8a9c8e' }}>{active.toUpperCase()}</span>
       </motion.div>
       <div className="fixed right-4 md:right-6 top-1/2 -translate-y-1/2 z-40 hidden lg:flex flex-col gap-3 items-center">
         {SECTIONS.map((s) => (
@@ -247,8 +247,8 @@ export function KeyboardShortcuts() {
         )}
       </AnimatePresence>
       <div className="fixed bottom-5 left-5 z-50 hidden md:flex items-center gap-1.5">
-        <kbd className="px-1.5 py-0.5 text-[0.55rem] font-mono bg-paper/80 border border-ink/10 rounded-sm text-ink-faint/60 backdrop-blur-sm">?</kbd>
-        <span className="text-[0.55rem] text-ink-faint/40">Shortcuts</span>
+        <kbd className="px-1.5 py-0.5 text-[0.55rem] font-mono bg-paper/80 border border-ink/10 rounded-sm text-ink-faint backdrop-blur-sm">?</kbd>
+        <span className="text-[0.55rem] text-ink-faint">Shortcuts</span>
       </div>
     </>
   )

@@ -1,9 +1,7 @@
 /**
  * sections/ToolsSection.jsx — Tools & Software section
  */
-import { useRef } from 'react'
-import { motion, useInView } from 'framer-motion'
-import { useLanguage } from '../LanguageContext'
+import { motion } from 'framer-motion'
 import AnimatedSection from '../components/AnimatedSection'
 import { MaskReveal } from '../motionEffects.jsx'
 import { ReadingBadge, TextDensityBar } from '../pretextUtils.jsx'
@@ -72,7 +70,6 @@ const TAG_CLOUD = [
 ]
 
 export default function ToolsSection() {
-  const { t } = useLanguage()
   const desc = "The creative arsenal — industry-standard tools and beloved open-source alternatives used daily to bring ideas to life."
   return (
     <section id="tools" className="relative py-20 md:py-28 lg:py-40 px-6 md:px-8 lg:px-12">
@@ -112,7 +109,7 @@ export default function ToolsSection() {
                     <div className="flex flex-wrap gap-2">
                       {cat.tools.map((tool, ti) => (
                         <motion.div key={tool.name} initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: ti * 0.05 }}
-                          className="group flex flex-col md:flex-row items-start md:items-center gap-4 px-5 py-4 bg-white border border-ink/6 hover:border-accent/30 transition-all duration-300">
+                          className="group flex flex-col md:flex-row items-start md:items-center gap-4 px-5 py-4 bg-paper-dark border border-ink/10 hover:border-accent/30 transition-all duration-300">
                           {SVGL_URLs[tool.name] ? (
                             <img src={SVGL_URLs[tool.name]} alt={tool.name} className="w-8 h-8 lg:w-9 lg:h-9 object-contain grayscale group-hover:grayscale-0 transition-all duration-300 pointer-events-none" />
                           ) : (
@@ -136,7 +133,7 @@ export default function ToolsSection() {
                 <div className="flex flex-wrap gap-x-4 gap-y-2">
                   {TAG_CLOUD.map((tool, i) => {
                     const sizes = ['text-xs', 'text-sm', 'text-xs', 'text-base', 'text-xs']
-                    const opacities = ['text-ink-light/50', 'text-ink-light/70', 'text-ink-light/40', 'text-ink-light', 'text-ink-light/60']
+                    const opacities = ['text-ink-light/75', 'text-ink-light/70', 'text-ink-light/70', 'text-ink-light', 'text-ink-light/80']
                     return (
                       <motion.span key={tool} initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: i * 0.02 }}
                         className={`${sizes[i % 5]} ${opacities[i % 5]} hover:text-accent transition-colors cursor-default font-light inline-flex items-center gap-1.5`}>

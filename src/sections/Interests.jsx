@@ -1,9 +1,7 @@
 /**
  * sections/Interests.jsx — Areas of interest / passion tags
  */
-import { useRef } from 'react'
-import { motion, useInView } from 'framer-motion'
-import { useLanguage } from '../LanguageContext'
+import { motion } from 'framer-motion'
 import AnimatedSection from '../components/AnimatedSection'
 
 
@@ -18,7 +16,6 @@ const INTERESTS = [
 ]
 
 export default function Interests() {
-  const { t } = useLanguage()
   return (
     <section id="interests" className="relative py-20 md:py-28 lg:py-32 px-6 md:px-8 lg:px-12">
       <div className="absolute left-6 md:left-8 lg:left-12 top-0 bottom-0 w-px bg-ink/5" />
@@ -54,7 +51,7 @@ export default function Interests() {
             </div>
 
             <AnimatedSection delay={0.6}>
-              <div className="mt-16 p-8 md:p-10 bg-white border border-ink/6">
+              <div className="mt-16 p-8 md:p-10 bg-paper-dark border border-ink/10">
                 <svg className="w-8 h-8 text-accent/20 mb-4" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
                 </svg>

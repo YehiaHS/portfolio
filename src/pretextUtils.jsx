@@ -62,7 +62,7 @@ export const ReadingBadge = ({ text, className = '' }) => {
         {readingTimeSec < 120 ? `${readingTimeSec}s read` : `${Math.ceil(readingTimeSec / 60)} min read`}
       </span>
       <span className="w-px h-3" style={{ backgroundColor: '#2d5a3d20' }} />
-      <span className="text-[0.55rem] font-heading tracking-wide" style={{ color: '#2d5a3d60' }}>
+      <span className="text-[0.55rem] font-heading tracking-wide" style={{ color: '#8a9c8e' }}>
         {lines}l · {charCount}c
       </span>
     </motion.span>
@@ -172,7 +172,7 @@ export const TextSampleDensity = ({ className = '' }) => {
           />
         ))}
       </div>
-      <p className="mt-2 text-center text-[0.5rem] font-heading tracking-widest text-ink-faint/40 uppercase">
+      <p className="mt-2 text-center text-[0.5rem] font-heading tracking-widest text-ink-faint uppercase">
         Type Sample — &ldquo;{bars.map((b) => b.text).join(' ')}&rdquo;
       </p>
     </motion.div>

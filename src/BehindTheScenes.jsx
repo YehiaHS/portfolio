@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, useInView, useScroll } from 'framer-motion'
 import { useLanguage } from './LanguageContext'
@@ -97,8 +97,8 @@ const VideoCard = ({ src, title, description, duration, index }) => {
         <video
           ref={videoRef}
           src={src}
+          preload="metadata"
           className="w-full h-full object-cover"
-          decoding="async"
           onClick={handleToggle}
           playsInline
           onEnded={() => setIsPlaying(false)}
@@ -107,6 +107,7 @@ const VideoCard = ({ src, title, description, duration, index }) => {
         {!isPlaying && (
           <motion.button
             onClick={handleToggle}
+            aria-label={`Play ${title}`}
             className="absolute inset-0 flex items-center justify-center z-10"
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
@@ -150,14 +151,14 @@ function BehindTheScenes() {
   const { scrollYProgress } = useScroll()
 
   return (
-    <div className="relative min-h-screen text-ink cursor-none page-enter">
+    <div className="relative min-h-screen text-ink cursor-none">
       <Cursor />
 
       {/* Scroll progress bar */}
       <motion.div className="fixed top-0 left-0 right-0 h-[2px] z-[9999] origin-left" style={{ scaleX: scrollYProgress, backgroundColor: '#4a9f62' }} />
 
       {/* Top bar */}
-      <div className="fixed top-0 left-0 right-0 z-50">
+      <div className="fixed top-0 left-0 right-0 z-50 bg-paper/90 backdrop-blur-md">
         <div className="mx-auto max-w-7xl px-6 md:px-12 py-5 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Link
@@ -193,7 +194,7 @@ function BehindTheScenes() {
               >
                 <span className="section-number">Event Media</span>
                 <div className="w-8 h-px bg-accent/40 my-4" />
-                <p className="page-number">Behind the scenes of Yehia's creative work</p>
+                <p className="page-number">Behind the scenes of Yehia&apos;s creative work</p>
               </motion.div>
             </div>
             <div className="col-span-12 md:col-span-8 lg:col-span-9">

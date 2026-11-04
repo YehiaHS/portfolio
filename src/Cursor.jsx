@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
-import { motion, useSpring, useTransform } from 'framer-motion';
+import { motion, useSpring } from 'framer-motion';
 
 const ACCENT = '#8fb09b';
 const NEUTRAL = '#c8d8cc';
@@ -33,6 +33,10 @@ function useAnimationFrame(callback, active = true) {
   }, [active]);
 }
 
+// Framer owns `transform` once x/y are motion values, so a plain style.transform is dropped.
+// The template is how the elements stay centred on the pointer rather than hanging off it.
+const centred = (_, generated) => `${generated === 'none' ? '' : generated} translate(-50%, -50%)`;
+
 const Cursor = () => {
   const [visible, setVisible] = useState(false);
   const [hoverState, setHoverState] = useState('default');
@@ -45,7 +49,6 @@ const Cursor = () => {
 
   const hoverTarget = useRef(null);
   const targetBounds = useRef(null);
-  const magneticStrength = useRef(0.35);
 
   // Spring targets
   const ringTargetX = useRef(0);
@@ -200,7 +203,8 @@ const Cursor = () => {
 
       {/* Outer ring */}
       <motion.div
-        className="pointer-events-none fixed left-0 top-0 z-[9999] hidden md:block"
+        className="pointer-events-none fixed left-0 top-0 z-[10002] hidden md:block"
+        transformTemplate={centred}
         style={{
           x: ringX,
           y: ringY,
@@ -209,15 +213,15 @@ const Cursor = () => {
           borderRadius: '50%',
           border: `1px solid ${borderColor}`,
           mixBlendMode: 'difference',
-          opacity: ringOpacity,
-          transform: `translate(-50%, -50%)`,
+          opacity: visible ? ringOpacity : 0,
           transition: 'border-color 0.25s ease',
         }}
       />
 
       {/* Inner dot (fast) */}
       <motion.div
-        className="pointer-events-none fixed left-0 top-0 z-[9999] hidden md:block"
+        className="pointer-events-none fixed left-0 top-0 z-[10002] hidden md:block"
+        transformTemplate={centred}
         style={{
           x: dotX,
           y: dotY,
@@ -227,14 +231,14 @@ const Cursor = () => {
           backgroundColor: color,
           mixBlendMode: 'difference',
           opacity: visible ? 1 : 0,
-          transform: 'translate(-50%, -50%)',
           transition: 'background-color 0.25s ease',
         }}
       />
 
       {/* Trailing dot (slow) */}
       <motion.div
-        className="pointer-events-none fixed left-0 top-0 z-[9998] hidden md:block"
+        className="pointer-events-none fixed left-0 top-0 z-[10001] hidden md:block"
+        transformTemplate={centred}
         style={{
           x: trailX,
           y: trailY,
@@ -243,31 +247,31 @@ const Cursor = () => {
           borderRadius: '50%',
           backgroundColor: isHovering ? ACCENT : `${NEUTRAL}40`,
           opacity: visible ? 0.5 : 0,
-          transform: 'translate(-50%, -50%)',
           transition: 'background-color 0.25s ease',
         }}
       />
 
       {/* Text Color */}
       <motion.div
-        className="pointer-events-none fixed z-[9999] hidden md:block"
+        className="pointer-events-none fixed left-0 top-0 z-[10002] hidden md:block"
+        aria-hidden="true"
+        transformTemplate={centred}
         style={{
           x: textX,
           y: textY,
-          opacity: textOpacity,
-          transform: 'translate(-50%, calc(-50% + 46px))',
+          opacity: visible ? textOpacity : 0,
         }}
       >
         <span
           style={{
-            fontFamily: "'Inter', system-ui, sans-serif",
+            fontFamily: 'var(--font-body)',
             fontSize: '10px',
             fontWeight: 600,
             letterSpacing: '0.08em',
             color: ACCENT,
             textTransform: 'uppercase',
             whiteSpace: 'nowrap',
-            background: 'rgba(255,255,255,0.92)',
+            background: 'rgba(13,20,16,0.92)',
             padding: '3px 8px',
             borderRadius: '4px',
             boxShadow: '0 1px 4px rgba(0,0,0,0.08)',
@@ -280,7 +284,8 @@ const Cursor = () => {
       {/* Click ripple */}
       {clickRipple && (
         <motion.div
-          className="pointer-events-none fixed z-[9997] hidden md:block"
+          className="pointer-events-none fixed z-[10000] hidden md:block"
+          transformTemplate={centred}
           initial={{ scale: 0, opacity: 0.6 }}
           animate={{ scale: 2.5, opacity: 0 }}
           transition={{ duration: 0.4, ease: 'easeOut' }}
@@ -291,7 +296,6 @@ const Cursor = () => {
             height: 24,
             borderRadius: '50%',
             border: `2px solid ${ACCENT}`,
-            transform: 'translate(-50%, -50%)',
           }}
         />
       )}

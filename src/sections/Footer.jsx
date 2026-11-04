@@ -63,7 +63,7 @@ export default function Footer() {
   const showBackToTop = useScrollBottom(600)
 
   const navLinks = [
-    { label: 'About', href: '#about' },
+    { label: t('aboutLabel'), href: '#about' },
     { label: t('skillsTitle'), href: '#skills' },
     { label: t('awardsTitle'), href: '#awards' },
     { label: t('educationTitle'), href: '#education' },
@@ -71,7 +71,7 @@ export default function Footer() {
   ]
 
   return (
-    <footer className="relative bg-ink text-paper/70">
+    <footer className="relative bg-[#0a0e0c] text-ink-light">
       {/* Top accent line */}
       <div className="h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent" />
 
@@ -79,8 +79,8 @@ export default function Footer() {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-12 gap-8 md:gap-12">
           {/* Brand column */}
           <div className="md:col-span-4">
-            <h3 className="font-display text-2xl italic text-white mb-4">Yehia Salem</h3>
-            <p className="text-sm text-paper/40 font-light leading-relaxed max-w-xs">{t('tagline')}</p>
+            <h3 className="font-display text-2xl italic text-ink mb-4">Yehia Salem</h3>
+            <p className="text-sm text-ink-faint font-light leading-relaxed max-w-xs">{t('tagline')}</p>
           </div>
 
           {/* Nav links */}
@@ -88,7 +88,7 @@ export default function Footer() {
             <p className="section-number mb-4">Navigate</p>
             <div className="space-y-2">
               {navLinks.map((link) => (
-                <a key={link.label} href={link.href} className="block text-sm text-paper/50 hover:text-accent transition-colors font-light">
+                <a key={link.label} href={link.href} className="block text-sm text-ink-faint hover:text-accent transition-colors font-light">
                   {link.label}
                 </a>
               ))}
@@ -98,7 +98,7 @@ export default function Footer() {
           {/* Contact info */}
           <div className="md:col-span-3">
             <p className="section-number mb-4">Contact</p>
-            <div className="space-y-2 text-sm font-light text-paper/50">
+            <div className="space-y-2 text-sm font-light text-ink-faint">
               <p>{profile.contact.email}</p>
               <p>{profile.contact.whatsapp}</p>
               <p>{profile.contact.phone}</p>
@@ -109,19 +109,19 @@ export default function Footer() {
           <div className="md:col-span-2">
             <p className="section-number mb-4">Social</p>
             <div className="space-y-2">
-              <a href="https://github.com/yehiasalem" target="_blank" rel="noreferrer" className="block text-sm text-paper/50 hover:text-accent transition-colors font-light">GitHub</a>
-              <a href="https://linkedin.com/in/yehiahatemsalem" target="_blank" rel="noreferrer" className="block text-sm text-paper/50 hover:text-accent transition-colors font-light">LinkedIn</a>
-              <Link to="/works" className="block text-sm text-paper/50 hover:text-accent transition-colors font-light">Works Archive</Link>
+              <a href="https://github.com/YehiaHS" target="_blank" rel="noreferrer" className="block text-sm text-ink-faint hover:text-accent transition-colors font-light">GitHub</a>
+              <a href="https://linkedin.com/in/yehiahatemsalem" target="_blank" rel="noreferrer" className="block text-sm text-ink-faint hover:text-accent transition-colors font-light">LinkedIn</a>
+              <Link to="/works" className="block text-sm text-ink-faint hover:text-accent transition-colors font-light">Works Archive</Link>
             </div>
           </div>
         </div>
 
         {/* Bottom bar */}
-        <div className="mt-14 pt-6 border-t border-paper/10 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-[0.65rem] text-paper/30 tracking-wider font-light">
+        <div className="mt-14 pt-6 border-t border-ink/10 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="text-[0.65rem] text-ink-faint tracking-wider font-light">
             {t('footerText')} &mdash; {new Date().getFullYear()}
           </p>
-          <p className="text-[0.65rem] text-paper/30 tracking-wider font-light">{t('precision')}</p>
+          <p className="text-[0.65rem] text-ink-faint tracking-wider font-light">{t('precision')}</p>
         </div>
       </div>
 

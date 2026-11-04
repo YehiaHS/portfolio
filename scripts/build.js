@@ -1,4 +1,4 @@
-import { cpSync, existsSync, mkdirSync, rmSync, readdirSync } from 'fs'
+import { cpSync, existsSync, mkdirSync, rmSync, readdirSync, writeFileSync } from 'fs'
 import { dirname, join } from 'path'
 import { fileURLToPath } from 'url'
 import { build as viteBuild } from 'vite'
@@ -10,7 +10,6 @@ const dist = join(root, 'dist')
 
 const portfolioPublicDir = join(root, 'public', 'portfolio')
 const imagesDir = join(root, 'public', 'images')
-const viteSvg = join(tmp, 'vite.svg')
 
 rmSync(tmp, { recursive: true, force: true })
 rmSync(dist, { recursive: true, force: true })
@@ -23,18 +22,18 @@ await viteBuild({
   build: {
     outDir: tmp,
     emptyOutDir: false,
+    // public/ is 280MB and assembled by hand below, so Vite does not need its own copy
+    copyPublicDir: false,
   },
 })
 
 cpSync(join(tmp, 'index.html'), join(dist, 'index.html'))
 cpSync(join(tmp, 'assets'), join(dist, 'assets'), { recursive: true })
 
-if (existsSync(viteSvg)) {
-  cpSync(viteSvg, join(dist, 'vite.svg'))
-}
-
 // index.html links /favicon.svg, which is served from public/ and must be copied explicitly
 cpSync(join(root, 'public', 'favicon.svg'), join(dist, 'favicon.svg'))
+// Linked from the nav, so it has to ship with the site
+cpSync(join(root, 'public', 'Yehia_Salem_Resume.pdf'), join(dist, 'Yehia_Salem_Resume.pdf'))
 
 if (existsSync(portfolioPublicDir)) {
   cpSync(portfolioPublicDir, dist, { recursive: true, force: false })
@@ -59,6 +58,12 @@ if (existsSync(portfolioPublicDir)) {
     }
   };
   prune(dist);
+}
+
+// Without the Drive sync configured there's nothing to show, but the site still asks for the manifest
+if (!existsSync(join(dist, 'drive', 'manifest.json'))) {
+  mkdirSync(join(dist, 'drive'), { recursive: true })
+  writeFileSync(join(dist, 'drive', 'manifest.json'), JSON.stringify({ version: 1, categories: [] }))
 }
 
 if (existsSync(imagesDir)) {
