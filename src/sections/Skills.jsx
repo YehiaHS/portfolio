@@ -8,11 +8,6 @@ import AnimatedSection from '../components/AnimatedSection'
 
 
 
-const TOOL_TAGS = [
-  'Photoshop', 'DaVinci Resolve', 'Premiere Pro', 'Krita',
-  'Affinity Photo', 'Affinity Designer', 'Affinity Publisher',
-  'GIMP', 'Sony Vegas', 'Paint Tool SAI', 'Illustrator', 'Figma',
-]
 const SKILL_LEVELS = [92, 88, 95, 85]
 
 export default function Skills() {
@@ -35,7 +30,7 @@ export default function Skills() {
           <div className="grid grid-cols-12 gap-8 md:gap-16 lg:gap-20">
             <div className="col-span-12 md:col-span-3 lg:col-span-2">
               <AnimatedSection>
-                <span className="section-number">03</span>
+                <span className="section-number">02</span>
                 <p className="page-number mt-2">{t('capabilities')}</p>
               </AnimatedSection>
             </div>
@@ -82,20 +77,6 @@ export default function Skills() {
                   </AnimatedSection>
                 ))}
               </div>
-
-              <AnimatedSection delay={0.7}>
-                <div className="mt-12">
-                  <p className="section-number mb-4">Tools &amp; Software</p>
-                  <div className="flex flex-wrap gap-2">
-                    {TOOL_TAGS.map((tool, i) => (
-                      <motion.span key={tool} initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: i * 0.03 }}
-                        className="px-3 py-1.5 bg-paper-dark border border-ink/10 text-xs font-light text-ink-light hover:border-accent/40 hover:text-accent hover:bg-accent/[0.03] transition-all duration-300 cursor-default">
-                        {tool}
-                      </motion.span>
-                    ))}
-                  </div>
-                </div>
-              </AnimatedSection>
             </div>
           </div>
         </div>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useLanguage } from './LanguageContext'
 import LanguageSelector from './LanguageSelector'
@@ -94,9 +94,9 @@ export default function Nav() {
           <div className="site-nav__links">
             {navLinks.map((link) =>
               link.type === 'route' ? (
-                <Link key={`${link.href}-${link.label}`} to={link.href} className="site-nav__link">
+                <NavLink key={`${link.href}-${link.label}`} to={link.href} className="site-nav__link">
                   {link.label}
-                </Link>
+                </NavLink>
               ) : (
                 <a key={`${link.href}-${link.label}`} href={link.href} className="site-nav__link" download={link.type === 'download' ? '' : undefined}>
                   {link.label}

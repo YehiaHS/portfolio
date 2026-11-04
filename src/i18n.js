@@ -15,6 +15,7 @@ const portfolioWorks = _portfolioWorks;
 
 export const translations = {
   en: {
+    aboutHeadline: 'Creativity meets code',
     navBehind: 'Behind the Scenes',
     navShowreel: 'Showreel',
     navResume: 'Resume',
@@ -147,6 +148,7 @@ export const translations = {
     ],
   },
   ar: {
+    aboutHeadline: 'الإبداع يلتقي بالبرمجة',
     navBehind: 'خلف الكواليس',
     navShowreel: 'العرض التجميعي',
     navResume: 'السيرة الذاتية',
@@ -315,6 +317,7 @@ export const translations = {
     ],
   },
   fr: {
+    aboutHeadline: 'La créativité rencontre le code',
     navBehind: 'Coulisses',
     navShowreel: 'Showreel',
     navResume: 'CV',

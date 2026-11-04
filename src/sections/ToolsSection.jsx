@@ -4,7 +4,6 @@
 import { motion } from 'framer-motion'
 import AnimatedSection from '../components/AnimatedSection'
 import { MaskReveal } from '../motionEffects.jsx'
-import { ReadingBadge, TextDensityBar } from '../pretextUtils.jsx'
 
 
 
@@ -48,7 +47,6 @@ const TOOL_CATEGORIES = [
       { name: 'DaVinci Resolve', role: 'Color & Editing' },
       { name: 'Adobe Premiere', role: 'Video Editing' },
       { name: 'Sony Vegas', role: 'Timeline Editing' },
-      { name: 'Krita', role: 'Animation & Painting' },
     ],
   },
   {
@@ -56,18 +54,11 @@ const TOOL_CATEGORIES = [
     tools: [
       { name: 'Krita', role: 'Digital Painting' },
       { name: 'Paint Tool SAI', role: 'Illustration' },
-      { name: 'Affinity Photo', role: 'Compositing' },
     ],
   },
 ]
 
-const TAG_CLOUD = [
-  'Photoshop', 'Premiere', 'DaVinci Resolve', 'Krita', 'SAI',
-  'Affinity Designer', 'Affinity Photo', 'Affinity Publisher',
-  'GIMP', 'Sony Vegas', 'HTML', 'CSS', 'JavaScript',
-  'React', 'Python', 'Git', 'VS Code', 'Figma',
-  'Canva', 'Lightroom', 'After Effects', 'Blender',
-]
+const ALSO_USES = ['Figma', 'Lightroom', 'After Effects', 'Blender', 'Canva', 'HTML', 'CSS', 'JavaScript', 'React', 'Python', 'Git', 'VS Code']
 
 export default function ToolsSection() {
   const desc = "The creative arsenal — industry-standard tools and beloved open-source alternatives used daily to bring ideas to life."
@@ -81,7 +72,7 @@ export default function ToolsSection() {
         <div className="grid grid-cols-12 gap-8 md:gap-16 lg:gap-20">
           <div className="col-span-12 md:col-span-3 lg:col-span-2">
             <AnimatedSection>
-              <span className="section-number">06</span>
+              <span className="section-number">04</span>
               <p className="page-number mt-2">Toolkit</p>
             </AnimatedSection>
           </div>
@@ -97,8 +88,6 @@ export default function ToolsSection() {
                   {desc}
                 </p>
               </MaskReveal>
-              <ReadingBadge text={desc} className="border-ink/10 text-ink-faint mt-3" />
-              <TextDensityBar text={desc} className="mt-4" />
             </div>
 
             <div className="space-y-12">
@@ -113,7 +102,7 @@ export default function ToolsSection() {
                           {SVGL_URLs[tool.name] ? (
                             <img src={SVGL_URLs[tool.name]} alt={tool.name} className="w-8 h-8 lg:w-9 lg:h-9 object-contain grayscale group-hover:grayscale-0 transition-all duration-300 pointer-events-none" />
                           ) : (
-                            <div className="w-4 h-4 rounded-sm bg-accent/40 group-hover:bg-accent transition-colors" />
+                            <div className="w-8 h-8 lg:w-9 lg:h-9 rounded-sm border border-ink/10 flex items-center justify-center font-display text-sm text-ink-light" aria-hidden="true">{tool.name[0]}</div>
                           )}
                           <div>
                             <p className="text-sm font-medium text-ink group-hover:text-accent transition-colors">{tool.name}</p>
@@ -129,20 +118,8 @@ export default function ToolsSection() {
 
             <AnimatedSection delay={0.8}>
               <div className="mt-12 pt-8 border-t border-ink/5">
-                <p className="page-number mb-4">Complete Tag Cloud</p>
-                <div className="flex flex-wrap gap-x-4 gap-y-2">
-                  {TAG_CLOUD.map((tool, i) => {
-                    const sizes = ['text-xs', 'text-sm', 'text-xs', 'text-base', 'text-xs']
-                    const opacities = ['text-ink-light/75', 'text-ink-light/70', 'text-ink-light/70', 'text-ink-light', 'text-ink-light/80']
-                    return (
-                      <motion.span key={tool} initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: i * 0.02 }}
-                        className={`${sizes[i % 5]} ${opacities[i % 5]} hover:text-accent transition-colors cursor-default font-light inline-flex items-center gap-1.5`}>
-                        {SVGL_URLs[tool] && <img src={SVGL_URLs[tool]} alt="" className="w-3.5 h-3.5 object-contain opacity-70" />}
-                        {tool}
-                      </motion.span>
-                    )
-                  })}
-                </div>
+                <p className="page-number mb-3">Also uses</p>
+                <p className="text-sm text-ink-light font-light leading-relaxed max-w-2xl">{ALSO_USES.join(', ')}</p>
               </div>
             </AnimatedSection>
           </div>

@@ -94,6 +94,7 @@ export function getArchiveCategories() {
     },
     {
       id: 'logos',
+      fit: 'contain',
       label: 'Logos & Brand Identity',
       description: 'Brand marks and logo design explorations',
       items: [

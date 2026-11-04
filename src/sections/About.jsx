@@ -1,177 +1,100 @@
 /**
  * sections/About.jsx
  *
- * The "About" section — editorial portrait monogram, bio summary, languages bar,
- * quick-facts row, and pull-quote. Powered by pretext for text metrics.
+ * The bio wraps around an arched portrait, then a pull-quote set to the full width of the page.
+ * Both are laid out with pretext (see components/PretextType.jsx).
  */
 
-import { motion } from 'framer-motion'
-import { MaskReveal } from '../motionEffects.jsx'
+import { useCallback, useMemo } from 'react'
 import { useLanguage } from '../LanguageContext'
-import { ReadingBadge, TextDensityBar } from '../pretextUtils.jsx'
 import AnimatedSection from '../components/AnimatedSection'
+import { FitLines, FlowText, useElementWidth } from '../components/PretextType'
 
+const QUOTE_LINES = ['The best work lives', 'where disciplines', 'collide.']
 
-
-function getGreeting() {
-  const now = new Date()
-  const hour = parseInt(new Intl.DateTimeFormat('en-US', { timeZone: 'Africa/Cairo', hour: 'numeric', hourCycle: 'h23' }).format(now))
-  if (hour < 12) return 'Good Morning'
-  if (hour < 17) return 'Good Afternoon'
-  return 'Good Evening'
+/** Arch proportions shared by the image and the text wrapping around it. */
+function archFor(width) {
+  const small = width < 560
+  const archWidth = small ? width * 0.46 : Math.min(width * 0.38, 400)
+  return { small, archWidth, archHeight: archWidth * 1.32, gutter: small ? 16 : 44 }
 }
 
 export default function About() {
   const { t } = useLanguage()
   const profile = t('profile')
-  const greeting = getGreeting()
+  const headline = t('aboutHeadline')
+  const [flowRef, width] = useElementWidth()
+  const { small, archWidth, archHeight, gutter } = archFor(width)
+
+  const insetAt = useCallback(
+    (y) => {
+      if (y >= archHeight + gutter / 2) return 0
+      const radius = archWidth / 2
+      if (y >= radius) return archWidth + gutter
+      // The arch's semicircular top: how far its edge reaches at this height
+      return radius + Math.sqrt(radius * radius - (radius - y) * (radius - y)) + gutter
+    },
+    [archWidth, archHeight, gutter],
+  )
+
+  const blocks = useMemo(
+    () => [
+      {
+        text: headline,
+        as: 'h2',
+        font: `340 ${small ? 30 : 46}px Fraunces`,
+        lineHeight: small ? 36 : 54,
+        className: 'text-ink',
+        gapAfter: small ? 12 : 20,
+      },
+      {
+        text: profile.summary,
+        font: `300 ${small ? 16 : 21}px Manrope`,
+        lineHeight: small ? 25 : 33,
+        className: 'text-ink-light',
+        gapAfter: 0,
+      },
+    ],
+    [small, profile.summary, headline],
+  )
 
   return (
     <section id="about" className="relative py-20 md:py-28 lg:py-40 px-6 md:px-8 lg:px-12">
       <div className="absolute left-6 md:left-8 lg:left-12 top-0 bottom-0 w-px bg-ink/5" />
       <div className="absolute right-6 md:right-8 lg:right-12 top-0 bottom-0 w-px bg-ink/5" />
 
-      {/* Decorative sidebar imagery */}
-      <div className="hidden lg:block absolute left-0 top-0 bottom-0 w-24 pointer-events-none select-none opacity-[0.04]">
-        <svg className="absolute top-20 left-2" viewBox="0 0 40 40" fill="none" stroke="#2d5a3d" strokeWidth="1">
-          <circle cx="20" cy="14" r="8" />
-          <path d="M6 36c0-8 6-14 14-14s14 6 14 14" />
-        </svg>
-      </div>
-
-      {/* Greeting watermark */}
-      <div className="absolute top-8 right-4 md:right-12 lg:right-20 opacity-[0.03] font-display pointer-events-none select-none" style={{ fontSize: 'clamp(4rem, 8vw, 10rem)', lineHeight: '1', fontWeight: 'bold', fontStyle: 'italic' }}>
-        {greeting.split(' ')[0]}
-      </div>
-
       <div className="relative mx-auto max-w-7xl">
         <div className="grid grid-cols-12 gap-8 md:gap-16 lg:gap-20">
-          {/* Section label */}
           <div className="col-span-12 md:col-span-3 lg:col-span-2">
             <AnimatedSection>
-              <span className="section-number">02</span>
+              <span className="section-number">01</span>
               <p className="page-number mt-2">{t('aboutLabel')}</p>
             </AnimatedSection>
           </div>
 
-          <div className="col-span-12 md:col-span-9 lg:col-span-10">
-            <div className="grid md:grid-cols-5 gap-6 md:gap-10 lg:gap-14">
-              {/* Left: editorial portrait + highlights */}
-              <div className="md:col-span-2">
-                <AnimatedSection delay={0.2}>
-                  <div className="relative">
-                    <div className="aspect-[4/5] bg-paper-dark flex items-center justify-center border border-ink/5 overflow-hidden relative" style={{ maxWidth: '100%' }}>
-                      <img 
-                        src={`${import.meta.env.BASE_URL}images/about_portrait.jpg`} 
-                        alt="Yehia Salem Portrait" 
-                        className="absolute inset-0 w-full h-full object-cover grayscale-[20%] sepia-[10%] transition-transform duration-700 hover:scale-105"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-br from-[#2d5a3d]/[0.15] via-transparent to-[#0d1410]/[0.5] mix-blend-multiply pointer-events-none" />
-                      
-                      <svg className="absolute top-3 left-3 w-8 h-8 opacity-40" viewBox="0 0 32 32" fill="none">
-                        <path d="M0 0h12v2H2v10H0V0z" fill="#fff" />
-                        <circle cx="18" cy="18" r="2" fill="#fff" />
-                      </svg>
-                      <svg className="absolute bottom-3 right-3 w-8 h-8 opacity-40" viewBox="0 0 32 32" fill="none">
-                        <path d="M32 32H20v-2h10V20h2v12z" fill="#fff" />
-                        <circle cx="14" cy="14" r="2" fill="#fff" />
-                      </svg>
-                    </div>
-                    <div className="absolute -top-2 -left-2 w-6 h-6 border-t-2 border-l-2 border-accent/20" />
-                    <div className="absolute -top-2 -right-2 w-6 h-6 border-t-2 border-r-2 border-accent/20" />
-                    <div className="absolute -bottom-2 -left-2 w-6 h-6 border-b-2 border-l-2 border-accent/20" />
-                    <div className="absolute -bottom-2 -right-2 w-6 h-6 border-b-2 border-r-2 border-accent/20" />
-                  </div>
-                </AnimatedSection>
+          <div ref={flowRef} className="relative col-span-12 md:col-span-9 lg:col-span-10" style={{ minHeight: archHeight }}>
+            <img
+              src={`${import.meta.env.BASE_URL}images/about_portrait.jpg`}
+              alt="Yehia Salem at a table, smiling, with birthday cupcakes in front of him"
+              loading="lazy"
+              decoding="async"
+              className="about-arch"
+              style={{ width: archWidth, height: archHeight, borderRadius: `${archWidth / 2}px ${archWidth / 2}px 0 0` }}
+            />
 
-                {/* Highlights */}
-                <AnimatedSection delay={0.6}>
-                  <div className="mt-8 space-y-3">
-                    {profile.highlights.map((item, i) => (
-                      <motion.div key={item} initial={{ opacity: 0, x: -8 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }} className="flex items-start gap-3">
-                        <span className="w-1.5 h-1.5 bg-accent/60 mt-1.5 flex-shrink-0" />
-                        <span className="text-sm text-ink-light font-light">{item}</span>
-                      </motion.div>
-                    ))}
-                  </div>
-                </AnimatedSection>
-              </div>
+            {width > 0 && (
+              <FlowText blocks={blocks} width={width} insetAt={insetAt} minHeight={small ? archHeight + 20 : 0} />
+            )}
 
-              {/* Right: bio + languages + quick facts */}
-              <div className="md:col-span-3 space-y-8">
-                <AnimatedSection delay={0.3}>
-                  <h2 className="leading-tight" style={{ fontSize: 'clamp(1.5rem, 4vw, 3rem)' }}>
-                    <span className="italic font-italic text-accent">Creativity</span>
-                    <br />meets code
-                  </h2>
-                </AnimatedSection>
-
-                <MaskReveal delay={0.5}>
-                  <p className="text-ink-light text-base leading-relaxed font-light">{profile.summary}</p>
-                </MaskReveal>
-
-                <ReadingBadge text={profile.summary} className="border-ink/10 text-ink-faint mt-3" />
-                <TextDensityBar text={profile.summary} className="mt-4" />
-
-                {/* Quick Facts */}
-                <AnimatedSection delay={0.6}>
-                  <div className="flex flex-wrap gap-3 pt-2">
-                    {[
-                      { icon: <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3v4l3 3" /></svg>, text: greeting },
-                      { icon: <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="12" cy="12" r="10" /><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" /></svg>, text: 'UTC+2 Cairo' },
-                      { icon: <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg>, text: 'Age ~22' },
-                    ].map((fact) => (
-                      <span key={fact.text} className="inline-flex items-center gap-2 px-3 py-2 bg-paper-dark border border-ink/10 text-xs text-ink-light font-light rounded-sm">
-                        {fact.icon}{fact.text}
-                      </span>
-                    ))}
-                  </div>
-                </AnimatedSection>
-
-                {/* Languages bar */}
-                <AnimatedSection delay={0.7}>
-                  <div className="border-t border-ink/5 pt-6">
-                    <p className="section-number mb-4">Languages</p>
-                    <div className="flex gap-3">
-                      {['Arabic', 'English', 'French'].map((lang) => (
-                        <div key={lang} className="flex-1">
-                          <div className="h-1 bg-paper-dark mb-1.5">
-                            <motion.div initial={{ width: 0 }} whileInView={{ width: '100%' }} viewport={{ once: true }} transition={{ duration: 1, delay: 0.5 }} className="h-1 bg-ink" />
-                          </div>
-                          <p className="page-number">{lang}</p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </AnimatedSection>
-
-                {/* Education mini-card */}
-                <AnimatedSection delay={0.8}>
-                  <a href="#education" className="group flex items-start gap-4 p-4 bg-paper-dark border border-ink/5 hover:border-accent/30 transition-colors duration-300 cursor-pointer">
-                    <svg className="w-5 h-5 text-accent mt-0.5 flex-shrink-0 group-hover:text-accent-deep transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                      <path d="M12 14l9-5-9-5-9 5 9 5z" />
-                      <path d="M12 14l6.16-3.422A12.083 12.083 0 0 1 21.16 14 12.083 12.083 0 0 1 12 17.578 12.083 12.083 0 0 1 2.84 14 12.083 12.083 0 0 1 12 14z" />
-                      <path d="M6 9v3a6 6 0 0 0 12 0V9" />
-                    </svg>
-                    <div>
-                      <p className="text-sm font-medium text-ink group-hover:text-accent transition-colors">Dual Bachelor&apos;s Degrees</p>
-                      <p className="text-xs text-ink-faint font-light mt-1">BUE + University of the People &rarr;</p>
-                    </div>
-                  </a>
-                </AnimatedSection>
-              </div>
-            </div>
+            <ul className="about-highlights" style={{ marginInlineStart: small ? 0 : archWidth + gutter }}>
+              {profile.highlights.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
           </div>
         </div>
-      </div>
 
-      {/* Decorative pull-quote */}
-      <div className="mt-24 md:mt-32 text-center">
-        <AnimatedSection>
-          <p className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-italic italic text-ink/70 leading-tight max-w-4xl mx-auto">
-            &ldquo;The best work lives where disciplines collide.&rdquo;
-          </p>
-        </AnimatedSection>
+        <FitLines lines={QUOTE_LINES} font={'italic 400 "Instrument Serif"'} maxSize={230} className="about-quote" />
       </div>
     </section>
   )

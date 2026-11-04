@@ -5,9 +5,14 @@
  * Embeds a Google Drive hosted video in the portfolio's editorial style.
  */
 
+import { Link } from 'react-router-dom'
 import Nav from './Nav'
+import { FitLines } from './components/PretextType'
 import { Grain } from './sections/DecorativeBreaks.jsx'
 import { motion } from 'framer-motion'
+
+const VIDEO_ID = '11jd-ODs1Ku42kJMiD9yCzHZBcapOsQRy'
+const TITLE = ['Showreel']
 
 export default function Showreel() {
   return (
@@ -15,7 +20,8 @@ export default function Showreel() {
       <Grain />
       <Nav />
 
-      <main className="pt-28 pb-20 px-6 md:px-12 max-w-7xl mx-auto">
+      <div className="pt-28 pb-20 px-6 md:px-12">
+        <div className="max-w-7xl mx-auto">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -23,14 +29,8 @@ export default function Showreel() {
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
           className="mb-10"
         >
-          <p className="text-[0.6rem] tracking-[0.3em] uppercase text-[#4a9f62] font-heading mb-3">
-            Creative Portfolio
-          </p>
-          <h1 className="font-display text-4xl md:text-5xl lg:text-6xl text-[#d4e4d8] mb-3 tracking-tight">
-            Showreel
-          </h1>
-          <div className="h-px w-24 bg-gradient-to-r from-[#4a9f62] to-transparent mb-4" />
-          <p className="text-[#5a6a5e] text-sm md:text-base font-body max-w-xl leading-relaxed">
+          <FitLines lines={TITLE} font={'340 "Fraunces"'} as="h1" maxSize={170} className="page-title" />
+          <p className="text-ink-light text-base font-light max-w-xl mt-4 leading-relaxed">
             A curated selection of creative work spanning design, motion, and digital storytelling.
           </p>
         </motion.div>
@@ -43,7 +43,7 @@ export default function Showreel() {
           className="w-full aspect-video rounded-xl overflow-hidden border border-[#4a9f62]/20 shadow-[0_40px_100px_-25px_rgba(0,0,0,0.7)] bg-[#111c14]"
         >
           <iframe
-            src="https://drive.google.com/file/d/11jd-ODs1Ku42kJMiD9yCzHZBcapOsQRy/preview"
+            src={`https://drive.google.com/file/d/${VIDEO_ID}/preview`}
             width="100%"
             height="100%"
             allow="autoplay"
@@ -52,7 +52,14 @@ export default function Showreel() {
             title="Yehia Salem — Showreel"
           />
         </motion.div>
-      </main>
+        <div className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-sm">
+          <a href={`https://drive.google.com/file/d/${VIDEO_ID}/view`} target="_blank" rel="noopener noreferrer" className="text-accent-light underline underline-offset-4">
+            Open in Google Drive
+          </a>
+          <Link to="/works" className="text-accent-light underline underline-offset-4">See the complete works</Link>
+        </div>
+        </div>
+      </div>
     </div>
   )
 }

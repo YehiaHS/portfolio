@@ -28,7 +28,7 @@ export default function Education() {
         <div className="grid grid-cols-12 gap-8 md:gap-16 lg:gap-20">
           <div className="col-span-12 md:col-span-3 lg:col-span-2">
             <AnimatedSection>
-              <span className="section-number">08</span>
+              <span className="section-number">07</span>
               <p className="page-number mt-2">{t('educationLabel')}</p>
             </AnimatedSection>
           </div>

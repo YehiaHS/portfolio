@@ -9,8 +9,25 @@ const resolvePath = (path) => {
   return `${base}${path.startsWith('/') ? '' : '/'}${path}`;
 };
 
-export default function Lightbox({ src, caption, onClose, onPrev, onNext, isVideo, isEmbed, driveFallback }) {
+export default function Lightbox({ src, caption, onClose, onPrev, onNext, isVideo, isEmbed, driveFallback, position, preload = [] }) {
   const closeRef = useRef(null);
+  const touchStart = useRef(null);
+
+  // The neighbours are the likely next click, so have them ready
+  useEffect(() => {
+    preload.forEach((path) => { new Image().src = resolvePath(path); });
+  }, [preload]);
+
+  const onTouchEnd = (e) => {
+    if (!touchStart.current) return;
+    const touch = e.changedTouches[0];
+    const dx = touch.clientX - touchStart.current.x;
+    const dy = touch.clientY - touchStart.current.y;
+    touchStart.current = null;
+    if (Math.abs(dx) < 50 || Math.abs(dx) < Math.abs(dy)) return;
+    if (dx > 0) onPrev?.();
+    else onNext?.();
+  };
 
   // Move focus into the dialog so keyboard input no longer reaches the card behind it,
   // then return focus to the card that opened it on close.
@@ -47,10 +64,15 @@ export default function Lightbox({ src, caption, onClose, onPrev, onNext, isVide
       aria-modal="true"
       aria-label={caption}
       onClick={onClose}
+      onTouchStart={(e) => { touchStart.current = { x: e.touches[0].clientX, y: e.touches[0].clientY }; }}
+      onTouchEnd={onTouchEnd}
     >
       <div className="absolute top-5 left-0 right-0 z-10 flex items-center justify-between px-6" onClick={e => e.stopPropagation()}>
         <div className="flex flex-col gap-1">
-          <p className="text-sm font-light max-w-md truncate text-ink-light">{caption}</p>
+          <p className="text-sm font-light max-w-md truncate text-ink-light">
+            {position && <span className="text-ink-faint me-3">{position}</span>}
+            {caption}
+          </p>
           {driveFallback && (
             <a 
               href={driveFallback} 

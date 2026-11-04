@@ -23,13 +23,12 @@ export default function Awards() {
           <rect x="13" y="33" width="14" height="3" rx="1" />
         </svg>
       </div>
-      <div className="absolute bottom-10 right-8 md:right-20 opacity-[0.025] font-heading text-[10rem] font-bold leading-none select-none pointer-events-none">05</div>
 
       <div className="relative mx-auto max-w-7xl">
         <div className="grid grid-cols-12 gap-8 md:gap-16 lg:gap-20">
           <div className="col-span-12 md:col-span-3 lg:col-span-2">
             <AnimatedSection>
-              <span className="section-number">05</span>
+              <span className="section-number">03</span>
               <p className="page-number mt-2">{t('recognition')}</p>
             </AnimatedSection>
           </div>

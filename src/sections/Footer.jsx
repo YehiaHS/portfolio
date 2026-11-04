@@ -35,6 +35,7 @@ function BackToTopButton() {
       onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
       className="fixed bottom-5 right-5 md:bottom-6 md:right-6 z-50 flex items-center justify-center"
       title="Back to top"
+      aria-label="Back to top"
       whileHover={{ scale: 1.08 }}
       whileTap={{ scale: 0.92 }}
     >
@@ -54,6 +55,12 @@ function BackToTopButton() {
       </svg>
     </motion.button>
   )
+}
+
+/** For pages with their own footer, which still benefit from the quick way back up. */
+export function BackToTop() {
+  const visible = useScrollBottom(600)
+  return <AnimatePresence>{visible && <BackToTopButton />}</AnimatePresence>
 }
 
 /* ── Footer ──────────────────────────────────────────────────────────────── */
@@ -99,9 +106,9 @@ export default function Footer() {
           <div className="md:col-span-3">
             <p className="section-number mb-4">Contact</p>
             <div className="space-y-2 text-sm font-light text-ink-faint">
-              <p>{profile.contact.email}</p>
-              <p>{profile.contact.whatsapp}</p>
-              <p>{profile.contact.phone}</p>
+              <a href={`mailto:${profile.contact.email}`} className="block hover:text-accent transition-colors">{profile.contact.email}</a>
+              <a href={`https://wa.me/${profile.contact.whatsapp.replace(/[^0-9]/g, '')}`} target="_blank" rel="noreferrer" className="block hover:text-accent transition-colors">{profile.contact.whatsapp}</a>
+              <a href={`tel:${profile.contact.phone}`} className="block hover:text-accent transition-colors">{profile.contact.phone}</a>
             </div>
           </div>
 

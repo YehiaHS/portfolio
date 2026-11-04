@@ -1,8 +1,10 @@
 import { useState, useRef, useEffect, useMemo, useCallback } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { motion, AnimatePresence, useScroll, useInView } from 'framer-motion'
 import { useLanguage } from './LanguageContext'
-import LanguageSelector from './LanguageSelector'
+import Nav from './Nav'
+import { BackToTop } from './sections/Footer'
+import { FitLines } from './components/PretextType'
 import Cursor from './Cursor'
 import { FEATURED_WORKS, getArchiveCategories } from './data/archiveData'
 import ImageCard from './components/ImageCard'
@@ -10,9 +12,6 @@ import Lightbox from './components/Lightbox'
 import { useImageLoader } from './hooks/useImageLoader'
 import { latestItems, mergeCategories, useDriveCategories } from './data/driveContent'
 import Fuse from 'fuse.js'
-
-/* ──────────────── FEATURED WORKS (from Portfolio showcase) ──────────────── */
-/* Removed code block */
 
 const D = {
   bg: '#0d1410',
@@ -28,9 +27,6 @@ const D = {
   cardBgLight: '#111c14',
 }
 
-/* ──────────────── ARCHIVE CATEGORIES ──────────────── */
-/* Removed code block */
-
 /* ──────────────── FALLBACK SVG ──────────────── */
 const FallbackSvg = () => (
   <svg viewBox="0 0 400 267" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
@@ -40,29 +36,9 @@ const FallbackSvg = () => (
   </svg>
 )
 
-/* ──────────────── BOTANICAL WATERMARK ──────────────── */
-const BotanicalWatermark = () => (
-  <svg
-    className="absolute inset-0 w-full h-full opacity-[0.03] pointer-events-none"
-    viewBox="0 0 1200 600"
-    preserveAspectRatio="xMaxYMid slice"
-    xmlns="http://www.w3.org/2000/svg"
-    aria-hidden="true"
-  >
-    <defs>
-      <path id="vine" d="M0,300 C150,280 200,200 350,250 C500,300 550,150 700,200 C850,250 900,100 1050,180 C1100,210 1150,250 1200,200" fill="none" stroke="#2d5a3d" strokeWidth="2" />
-      <path id="leaf" d="M0,0 C15,-30 35,-20 40,0 C35,20 15,30 0,0 Z" fill="#2d5a3d" />
-    </defs>
-    <use href="#vine" />
-    <use href="#vine" transform="translate(0, 80) scale(0.8)" opacity="0.6" />
-    {Array.from({ length: 12 }).map((_, i) => (
-      <use key={i} href="#leaf" transform={`translate(${100 + i * 90}, ${150 + Math.sin(i) * 80}) rotate(${i * 15 - 30}) scale(${0.6 + Math.random() * 0.4})`} opacity="0.5" />
-    ))}
-  </svg>
-)
-
-/* ──────────────── IMAGE STATE ──────────────── */
-/* Removed code block */
+const TITLE_FONT = '340 "Fraunces"'
+const SHOWCASE_TITLE = ['Selected Works']
+const ARCHIVE_TITLE = ['Complete Archive']
 
 /* ──────────────── FEATURED WORK ITEM ──────────────── */
 const FeaturedWorkItem = ({ work, index, onClick }) => {
@@ -72,7 +48,6 @@ const FeaturedWorkItem = ({ work, index, onClick }) => {
   const [hovered, setHovered] = useState(false)
   const imgState = useImageLoader(work.isVideo ? null : work.src, isInView)
   const [showReflection, setShowReflection] = useState(false)
-  const [expanded, setExpanded] = useState(false)
 
 
   return (
@@ -81,19 +56,11 @@ const FeaturedWorkItem = ({ work, index, onClick }) => {
       animate={isInView ? { opacity: 1, y: 0 } : {}}
       transition={{ delay: 0.05, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
       className="relative"
-      style={{ minHeight: 'calc(100vh - 12rem)' }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-      {/* water number */}
-      <div className="absolute -top-16 -left-4 md:-left-16 pointer-events-none select-none z-0"
-        style={{ color: '#2d5a3d', opacity: 0.03 }}>
-        <span className="font-display text-[12rem] md:text-[20rem] lg:text-[28rem] leading-none tracking-tighter">
-          {String(index + 1).padStart(2, '0')}
-        </span>
-      </div>
 
-      <div className="relative z-10 pt-8">
+      <div className="relative z-10">
         {/* Category label */}
         <div className="flex items-center gap-3 mb-6">
           <span className="page-number" style={{ color: D.faint }}>{String(index + 1).padStart(2, '0')}</span>
@@ -110,7 +77,8 @@ const FeaturedWorkItem = ({ work, index, onClick }) => {
 
         {/* Image / Video */}
         <div
-          className="relative aspect-[4/3] overflow-hidden mb-6 cursor-pointer"
+          className="relative aspect-[16/10] overflow-hidden mb-6 cursor-pointer"
+          style={{ background: D.cardBg }}
           role="button"
           tabIndex={0}
           aria-label={work.title}
@@ -129,7 +97,7 @@ const FeaturedWorkItem = ({ work, index, onClick }) => {
               muted 
               loop 
               playsInline 
-              className="h-full w-full object-cover"
+              className="h-full w-full object-contain"
               onMouseOver={e => e.currentTarget.play()}
               onMouseOut={e => { e.currentTarget.pause(); e.currentTarget.currentTime = 0; }}
             />
@@ -143,7 +111,7 @@ const FeaturedWorkItem = ({ work, index, onClick }) => {
               {imgState !== "error" && (
                 <motion.img
                   src={work.src} alt={work.title} loading="lazy" decoding="async"
-                  className="h-full w-full object-cover"
+                  className="h-full w-full object-contain"
                   style={{ opacity: imgState === "loaded" ? 1 : 0 }}
                   animate={{ scale: hovered ? 1.04 : 1 }}
                   transition={{ duration: 0.6 }}
@@ -170,14 +138,9 @@ const FeaturedWorkItem = ({ work, index, onClick }) => {
         </div>
 
         {/* Description with expand */}
-        <p className={`text-sm leading-relaxed font-light max-w-2xl ${expanded ? '' : 'line-clamp-3'}`} style={{ color: D.muted }}>
+        <p className="text-sm leading-relaxed font-light max-w-2xl" style={{ color: D.muted }}>
           {work.description}
         </p>
-        {work.description.length > 120 && (
-          <button onClick={() => setExpanded(!expanded)} className="text-sm underline mt-1" style={{ color: D.accent }}>
-            {expanded ? 'less' : 'more'}
-          </button>
-        )}
 
         {/* Reflection toggle */}
         <button onClick={() => setShowReflection(!showReflection)}
@@ -221,36 +184,27 @@ const FeaturedWorkItem = ({ work, index, onClick }) => {
 
 /* Removed code block */
 
-/* ──────────────── WORKS STATS BAR ──────────────── */
-const WorksStats = ({ totalItems, shownItems, totalCategories, featuredCount, viewMode }) => (
-  <motion.div
-    initial={{ opacity: 0, y: 10 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ delay: 0.6, duration: 0.5 }}
-    className="mx-auto max-w-7xl px-6 md:px-12 py-4"
-  >
-    <div className="flex items-center justify-between flex-wrap gap-3">
-      <div className="flex items-center gap-4 md:gap-6">
-        <div className="text-center">
-          <div className="font-display text-lg md:text-xl" style={{ color: D.text }}>{featuredCount}</div>
-          <div className="text-[0.55rem] uppercase tracking-widest" style={{ color: D.faint }}>Featured</div>
-        </div>
-        <div className="h-6 w-px" style={{ background: D.border }} />
-        <div className="text-center">
-          <div className="font-display text-lg md:text-xl" style={{ color: D.text }}>{totalItems}</div>
-          <div className="text-[0.55rem] uppercase tracking-widest" style={{ color: D.faint }}>Total</div>
-        </div>
-        <div className="h-6 w-px" style={{ background: D.border }} />
-        <div className="text-center">
-          <div className="font-display text-lg md:text-xl" style={{ color: D.text }}>{totalCategories}</div>
-          <div className="text-[0.55rem] uppercase tracking-widest" style={{ color: D.faint }}>Categories</div>
-        </div>
-      </div>
-      <div className="page-number hidden md:block" style={{ color: D.faint }}>
-        {viewMode === 'showcase' ? 'Scroll to explore' : `Showing ${shownItems} works`}
-      </div>
+/* ──────────────── VIEW SWITCH ──────────────── */
+const ViewSwitch = ({ viewMode, onChange, summary }) => (
+  <div className="px-6 md:px-12 pb-8">
+  <div className="mx-auto max-w-7xl flex flex-wrap items-center justify-between gap-4">
+    <div className="flex gap-1 p-1 rounded-sm border" style={{ borderColor: D.border }} role="group" aria-label="Choose a view">
+      {[['showcase', 'Featured'], ['archive', 'Full archive']].map(([mode, label]) => (
+        <button
+          key={mode}
+          type="button"
+          aria-pressed={viewMode === mode}
+          onClick={() => onChange(mode)}
+          className="px-4 py-2 text-sm rounded-sm transition-colors"
+          style={viewMode === mode ? { background: D.accent, color: D.bg } : { color: D.muted }}
+        >
+          {label}
+        </button>
+      ))}
     </div>
-  </motion.div>
+    <p className="text-sm font-light" style={{ color: D.faint }}>{summary}</p>
+  </div>
+  </div>
 )
 
 /* ──────────────── CATEGORY SECTION ──────────────── */
@@ -279,6 +233,7 @@ const CategorySection = ({ category, index, onImageClick, isSearchResult }) => {
             <ImageCard 
               key={item.src} 
               {...item}
+              fit={category.fit}
               index={i} 
               badge={isSearchResult ? item.categoryLabel : item.isNew ? 'New' : null}
               onClick={onImageClick} 
@@ -292,8 +247,8 @@ const CategorySection = ({ category, index, onImageClick, isSearchResult }) => {
 
 /* ──────────────── DIVIDER ──────────────── */
 const Divider = () => (
-  <div className="mx-auto max-w-7xl px-6 md:px-12">
-    <div className="h-px" style={{ backgroundImage: 'linear-gradient(to right, #2d5a3d20, #2d5a3d10, transparent)' }} />
+  <div className="px-6 md:px-12">
+    <div className="mx-auto max-w-7xl h-px" style={{ backgroundImage: 'linear-gradient(to right, #2d5a3d40, #2d5a3d10, transparent)' }} />
   </div>
 )
 
@@ -327,10 +282,58 @@ function WorksArchive() {
   }), [searchableItems])
 
   /* State for archive section */
-  const [activeCategory, setActiveCategory] = useState('all')
-  const [searchQuery, setSearchQuery] = useState('')
+  // Kept in the URL so a filtered view survives a refresh, can be shared, and works with the back button
+  const [searchParams, setSearchParams] = useSearchParams()
+  const viewMode = searchParams.get('view') === 'archive' ? 'archive' : 'showcase'
+  const searchQuery = searchParams.get('q') || ''
+  const requestedCategory = searchParams.get('category')
+  const activeCategory = allCategories.some((category) => category.id === requestedCategory) ? requestedCategory : 'all'
   const [lightbox, setLightbox] = useState(null)
-  const [viewMode, setViewMode] = useState('showcase') // 'showcase' or 'archive'
+  const searchRef = useRef(null)
+  const filterBarRef = useRef(null)
+  const resultsRef = useRef(null)
+
+  const updateParams = useCallback((changes, options) => {
+    setSearchParams((current) => {
+      const next = new URLSearchParams(current)
+      Object.entries(changes).forEach(([key, value]) => {
+        if (value) next.set(key, value)
+        else next.delete(key)
+      })
+      return next
+    }, options)
+  }, [setSearchParams])
+
+  const setViewMode = useCallback((mode) => updateParams({ view: mode === 'archive' ? 'archive' : null }), [updateParams])
+  const setActiveCategory = useCallback((id) => updateParams({ category: id === 'all' ? null : id }), [updateParams])
+  // Typing replaces the history entry, otherwise back would undo one letter at a time
+  const setSearchQuery = useCallback((value) => updateParams({ q: value }, { replace: true }), [updateParams])
+
+  // Press / to jump to the search box from anywhere in the archive
+  useEffect(() => {
+    if (viewMode !== 'archive') return undefined
+    const onKey = (event) => {
+      if (event.key !== '/' || /^(INPUT|TEXTAREA|SELECT)$/.test(event.target.tagName)) return
+      event.preventDefault()
+      searchRef.current?.focus()
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [viewMode])
+
+  // Picking a category from far down the page shows its start, just below the sticky filters
+  const isFirstCategory = useRef(true)
+  useEffect(() => {
+    if (isFirstCategory.current) {
+      isFirstCategory.current = false
+      return
+    }
+    const results = resultsRef.current
+    const bar = filterBarRef.current
+    if (!results || !bar) return
+    const offset = results.getBoundingClientRect().top - bar.getBoundingClientRect().bottom
+    if (offset < 0) window.scrollBy({ top: offset, behavior: 'instant' })
+  }, [activeCategory])
 
   // Switching modes swaps the whole page, so don't leave the reader stranded mid-way down it
   const isFirstRender = useRef(true)
@@ -429,68 +432,28 @@ function WorksArchive() {
   return (
     <div className="relative min-h-screen cursor-none" style={{ background: D.bg, color: D.text }}>
       <Cursor />
+      <Nav />
 
       {/* Reading progress bar */}
-      <motion.div className="fixed top-0 left-0 right-0 h-[2px] z-[60] origin-left"
+      <motion.div className="fixed top-0 left-0 right-0 h-[2px] z-[90] origin-left"
         style={{ scaleX: scrollYProgress, backgroundColor: D.accent }} aria-hidden="true" />
 
-      {/* Top bar */}
-      <div className="fixed top-0 left-0 right-0 z-50" style={{ background: 'rgba(13, 20, 16, 0.92)', backdropFilter: 'blur(12px)' }}>
-        <div className="mx-auto max-w-7xl px-6 md:px-12 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Link to="/" style={{ color: D.text }} className="font-display text-xl italic hover:transition-colors"
-              onMouseEnter={e => e.currentTarget.style.color = D.accent}
-              onMouseLeave={e => e.currentTarget.style.color = D.text}>
-              Y.S.
-            </Link>
-            <span className="hidden md:block h-4 w-px" style={{ background: D.faint }} />
-            <span className="hidden md:block page-number" style={{ color: D.muted }}>Portfolio & Archive</span>
-          </div>
-          <div className="flex items-center gap-4">
-            <button onClick={() => setViewMode(v => v === 'showcase' ? 'archive' : 'showcase')}
-              className="page-number text-xs px-3 py-1.5 border rounded-sm transition-colors"
-              style={{ borderColor: D.border, color: D.muted, background: viewMode === 'showcase' ? D.cardBg : 'transparent' }}
-              onMouseEnter={e => e.currentTarget.style.color = D.accent}
-              onMouseLeave={e => e.currentTarget.style.color = D.muted}
-            >
-              {viewMode === 'showcase' ? 'Showcase' : 'Archive'}
-            </button>
-            <LanguageSelector />
-          </div>
+      <header className="pt-28 md:pt-32 pb-8 px-6 md:px-12">
+        <div className="mx-auto max-w-7xl">
+          <FitLines key={viewMode} lines={viewMode === 'showcase' ? SHOWCASE_TITLE : ARCHIVE_TITLE} font={TITLE_FONT} as="h1" className="page-title" />
+          <p className="text-base font-light max-w-xl leading-relaxed mt-4" style={{ color: D.muted }}>
+            {viewMode === 'showcase'
+              ? 'Featured projects from my creative process — each piece reflects deliberate practice, iterative critique, and growth across my academic journey.'
+              : 'Every design piece, photograph, academic slide, and creative project, organized in one browsable archive.'}
+          </p>
         </div>
-        <div className="mx-auto max-w-7xl px-6 md:px-12">
-          <div className="h-px" style={{ background: `linear-gradient(to right, transparent, ${D.border}, transparent)` }} />
-        </div>
-      </div>
+      </header>
 
-      {/* Header */}
-      <motion.header initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }} className="pt-24 pb-8 px-6 md:px-12 relative overflow-hidden">
-        <BotanicalWatermark />
-        <div className="mx-auto max-w-7xl relative z-10">
-          <div className="grid grid-cols-12 gap-8 md:gap-16">
-            <div className="col-span-12 md:col-span-4 lg:col-span-3">
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }}>
-                <span className="section-number" style={{ color: D.accent }}>Works</span>
-                <div className="w-8 h-px my-4" style={{ background: `${D.accent}66` }} />
-                <p className="page-number" style={{ color: D.muted }}>{viewMode === 'showcase' ? `${FEATURED_WORKS.length} featured works` : (searchQuery ? `${resultsCount} results` : `${resultsCount} works across ${filteredContent.length} sections`)}</p>
-              </motion.div>
-            </div>
-            <div className="col-span-12 md:col-span-8 lg:col-span-9">
-              <motion.h1 initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.25 }} className="text-5xl md:text-7xl lg:text-8xl font-display tracking-tight leading-[0.9] mb-6" style={{ color: D.text }}>
-                {viewMode === 'showcase' ? 'Selected Works' : 'Complete Archive'}
-              </motion.h1>
-              <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }} className="text-base font-light max-w-xl leading-relaxed" style={{ color: D.muted }}>
-                {viewMode === 'showcase'
-                  ? 'Featured projects from my creative process — each piece reflects deliberate practice, iterative critique, and growth across my academic journey.'
-                  : 'Every design piece, photograph, academic slide, and creative project — organized in one browsable archive.'}
-              </motion.p>
-            </div>
-          </div>
-        </div>
-      </motion.header>
-
-      {/* Stats bar */}
-      <WorksStats totalItems={totalItems} shownItems={resultsCount} totalCategories={allCategories.length} featuredCount={FEATURED_WORKS.length} viewMode={viewMode} />
+      <ViewSwitch
+        viewMode={viewMode}
+        onChange={setViewMode}
+        summary={searchQuery ? `${resultsCount} results` : `${viewMode === 'archive' ? resultsCount : totalItems} works in ${viewMode === 'archive' && activeCategory !== 'all' ? '1 category' : `${allCategories.length} categories`}`}
+      />
 
       {/* Showcase mode */}
       {viewMode === 'showcase' && (
@@ -508,23 +471,10 @@ function WorksArchive() {
               </div>
             </section>
           )}
-          <div className="mx-auto max-w-7xl px-6 md:px-12 pt-8">
-            <div className="flex items-center justify-between">
-              <p className="page-number text-sm" style={{ color: D.muted }}>Featured Projects</p>
-              <button onClick={() => setViewMode('archive')}
-                className="page-number text-sm flex items-center gap-2 hover:transition-colors"
-                style={{ color: D.accent }}
-                onMouseEnter={e => e.currentTarget.style.color = '#63b476'}
-                onMouseLeave={e => e.currentTarget.style.color = D.accent}
-              >
-                View All Works <span>→</span>
-              </button>
-            </div>
-          </div>
-          <section className="px-6 md:px-12 pt-8 pb-20">
+          <section className="px-6 md:px-12 pt-4 pb-20">
             <div className="mx-auto max-w-7xl">
               {FEATURED_WORKS.map((work, i) => (
-                <div key={work.id} className="py-8 md:py-16" data-project>
+                <div key={work.id} className="py-8 md:py-12" data-project>
                   <div id={`project-${work.id}`}>
                     <FeaturedWorkItem work={work} index={i} onClick={handleFeaturedClick} />
                   </div>
@@ -547,7 +497,7 @@ function WorksArchive() {
                 {allCategories.map((cat, i) => (
                   <motion.button
                     key={cat.id}
-                    onClick={() => { setActiveCategory(cat.id); setViewMode('archive') }}
+                    onClick={() => updateParams({ view: 'archive', category: cat.id })}
                     className="group text-left p-4 rounded-sm border transition-colors"
                     style={{ borderColor: D.border, background: D.cardBg }}
                     initial={{ opacity: 0, y: 10 }}
@@ -578,13 +528,16 @@ function WorksArchive() {
       {viewMode === 'archive' && (
         <>
           {/* Sticky filter bar */}
-          <div className="sticky top-[57px] z-40 border-b" style={{ background: 'rgba(13, 20, 16, 0.95)', backdropFilter: 'blur(8px)', borderColor: D.border }}>
-            <div className="mx-auto max-w-7xl px-6 md:px-12 pt-4 pb-2">
+          <div ref={filterBarRef} className="sticky top-[60px] md:top-[61px] z-40 border-b" style={{ background: 'rgba(13, 20, 16, 0.95)', backdropFilter: 'blur(8px)', borderColor: D.border }}>
+            <div className="px-6 md:px-12 pt-3 pb-2">
+            <div className="mx-auto max-w-7xl">
               <div className="relative group">
                 <input
-                  type="text" 
-                  placeholder="Thorough search (typos allowed)..." 
-                  value={searchQuery} 
+                  ref={searchRef}
+                  type="search"
+                  aria-label="Search works"
+                  placeholder="Search works (press / to start typing)"
+                  value={searchQuery}
                   onChange={e => setSearchQuery(e.target.value)}
                   className="w-full pl-4 pr-12 py-3.5 text-sm border outline-none transition-all duration-300 focus:ring-1 focus:ring-[#4a9f6240]"
                   style={{ 
@@ -607,42 +560,37 @@ function WorksArchive() {
                   </button>
                 )}
               </div>
-              <div className="flex items-center justify-between mt-3 px-1">
-                <div className="flex items-center gap-1.5 opacity-60">
-                  <span className="w-1.5 h-1.5 rounded-full" style={{ background: searchQuery ? D.accent : D.muted }} />
-                  <span className="text-[0.65rem] uppercase tracking-widest" style={{ color: D.muted }}>
-                    {searchQuery ? `Fuzzy Match: ${resultsCount} found` : 'Standard Filter'}
-                  </span>
-                </div>
+              <div className="flex items-center justify-end mt-2 px-1 empty:hidden">
                 { (searchQuery || activeCategory !== 'all') && (
-                  <button onClick={() => { setActiveCategory('all'); setSearchQuery('') }}
-                    className="text-[0.6rem] uppercase tracking-tighter opacity-50 hover:opacity-100 hover:transition-opacity" style={{ color: D.accent }}>
+                  <button onClick={() => updateParams({ category: null, q: null })}
+                    className="text-sm underline underline-offset-4" style={{ color: D.accent }}>
                     Reset Filters
                   </button>
                 )}
               </div>
               <div className="mt-2 overflow-x-auto pb-2">
                 <div className="flex gap-2 whitespace-nowrap">
-                  <button onClick={() => { setActiveCategory('all'); setSearchQuery('') }}
+                  <button onClick={() => updateParams({ category: null, q: null })}
                     className="px-4 py-2 text-xs uppercase rounded-sm transition-all"
-                    style={activeCategory === 'all' && !searchQuery ? { background: D.accent, color: '#fff' } : { background: D.cardBg, color: D.faint }}>
+                    style={activeCategory === 'all' && !searchQuery ? { background: D.accent, color: D.bg } : { background: D.cardBg, color: D.muted }}>
                     All ({totalItems})
                   </button>
                   {allCategories.map((cat) => (
                     <button key={cat.id} onClick={() => setActiveCategory(cat.id)}
                       className="px-4 py-2 text-xs uppercase rounded-sm transition-all"
-                      style={activeCategory === cat.id ? { background: D.accent, color: '#fff' } : { background: D.cardBg, color: D.faint }}>
+                      style={activeCategory === cat.id ? { background: D.accent, color: D.bg } : { background: D.cardBg, color: D.muted }}>
                       {cat.label} ({cat.items.length})
                     </button>
                   ))}
                 </div>
               </div>
             </div>
+            </div>
           </div>
 
           {/* Archive content */}
           <AnimatePresence mode="wait">
-            <motion.div key={activeCategory + '__' + searchQuery} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
+            <motion.div ref={resultsRef} key={activeCategory} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
               {filteredContent.length > 0 && resultsCount > 0 ? (
                 filteredContent.map((cat, i) => (
                   <CategorySection 
@@ -655,10 +603,9 @@ function WorksArchive() {
                 ))
               ) : (
                 <div className="py-24 text-center">
-                  <BotanicalWatermark />
                   <p className="text-xl font-display" style={{ color: D.muted }}>No matches found</p>
                   <p className="text-sm font-light mt-2" style={{ color: D.faint }}>Try searching for a different keyword or category</p>
-                  <button onClick={() => { setSearchQuery(''); setActiveCategory('all') }} 
+                  <button onClick={() => updateParams({ category: null, q: null })} 
                     className="mt-6 px-6 py-2 border rounded-sm text-xs uppercase tracking-widest transition-colors"
                     style={{ borderColor: D.border, color: D.accent }}
                   >
@@ -681,6 +628,8 @@ function WorksArchive() {
         </div>
       </footer>
 
+      <BackToTop />
+
       {/* Lightbox */}
       <AnimatePresence>
         {lightbox && (
@@ -693,6 +642,8 @@ function WorksArchive() {
             onClose={() => setLightbox(null)}
             onPrev={lightbox.items && lightbox.index > 0 ? () => navLightbox(-1) : null}
             onNext={lightbox.items && lightbox.index < lightbox.items.length - 1 ? () => navLightbox(1) : null}
+            position={lightbox.items?.length > 1 ? `${lightbox.index + 1} / ${lightbox.items.length}` : null}
+            preload={[lightbox.items?.[lightbox.index + 1], lightbox.items?.[lightbox.index - 1]].filter((item) => item && !item.isVideo).map((item) => item.src)}
           />
         )}
       </AnimatePresence>

@@ -1,4 +1,4 @@
-import React, { Suspense, lazy } from 'react'
+import React, { Suspense, lazy, useEffect } from 'react'
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { AnimatePresence, MotionConfig, motion } from 'framer-motion'
@@ -14,11 +14,25 @@ const Showreel = lazy(() => import('./Showreel.jsx'))
 
 const basename = import.meta.env.BASE_URL
 
+const PAGE_TITLES = {
+  '/works': 'Works',
+  '/behind-the-scenes': 'Behind the Scenes',
+  '/showreel': 'Showreel',
+}
+
 const AnimatedRoutes = () => {
   const location = useLocation()
+
+  useEffect(() => {
+    const page = PAGE_TITLES[location.pathname]
+    document.title = page ? `${page} | Yehia Salem` : 'Yehia Salem — Creative Portfolio'
+  }, [location.pathname])
+
   return (
     <AnimatePresence mode="wait">
-      <motion.div
+      <motion.main
+        id="main-content"
+        tabIndex={-1}
         key={location.pathname}
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
@@ -35,7 +49,7 @@ const AnimatedRoutes = () => {
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
         </Suspense>
-      </motion.div>
+      </motion.main>
     </AnimatePresence>
   )
 }
@@ -46,6 +60,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       <LanguageProvider>
         <BrowserRouter basename={basename}>
           <MotionConfig reducedMotion="user">
+            <a href="#main-content" className="skip-link">Skip to content</a>
             <ScrollToTop />
             <AnimatedRoutes />
           </MotionConfig>

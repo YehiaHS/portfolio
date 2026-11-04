@@ -9,7 +9,7 @@ const resolvePath = (path) => {
   return `${base}${path.startsWith('/') ? '' : '/'}${path}`;
 };
 
-export default function ImageCard({ src, caption, index, onClick, isDoc, isVideo, isEmbed, driveFallback, badge, thumb, poster, docLabel, className = "", style = {} }) {
+export default function ImageCard({ src, caption, index, onClick, isDoc, isVideo, isEmbed, driveFallback, badge, thumb, poster, docLabel, fit, className = "", style = {} }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: '100px' });
   const resolvedSrc = resolvePath(src);
@@ -64,7 +64,7 @@ export default function ImageCard({ src, caption, index, onClick, isDoc, isVideo
               alt={caption}
               loading="lazy"
               decoding="async"
-              className={`w-full h-full object-cover transition-all duration-700 ${imgState === 'loaded' ? 'opacity-100 scale-100 blur-0' : 'opacity-0 scale-110 blur-xl'}`}
+              className={`w-full h-full ${fit === 'contain' ? 'object-contain p-4' : 'object-cover'} transition-all duration-700 ${imgState === 'loaded' ? 'opacity-100 scale-100 blur-0' : 'opacity-0 scale-110 blur-xl'}`}
             />
             {isVideo && (
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
@@ -92,16 +92,17 @@ export default function ImageCard({ src, caption, index, onClick, isDoc, isVideo
           </div>
         ) : isVideo ? (
           <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center select-none">
-            <div className="mb-4 transition-transform duration-500 group-hover:scale-110">
+            {inView && !isEmbed && (
+              <video src={`${resolvedSrc}#t=0.5`} preload="metadata" muted playsInline tabIndex={-1} aria-hidden="true" className="absolute inset-0 w-full h-full object-cover opacity-70" />
+            )}
+            <div className="relative mb-4 transition-transform duration-500 group-hover:scale-110">
               <div className="w-14 h-14 rounded-full border border-accent/30 flex items-center justify-center bg-accent/10 backdrop-blur-sm">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" className="text-accent ml-1">
                   <path d="M8 5v14l11-7z" />
                 </svg>
               </div>
             </div>
-            <div className="text-[0.6rem] uppercase tracking-[0.2em] font-display mb-1 text-ink-light">Video Production</div>
-            <div className="text-[0.6rem] font-mono text-ink-faint">{isEmbed ? 'VIDEO' : 'MP4'}</div>
-
+            
             {/* Subtle background flair */}
             <div className="absolute inset-0 -z-10 opacity-10">
               <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
@@ -118,7 +119,7 @@ export default function ImageCard({ src, caption, index, onClick, isDoc, isVideo
       </div>
 
       {/* Overlay Caption */}
-      <div className="absolute inset-0 bg-gradient-to-t from-[#0d1a0f]/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity duration-500 flex items-end pointer-events-none">
+      <div className="absolute inset-0 bg-gradient-to-t from-[#0d1a0f]/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 [@media(hover:none)]:opacity-100 transition-opacity duration-500 flex items-end pointer-events-none">
         <p className="p-4 text-[#f5f5f0] text-sm font-light leading-snug">{caption}</p>
       </div>
     </motion.div>

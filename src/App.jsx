@@ -6,11 +6,10 @@
  */
 
 import Nav from './Nav'
-import { DividerText } from './motionEffects.jsx'
 import { motion, useScroll } from 'framer-motion'
 
 // Decorative utilities
-import { Grain, BotanicalBreak, MarqueeStrip, GeometricPatternBand, DecorativeEmblem, DecorativeBreak } from './sections/DecorativeBreaks.jsx'
+import { Grain, GeometricPatternBand } from './sections/DecorativeBreaks.jsx'
 
 // Sections (in render order)
 import Hero from './sections/Hero.jsx'
@@ -23,7 +22,6 @@ import Awards from './sections/Awards.jsx'
 import ToolsSection from './sections/ToolsSection.jsx'
 import Interests from './sections/Interests.jsx'
 import Education from './sections/Education.jsx'
-import VisualMoments from './sections/VisualMoments.jsx'
 import Contact from './sections/Contact.jsx'
 import Footer from './sections/Footer.jsx'
 
@@ -50,20 +48,13 @@ export default function App() {
       <JustAdded />
       <Ticker />
       <About />
-      <BotanicalBreak />
-      <MarqueeStrip />
       <Skills />
       <GeometricPatternBand />
-      <DividerText text="CRAFT" />
-      <DecorativeBreak letter="A" />
       <Awards />
-      <DecorativeEmblem />
-      <DividerText text="CREATE" />
       <ToolsSection />
       <Values />
       <Interests />
       <Education />
-      <VisualMoments />
       <Contact />
       <Footer />
     </div>

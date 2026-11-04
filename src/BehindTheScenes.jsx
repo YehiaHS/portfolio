@@ -1,15 +1,16 @@
 import { useState, useRef } from 'react'
 import { Link } from 'react-router-dom'
-import { motion, useInView, useScroll } from 'framer-motion'
+import { AnimatePresence, motion, useInView, useScroll } from 'framer-motion'
 import { useLanguage } from './LanguageContext'
-import LanguageSelector from './LanguageSelector'
+import Nav from './Nav'
+import Lightbox from './components/Lightbox'
+import { FitLines } from './components/PretextType'
+import { BackToTop } from './sections/Footer'
 import Cursor from './Cursor'
-import { DividerText } from './motionEffects.jsx'
 import ImageCard from './components/ImageCard'
 
 /* ───────────────────────── IMAGE DATA ───────────────────────── */
 const chineseCulturePhotos = [
-  { src: '/portfolio/photos/chinese-culture/photo21.jpg', caption: 'Chinese Culture Day — Main Event' },
   { src: '/portfolio/photos/chinese-culture/photo23.jpg', caption: 'Cultural presentations and performances' },
   { src: '/portfolio/photos/chinese-culture/photo24.jpg', caption: 'Traditional art and calligraphy' },
   { src: '/portfolio/photos/chinese-culture/photo25.jpg', caption: 'Student interactions and activities' },
@@ -21,6 +22,8 @@ const chineseCulturePhotos = [
   { src: '/portfolio/photos/chinese-culture/photo31.jpg', caption: 'Cultural exchange moments' },
   { src: '/portfolio/photos/chinese-culture/photo32.jpg', caption: 'Performance stage highlights' },
   { src: '/portfolio/photos/chinese-culture/photo34.jpg', caption: 'Event wrap-up and acknowledgements' },
+  // Kept last: a motion-blurred candid, a weak opener for the set
+  { src: '/portfolio/photos/chinese-culture/photo21.jpg', caption: 'Chinese Culture Day — Main Event' },
 ]
 
 const openDayPhotos = [
@@ -64,6 +67,8 @@ const videoGallery = [
   },
 ]
 
+const PAGE_TITLE = ['Behind the Scenes']
+
 /* ───────────────────────── COMPONENTS ───────────────────────── */
 
 /* Removed internal ImageCard */
@@ -96,7 +101,7 @@ const VideoCard = ({ src, title, description, duration, index }) => {
         {/* Video player */}
         <video
           ref={videoRef}
-          src={src}
+          src={`${src}#t=0.5`}
           preload="metadata"
           className="w-full h-full object-cover"
           onClick={handleToggle}
@@ -132,16 +137,31 @@ const VideoCard = ({ src, title, description, duration, index }) => {
   )
 }
 
-/* ───────────────────────── MASONRY GRID ───────────────────────── */
-const MasonryGrid = ({ images }) => {
+/* ───────────────────────── PHOTO GRID ───────────────────────── */
+const PhotoGrid = ({ images }) => {
+  const [openIndex, setOpenIndex] = useState(null)
+
   return (
-    <div className="columns-1 sm:columns-2 xl:columns-3 lg:columns-2 gap-3 md:gap-4 space-y-3 md:space-y-4">
-      {images.map((photo, i) => (
-        <div key={photo.src} className="break-inside-avoid">
-          <ImageCard src={photo.src} caption={photo.caption} index={i} />
-        </div>
-      ))}
-    </div>
+    <>
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3 md:gap-4">
+        {images.map((photo, i) => (
+          <ImageCard key={photo.src} src={photo.src} caption={photo.caption} index={i} onClick={() => setOpenIndex(i)} />
+        ))}
+      </div>
+      <AnimatePresence>
+        {openIndex !== null && (
+          <Lightbox
+            src={images[openIndex].src}
+            caption={images[openIndex].caption}
+            position={`${openIndex + 1} / ${images.length}`}
+            preload={[images[openIndex + 1]?.src, images[openIndex - 1]?.src].filter(Boolean)}
+            onClose={() => setOpenIndex(null)}
+            onPrev={openIndex > 0 ? () => setOpenIndex(openIndex - 1) : null}
+            onNext={openIndex < images.length - 1 ? () => setOpenIndex(openIndex + 1) : null}
+          />
+        )}
+      </AnimatePresence>
+    </>
   )
 }
 
@@ -155,105 +175,49 @@ function BehindTheScenes() {
       <Cursor />
 
       {/* Scroll progress bar */}
-      <motion.div className="fixed top-0 left-0 right-0 h-[2px] z-[9999] origin-left" style={{ scaleX: scrollYProgress, backgroundColor: '#4a9f62' }} />
+      <motion.div className="fixed top-0 left-0 right-0 h-[2px] z-[90] origin-left" style={{ scaleX: scrollYProgress, backgroundColor: '#4a9f62' }} aria-hidden="true" />
+      <Nav />
+      <BackToTop />
 
-      {/* Top bar */}
-      <div className="fixed top-0 left-0 right-0 z-50 bg-paper/90 backdrop-blur-md">
-        <div className="mx-auto max-w-7xl px-6 md:px-12 py-5 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Link
-              to="/"
-              className="font-display text-xl italic text-ink hover:text-accent transition-colors"
-            >
-              Y.S.
-            </Link>
-            <span className="hidden md:block h-4 w-px bg-ink-faint/20" />
-            <span className="hidden md:block page-number">{t('portfolio')}</span>
-          </div>
-          <LanguageSelector />
-        </div>
-        <div className="mx-auto max-w-7xl px-6 md:px-12">
-          <div className="h-px bg-gradient-to-r from-transparent via-ink/10 to-transparent" />
-        </div>
-      </div>
-
-      {/* Header */}
-      <motion.header
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1 }}
-        className="pt-24 md:pt-28 pb-12 md:pb-16 px-6 md:px-8 lg:px-12"
-      >
+      <header className="pt-28 md:pt-32 pb-12 md:pb-16 px-6 md:px-12">
         <div className="mx-auto max-w-7xl">
-          <div className="grid grid-cols-12 gap-8 md:gap-16">
-            <div className="col-span-12 md:col-span-4 lg:col-span-3">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-              >
-                <span className="section-number">Event Media</span>
-                <div className="w-8 h-px bg-accent/40 my-4" />
-                <p className="page-number">Behind the scenes of Yehia&apos;s creative work</p>
-              </motion.div>
-            </div>
-            <div className="col-span-12 md:col-span-8 lg:col-span-9">
-              <motion.h1
-                initial={{ opacity: 0, y: 40 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
-                className="font-display tracking-tight leading-[0.9] mb-6" style={{ fontSize: 'clamp(2.5rem, 8vw, 9rem)' }}
-              >
-                Behind the Scenes
-              </motion.h1>
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.5 }}
-                className="text-base font-light max-w-xl leading-relaxed text-ink-light"
-              >
-                Event documentation, behind-the-lens photography, and social media content creation.
-                Capturing the moments that define creative storytelling.
-              </motion.p>
-            </div>
-          </div>
+          <FitLines lines={PAGE_TITLE} font={'340 "Fraunces"'} as="h1" className="page-title" />
+          <p className="text-base font-light max-w-xl leading-relaxed text-ink-light mt-4">
+            Event documentation, behind-the-lens photography, and social media content creation.
+          </p>
         </div>
-      </motion.header>
+      </header>
 
-      <div className="mx-auto max-w-7xl px-6 md:px-12">
-        <div className="h-px bg-gradient-to-r from-ink/10 to-transparent" />
+      <div className="px-6 md:px-12">
+        <div className="mx-auto max-w-7xl h-px bg-gradient-to-r from-ink/10 to-transparent" />
       </div>
 
       {/* ───── CHINESE CULTURE DAY ───── */}
-      <section className="py-16 md:py-24 px-6 md:px-8 lg:px-12">
+      <section className="py-16 md:py-24 px-6 md:px-12">
         <div className="mx-auto max-w-7xl">
           <div className="mb-14">
             <span className="section-number">Event 01</span>
             <h2 className="text-3xl md:text-4xl font-display mt-2">Chinese Culture Day</h2>
             <p className="text-ink-faint text-sm font-light mt-1">Cultural event documentation — 12 photographs</p>
           </div>
-          <MasonryGrid images={chineseCulturePhotos} />
+          <PhotoGrid images={chineseCulturePhotos} />
         </div>
       </section>
 
-      <DividerText text="LIFE" />
-
       {/* ───── OPEN DAY ───── */}
-      <section className="py-16 md:py-24 px-6 md:px-8 lg:px-12">
+      <section className="py-16 md:py-24 px-6 md:px-12">
         <div className="mx-auto max-w-7xl">
           <div className="mb-14">
             <span className="section-number">Event 02</span>
             <h2 className="text-3xl md:text-4xl font-display mt-2">Open Day</h2>
-            <p className="text-ink-faint text-sm font-light mt-1">Campus Open Day — 17+ photographs</p>
+            <p className="text-ink-faint text-sm font-light mt-1">Campus Open Day — 17 photographs</p>
           </div>
-          <MasonryGrid images={openDayPhotos} />
+          <PhotoGrid images={openDayPhotos} />
         </div>
       </section>
 
-      <DividerText text="CRAFT" />
-
       {/* ───── VIDEO GALLERY ───── */}
-      <section className="py-16 md:py-24 px-6 md:px-8 lg:px-12">
+      <section className="py-16 md:py-24 px-6 md:px-12">
         <div className="mx-auto max-w-7xl">
           <div className="mb-14">
             <span className="section-number">Motion</span>

@@ -1,6 +1,7 @@
 /**
  * sections/Contact.jsx — Contact section with email, WhatsApp, phone cards & social links
  */
+import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { useLanguage } from '../LanguageContext'
 import AnimatedSection from '../components/AnimatedSection'
@@ -31,6 +32,17 @@ const SOCIALS = [
 export default function Contact() {
   const { t } = useLanguage()
   const profile = t('profile')
+  const [copied, setCopied] = useState(false)
+
+  const copyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText(profile.contact.email)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    } catch {
+      window.location.href = `mailto:${profile.contact.email}`
+    }
+  }
 
   const contactMethods = [
     {
@@ -62,15 +74,12 @@ export default function Contact() {
           <rect x="3" y="8" width="34" height="24" rx="2" /><path d="M3 8l17 14L37 8" />
         </svg>
       </div>
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.02] font-heading text-[16rem] md:text-[24rem] font-bold leading-none select-none pointer-events-none whitespace-nowrap">
-        Let&apos;s Talk
-      </div>
 
       <div className="relative mx-auto max-w-7xl">
         <div className="grid grid-cols-12 gap-8 md:gap-16 lg:gap-20">
           <div className="col-span-12 md:col-span-3 lg:col-span-2">
             <AnimatedSection>
-              <span className="section-number">09</span>
+              <span className="section-number">08</span>
               <p className="page-number mt-2">{t('contactMe')}</p>
             </AnimatedSection>
           </div>
@@ -112,10 +121,13 @@ export default function Contact() {
 
             {/* Social links */}
             <AnimatedSection delay={0.7}>
-              <div className="flex items-center gap-6 mb-8">
+              <div className="flex flex-wrap items-center gap-6 mb-8">
+                <button type="button" onClick={copyEmail} className="text-sm text-accent-light underline underline-offset-4" aria-live="polite">
+                  {copied ? 'Email address copied' : 'Copy email address'}
+                </button>
                 <p className="page-number">Find me on</p>
                 {SOCIALS.map((s) => (
-                  <a key={s.name} href={s.href} target="_blank" rel="noreferrer" className="text-ink-faint hover:text-accent transition-colors duration-300" title={s.name}>
+                  <a key={s.name} href={s.href} target="_blank" rel="noreferrer" className="text-ink-faint hover:text-accent transition-colors duration-300" title={s.name} aria-label={s.name}>
                     {s.icon}
                   </a>
                 ))}

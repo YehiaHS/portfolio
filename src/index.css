@@ -2953,3 +2953,116 @@ html[dir="rtl"] .language-menu__item {
     padding-bottom: 2.25rem;
   }
 }
+
+/* ============================================================
+   PRETEXT TYPOGRAPHY
+   ============================================================ */
+
+.type-line {
+  display: block;
+  white-space: nowrap;
+  /* Masks the reveal vertically while letting italic overhangs show at the sides */
+  clip-path: inset(0 -1em);
+}
+
+.type-line__inner {
+  display: block;
+}
+
+.type-fit .type-line {
+  line-height: 1.08;
+  padding-bottom: 0.06em;
+  margin-top: -0.06em;
+}
+
+.type-flow {
+  position: relative;
+}
+
+.type-flow__block {
+  margin: 0;
+  font: inherit;
+}
+
+.type-line--flow {
+  position: absolute;
+}
+
+.page-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 340;
+  letter-spacing: 0;
+  color: var(--ink);
+}
+
+.about-arch {
+  position: absolute;
+  top: 0;
+  inset-inline-start: 0;
+  object-fit: cover;
+  object-position: 50% 12%;
+  background: var(--paper-darker);
+}
+
+.about-highlights {
+  padding: 0;
+  margin-block: 1.75rem 0;
+  list-style: none;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--ink-light);
+}
+
+.about-highlights li {
+  padding: 0.5rem 0;
+  margin: 0;
+  border-top: 1px solid rgba(212, 228, 216, 0.1);
+}
+
+.about-quote {
+  margin: clamp(5rem, 12vw, 10rem) 0 0;
+  font-family: var(--font-serif-italic);
+  font-style: italic;
+  color: var(--ink);
+}
+
+/* ============================================================
+   SMALL THINGS
+   ============================================================ */
+
+.skip-link {
+  position: fixed;
+  top: 0.5rem;
+  inset-inline-start: 0.5rem;
+  z-index: 10003;
+  padding: 0.625rem 1rem;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  color: var(--paper);
+  background: var(--ink);
+  transform: translateY(-200%);
+}
+
+.skip-link:focus {
+  transform: none;
+}
+
+#main-content:focus {
+  outline: none;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+[role='button']:focus-visible {
+  outline: 2px solid var(--accent-light);
+  outline-offset: 2px;
+}
+
+.site-nav__link.active {
+  color: #f3f0e8;
+  text-decoration: underline;
+  text-underline-offset: 0.5em;
+  text-decoration-thickness: 1px;
+}

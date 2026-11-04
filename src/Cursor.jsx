@@ -40,7 +40,6 @@ const centred = (_, generated) => `${generated === 'none' ? '' : generated} tran
 const Cursor = () => {
   const [visible, setVisible] = useState(false);
   const [hoverState, setHoverState] = useState('default');
-  const [hoverLabel, setHoverLabel] = useState('link');
   const [clickRipple, setClickRipple] = useState(false);
 
   const posX = useRef(0);
@@ -63,9 +62,6 @@ const Cursor = () => {
   const dotX = useSpring(0, { stiffness: 2000, damping: 40, mass: 0.05 });
   const dotY = useSpring(0, { stiffness: 2000, damping: 40, mass: 0.05 });
 
-  const textX = useSpring(0, { stiffness: 400, damping: 30 })
-  const textY = useSpring(0, { stiffness: 400, damping: 30 })
-  const textOpacity = useSpring(0, { stiffness: 400, damping: 30 })
   const trailX = useSpring(0, { stiffness: 400, damping: 30, mass: 0.2 });
   const trailY = useSpring(0, { stiffness: 400, damping: 30, mass: 0.2 });
 
@@ -117,8 +113,6 @@ const Cursor = () => {
     }
 
     hoverTarget.current = target;
-    // Store the label in state so moving between two elements with the same hover state still re-renders it
-    setHoverLabel(target.textContent?.trim().slice(0, 30) || 'link');
     const rect = target.getBoundingClientRect();
     targetBounds.current = {
       left: rect.left,
@@ -167,10 +161,6 @@ const Cursor = () => {
     ringY.set(ty);
     trailX.set(tx);
     trailY.set(ty);
-
-    textX.set(tx);
-    textY.set(ty + (ringSize.get() || 40) / 2 + 12);
-    textOpacity.set(hoverState === 'link' ? 1 : 0);
 
     // Ring size
     switch (hoverState) {
@@ -250,36 +240,6 @@ const Cursor = () => {
           transition: 'background-color 0.25s ease',
         }}
       />
-
-      {/* Text Color */}
-      <motion.div
-        className="pointer-events-none fixed left-0 top-0 z-[10002] hidden md:block"
-        aria-hidden="true"
-        transformTemplate={centred}
-        style={{
-          x: textX,
-          y: textY,
-          opacity: visible ? textOpacity : 0,
-        }}
-      >
-        <span
-          style={{
-            fontFamily: 'var(--font-body)',
-            fontSize: '10px',
-            fontWeight: 600,
-            letterSpacing: '0.08em',
-            color: ACCENT,
-            textTransform: 'uppercase',
-            whiteSpace: 'nowrap',
-            background: 'rgba(13,20,16,0.92)',
-            padding: '3px 8px',
-            borderRadius: '4px',
-            boxShadow: '0 1px 4px rgba(0,0,0,0.08)',
-          }}
-        >
-          {hoverLabel}
-        </span>
-      </motion.div>
 
       {/* Click ripple */}
       {clickRipple && (
